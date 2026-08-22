@@ -1,5 +1,156 @@
-import { ArrowDownRight, BrainCircuit, Check, ShieldCheck, SunMedium, Zap } from "lucide-react";
-import { loadForecast, optimizationDecision, priorityDispatch, solarForecast } from "@/data/mockData";
-import { StatusPill } from "@/components/common/StatusPill";
-/** Grid Atlas: intelligence shows mock outputs from future forecasting and optimization systems without pretending they are live models. */
-export default function Intelligence() { return <div className="dashboard-canvas px-5 py-7 sm:px-7 lg:px-8 lg:py-8"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="section-label">Decision support / mock optimizer output</p><h1 className="mt-2 text-3xl font-semibold tracking-[-0.065em] text-white sm:text-[38px]">Forecast before the pressure arrives.</h1><p className="mt-2 text-sm text-[#98a39f]">Presentation-ready UI for forecasting and priority-aware allocation—no model is connected in this prototype.</p></div><StatusPill state="healthy">Demo output</StatusPill></div><section className="mt-7 grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,.9fr)]"><article className="asset-brief min-h-[340px] overflow-hidden"><div className="asset-brief-image" style={{ backgroundImage: "url('/manus-storage/solargrid-field_776643c4.png')" }} /><div className="relative z-10 flex min-h-[340px] flex-col p-6 sm:p-7"><div className="flex items-center gap-2 text-[#d8ff3e]"><BrainCircuit size={17} /><span className="font-mono text-[10px] uppercase tracking-[.13em]">Optimization decision</span></div><div className="mt-auto"><p className="section-label text-[#e8ecea]">Recommended action</p><h2 className="mt-2 text-3xl font-semibold tracking-[-.06em] text-white">{optimizationDecision.action}</h2><p className="mt-3 max-w-lg text-sm leading-6 text-[#d2dad6]">{optimizationDecision.reason}</p><div className="mt-5 flex flex-wrap gap-2">{optimizationDecision.impact.map((item) => <span key={item} className="rounded-full border border-[#d8ff3e]/25 bg-[#d8ff3e]/[.09] px-3 py-1 font-mono text-[10px] uppercase tracking-[.1em] text-[#d8ff3e]">{item}</span>)}</div></div></div></article><article className="operational-panel p-5 sm:p-6"><p className="section-label">Confidence state</p><h2 className="mt-2 text-xl font-semibold tracking-[-.045em] text-white">{optimizationDecision.confidence}</h2><div className="mt-7 space-y-5"><div className="flex gap-3"><span className="node-icon"><SunMedium size={17} /></span><div><p className="text-sm font-medium text-white">Solar peak expected: {solarForecast.peakExpected} kW</p><p className="mt-1 text-sm text-[#9ba5a1]">Next hour forecast is {solarForecast.nextHour} kW at {solarForecast.confidence} confidence.</p></div></div><div className="flex gap-3"><span className="node-icon node-icon-amber"><Zap size={17} /></span><div><p className="text-sm font-medium text-white">Demand peak expected: {loadForecast.expectedPeak} kW</p><p className="mt-1 text-sm text-[#9ba5a1]">The modeled peak arrives at {loadForecast.peakTime}, above current demand.</p></div></div><div className="flex gap-3"><span className="node-icon"><ShieldCheck size={17} /></span><div><p className="text-sm font-medium text-white">Tier 1 reliability maintained</p><p className="mt-1 text-sm text-[#9ba5a1]">Critical allocation remains protected before non-essential reductions.</p></div></div></div></article></section><section className="mt-4 operational-panel p-5 sm:p-6"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="section-label">Priority-based dispatch</p><h2 className="mt-2 text-xl font-semibold tracking-[-.045em] text-white">Protection is a policy, not a visual state.</h2></div><span className="font-mono text-[10px] uppercase tracking-[.1em] text-[#87918e]">Mock allocation</span></div><div className="mt-5 grid gap-3 lg:grid-cols-3">{priorityDispatch.map((item, index) => <article key={item.tier} className="rounded-[1rem_1rem_2rem_1rem] border border-white/[.075] bg-white/[.025] p-4"><div className="flex items-center justify-between"><span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#d8ff3e]/10 font-mono text-[10px] text-[#d8ff3e]">0{index + 1}</span><StatusPill state={item.status}>{item.state}</StatusPill></div><p className="mt-5 font-mono text-[10px] uppercase tracking-[.12em] text-[#86918d]">{item.tier}</p><h3 className="mt-1 text-lg font-medium tracking-[-.03em] text-white">{item.label}</h3><p className="mt-2 text-sm leading-5 text-[#99a39f]">{item.description}</p><div className="mt-4 flex items-center justify-between border-t border-white/[.07] pt-3"><span className="font-mono text-[10px] uppercase tracking-[.1em] text-[#d8ff3e]">{item.state}</span><span className="font-mono text-xs text-white">{item.allocation}</span></div></article>)}</div><div className="mt-5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[.1em] text-[#7f8986]"><Check size={13} className="text-[#d8ff3e]" />Demo policy preserves Tier 1 before any Tier 2 reduction or Tier 3 shedding.</div></section></div>; }
+import { ShieldCheck, SunMedium, Zap } from "lucide-react";
+import {
+  loadForecast,
+  optimizationDecision,
+  priorityDispatch,
+  solarForecast,
+  facility,
+} from "@/data/mockData";
+import { DayTimeline } from "@/components/dashboard/DayTimeline";
+
+export default function Intelligence() {
+  return (
+    <div className="dashboard-canvas px-5 py-6 sm:px-7 lg:px-8 lg:py-8">
+      <header>
+        <p className="facility-location">{facility.location}</p>
+        <h1 className="facility-name mt-1">Intelligence</h1>
+        <p className="mt-2 max-w-xl text-sm text-[#8a9692]">
+          Forecast, dispatch decisions, and priority-based load management for {facility.name}.
+        </p>
+      </header>
+
+      {/* Forecast → Decision → Impact flow */}
+      <section className="mt-10">
+        <div className="flex items-center gap-3 text-sm text-[#6d7874]">
+          <span className="asset-id">Forecast</span>
+          <span>→</span>
+          <span className="asset-id asset-id-active">Dispatch decision</span>
+          <span>→</span>
+          <span className="asset-id">Expected impact</span>
+        </div>
+
+        <div className="mt-8 grid gap-10 xl:grid-cols-[1fr_1fr]">
+          {/* Dispatch decision */}
+          <div className="dispatch-card">
+            <p className="asset-id asset-id-active">Dispatch decision</p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#e7ece9]">
+              {optimizationDecision.action}
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-[#8a9692]">
+              {optimizationDecision.reason}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-8">
+              {optimizationDecision.expectedEffect.map((effect) => (
+                <div key={effect.label}>
+                  <p className="asset-id">{effect.label}</p>
+                  <p className="mt-1 text-xl font-semibold text-[#c8e64a]">{effect.value}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-6 text-xs text-[#6d7874]">{optimizationDecision.confidence}</p>
+          </div>
+
+          {/* Forecast details */}
+          <div className="space-y-6">
+            <ForecastRow
+              icon={SunMedium}
+              assetId="PV-01"
+              title={`Solar peak expected: ${solarForecast.peakExpected} kW`}
+              detail={`Next hour forecast ${solarForecast.nextHour} kW at ${solarForecast.confidence} confidence.`}
+            />
+            <ForecastRow
+              icon={Zap}
+              assetId="LOAD"
+              title={`Demand peak expected: ${loadForecast.expectedPeak} kW`}
+              detail={`Modeled peak at ${loadForecast.peakTime}, above current ${loadForecast.current} kW demand.`}
+              variant="watch"
+            />
+            <ForecastRow
+              icon={ShieldCheck}
+              assetId="LOAD-T1"
+              title="Tier 01 reliability maintained"
+              detail="Critical allocation protected before any Tier 02 reduction or Tier 03 shedding."
+            />
+          </div>
+        </div>
+      </section>
+
+      <div className="section-divider mt-10" />
+
+      {/* Priority dispatch */}
+      <section className="mt-10">
+        <p className="asset-id">Priority-based load management</p>
+        <h2 className="section-heading mt-1">Load tiers</h2>
+        <p className="mt-2 text-sm text-[#8a9692]">
+          Critical infrastructure protection policy — connected to power flow allocation.
+        </p>
+
+        <div className="mt-8 grid gap-0 lg:grid-cols-3">
+          {priorityDispatch.map((item) => (
+            <div
+              key={item.tier}
+              className="border-t border-white/[.06] py-6 lg:border-t-0 lg:border-l lg:border-white/[.06] lg:px-8 lg:first:border-l-0 lg:first:pl-0"
+            >
+              <span className="asset-id">{item.assetId}</span>
+              <h3 className="mt-2 text-lg font-medium text-[#e7ece9]">
+                {item.tier} · {item.label}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#8a9692]">
+                {item.description}
+              </p>
+              <div className="mt-4 flex items-baseline justify-between">
+                <span
+                  className={
+                    item.status === "healthy"
+                      ? "text-sm text-[#c8e64a]"
+                      : item.status === "watch"
+                        ? "text-sm text-[#b89860]"
+                        : "text-sm text-[#6d7874]"
+                  }
+                >
+                  {item.state}
+                </span>
+                <span className="font-mono text-sm text-[#e7ece9]">{item.allocation}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="section-divider mt-10" />
+
+      <section className="mt-8">
+        <p className="asset-id">Day cycle</p>
+        <h2 className="section-heading mt-1">Energy timeline</h2>
+        <div className="mt-4">
+          <DayTimeline />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ForecastRow({
+  icon: Icon,
+  assetId,
+  title,
+  detail,
+  variant,
+}: {
+  icon: typeof SunMedium;
+  assetId: string;
+  title: string;
+  detail: string;
+  variant?: "watch";
+}) {
+  return (
+    <div className="flex gap-4 border-t border-white/[.06] pt-5">
+      <Icon size={18} className={variant === "watch" ? "text-[#b89860]" : "text-[#8a9692]"} />
+      <div>
+        <span className="asset-id">{assetId}</span>
+        <p className="mt-1 text-sm font-medium text-[#e7ece9]">{title}</p>
+        <p className="mt-1 text-sm text-[#6d7874]">{detail}</p>
+      </div>
+    </div>
+  );
+}

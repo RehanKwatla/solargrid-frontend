@@ -1,127 +1,220 @@
-import { BatteryCharging, Hospital, RadioTower, ShieldCheck, SunMedium, Zap } from "lucide-react";
-import { operatingState } from "@/data/mockData";
-import { StatusPill } from "@/components/common/StatusPill";
+import { operatingState, assets } from "@/data/mockData";
 import { useTelemetry } from "@/contexts/SolarTrackingContext";
+import { cn } from "@/lib/utils";
 
-/** Grid Atlas: a state-ready power diagram tells the normal, high-demand, outage, and recovery demo story. */
-const node =
-  "relative z-10 flex min-h-[112px] flex-col justify-between rounded-[1rem_1rem_2rem_1rem] border border-white/[0.1] bg-[#12191a] p-4 shadow-[0_12px_24px_rgba(0,0,0,.18)]";
-
+/** Live power flow — energy bus topology with animated flow paths. */
 export function PowerFlow() {
   const t = useTelemetry();
+  const solarActive = t.solarKw > 0;
+  const batteryCharging = t.batteryKw > 0;
+  const gridImporting = t.gridKw > 0 && t.gridConnected;
 
   return (
-    <section className="operational-panel overflow-hidden p-5 sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <section className="open-section">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="section-label">Power flow / demo-ready state</p>
-          <h2 className="mt-2 text-xl font-semibold tracking-[-0.045em] text-white">
-            How energy is protected and allocated
-          </h2>
+          <p className="asset-id asset-id-active">Live power flow</p>
+          <h2 className="section-heading mt-1">Energy allocation</h2>
         </div>
-        <StatusPill state="healthy">{operatingState.mode}</StatusPill>
+        <span className="system-online">Live</span>
       </div>
-      <div className="mt-3 rounded-xl border border-[#d8ff3e]/15 bg-[#d8ff3e]/[0.045] px-3 py-2.5 text-sm leading-5 text-[#cfd8d3]">
+
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#8a9692]">
         {operatingState.modeDetail}
-      </div>
-      <div className="power-grid relative mt-6 grid gap-3 md:grid-cols-3 xl:grid-cols-5">
-        <article className={node}>
-          <div className="flex items-start justify-between">
-            <span className="node-icon">
-              <SunMedium size={19} />
-            </span>
-            <span className="square-pip" />
-          </div>
-          <div>
-            <p className="section-label">Solar array</p>
-            <p className="mt-1 text-xl font-semibold text-white">
-              {t.solarKw}{" "}
-              <span className="font-mono text-[11px] text-[#9aa5a0]">kW</span>
-            </p>
-          </div>
-        </article>
-        <i className="energy-link energy-link-lime hidden xl:block" />
-        <article className={node}>
-          <div className="flex items-start justify-between">
-            <span className="node-icon">
-              <Zap size={19} />
-            </span>
-            <span className="font-mono text-[9px] uppercase text-[#d8ff3e]">EMS</span>
-          </div>
-          <div>
-            <p className="section-label">Energy manager</p>
-            <p className="mt-1 text-base font-medium text-white">Allocating</p>
-          </div>
-        </article>
-        <i className="energy-link energy-link-lime hidden xl:block" />
-        <article className={node}>
-          <div className="flex items-start justify-between">
-            <span className="node-icon">
-              <BatteryCharging size={19} />
-            </span>
-            <span className="font-mono text-[9px] text-[#d8ff3e]">{t.batterySoc}%</span>
-          </div>
-          <div>
-            <p className="section-label">Battery</p>
-            <p className="mt-1 text-xl font-semibold text-white">
-              {t.batteryKw > 0 ? "+" : ""}
-              {t.batteryKw}{" "}
-              <span className="font-mono text-[11px] text-[#9aa5a0]">kW</span>
-            </p>
-          </div>
-        </article>
-        <i className="energy-link energy-link-amber hidden xl:block" />
-        <article className={node}>
-          <div className="flex items-start justify-between">
-            <span className="node-icon node-icon-amber">
-              <RadioTower size={19} />
-            </span>
-            <span className="font-mono text-[9px] text-[#f1bf70]">ONLINE</span>
-          </div>
-          <div>
-            <p className="section-label">Grid</p>
-            <p className="mt-1 text-xl font-semibold text-white">
-              {t.gridKw}{" "}
-              <span className="font-mono text-[11px] text-[#9aa5a0]">kW</span>
-            </p>
-          </div>
-        </article>
-        <i className="energy-link energy-link-lime hidden xl:block" />
-        <article className={node}>
-          <div className="flex items-start justify-between">
-            <span className="node-icon">
-              <Hospital size={19} />
-            </span>
-            <ShieldCheck size={16} className="text-[#d8ff3e]" />
-          </div>
-          <div>
-            <p className="section-label">Critical loads</p>
-            <p className="mt-1 text-xl font-semibold text-white">
-              {t.criticalLoadKw}{" "}
-              <span className="font-mono text-[11px] text-[#9aa5a0]">kW</span>
-            </p>
-          </div>
-        </article>
-      </div>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="flex items-center justify-between rounded-xl border border-white/[0.075] bg-white/[0.025] px-3.5 py-3">
-          <span className="flex items-center gap-2 text-sm text-[#cfd7d3]">
-            <i className="h-2 w-2 bg-[#d8ff3e]" />
-            Tier 2 important loads
-          </span>
-          <span className="font-mono text-xs text-white">{t.tier2LoadKw} kW</span>
-        </div>
-        <div className="flex items-center justify-between rounded-xl border border-white/[0.075] bg-white/[0.025] px-3.5 py-3">
-          <span className="flex items-center gap-2 text-sm text-[#cfd7d3]">
-            <i className="h-2 w-2 bg-[#78827f]" />
-            Tier 3 deferrable loads
-          </span>
-          <span className="font-mono text-xs text-white">{t.tier3LoadKw} kW</span>
-        </div>
-      </div>
-      <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.09em] text-[#7f8986]">
-        Solar kW driven by 3D tracking simulation. Service layer can drive other modes later.
       </p>
+
+      {/* Desktop: bus topology */}
+      <div className="mt-8 hidden lg:block">
+        <div className="relative">
+          {/* Sources row */}
+          <div className="flex items-start justify-center gap-16">
+            <SourceNode
+              assetId={assets.pv01.id}
+              label="Solar array"
+              value={`${t.solarKw.toFixed(1)} kW`}
+              active={solarActive}
+            />
+            <SourceNode
+              assetId={assets.grid01.id}
+              label="Grid inlet"
+              value={`${t.gridKw.toFixed(1)} kW`}
+              active={gridImporting}
+              variant="grid"
+            />
+          </div>
+
+          {/* SVG connectors: sources → bus */}
+          <svg className="pf-flow-svg mx-auto mt-2 block" width="480" height="80" viewBox="0 0 480 80">
+            <path
+              d="M 120 0 L 120 40 L 240 40 L 240 60"
+              className={cn("pf-flow-path", solarActive ? "pf-flow-path-active" : "pf-flow-path-idle")}
+            />
+            <path
+              d="M 360 0 L 360 40 L 240 40"
+              className={cn("pf-flow-path", gridImporting ? "pf-flow-path-active" : "pf-flow-path-idle")}
+            />
+            {solarActive && (
+              <circle r="3" className="pf-particle">
+                <animateMotion dur="2s" repeatCount="indefinite" path="M 120 0 L 120 40 L 240 40 L 240 60" />
+              </circle>
+            )}
+          </svg>
+
+          {/* Energy bus */}
+          <div className="mx-auto max-w-xs">
+            <div className="pf-bus-node">
+              <span className="asset-id">Energy bus</span>
+              <span className="text-sm font-medium text-[#e7ece9]">{operatingState.mode}</span>
+            </div>
+          </div>
+
+          {/* SVG connectors: bus → branches */}
+          <svg className="pf-flow-svg mx-auto block" width="560" height="60" viewBox="0 0 560 60">
+            <path d="M 280 0 L 280 20 L 100 20 L 100 50" className={cn("pf-flow-path", solarActive ? "pf-flow-path-active" : "pf-flow-path-idle")} />
+            <path d="M 280 0 L 280 20 L 280 20 L 280 50" className={cn("pf-flow-path", solarActive ? "pf-flow-path-active" : "pf-flow-path-idle")} />
+            <path d="M 280 0 L 280 20 L 460 20 L 460 50" className={cn("pf-flow-path", batteryCharging ? "pf-flow-path-active" : "pf-flow-path-idle")} />
+            {solarActive && (
+              <>
+                <circle r="3" className="pf-particle">
+                  <animateMotion dur="2.2s" repeatCount="indefinite" path="M 280 0 L 280 20 L 100 20 L 100 50" />
+                </circle>
+                <circle r="3" className="pf-particle">
+                  <animateMotion dur="2.4s" repeatCount="indefinite" path="M 280 0 L 280 20 L 280 50" />
+                </circle>
+              </>
+            )}
+          </svg>
+
+          {/* Branch loads */}
+          <div className="mx-auto grid max-w-2xl grid-cols-3 gap-4">
+            <BranchNode
+              assetId={assets.loadT1.id}
+              label="Critical load · Tier 01"
+              value={`${t.criticalLoadKw.toFixed(1)} kW`}
+              critical
+            />
+            <BranchNode
+              assetId="FACILITY"
+              label="Facility load"
+              value={`${(t.loadKw - t.criticalLoadKw).toFixed(1)} kW`}
+            />
+            <BranchNode
+              assetId={assets.bess01.id}
+              label="Battery bank"
+              value={`${t.batterySoc}%`}
+              sub={batteryCharging ? `+${t.batteryKw} kW` : `${t.batteryKw} kW`}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile: stacked flow */}
+      <div className="mt-6 space-y-0 lg:hidden">
+        <MobileFlowRow assetId={assets.pv01.id} label="Solar array" value={`${t.solarKw.toFixed(1)} kW`} active={solarActive} />
+        <MobileFlowRow assetId={assets.grid01.id} label="Grid inlet" value={`${t.gridKw.toFixed(1)} kW`} active={gridImporting} />
+        <div className="py-3 text-center">
+          <span className="asset-id">↓ Energy bus ↓</span>
+        </div>
+        <MobileFlowRow assetId={assets.loadT1.id} label="Critical · Tier 01" value={`${t.criticalLoadKw.toFixed(1)} kW`} critical />
+        <MobileFlowRow assetId="FACILITY" label="Facility load" value={`${t.loadKw.toFixed(1)} kW`} />
+        <MobileFlowRow assetId={assets.bess01.id} label="Battery bank" value={`${t.batterySoc}%`} />
+      </div>
+
+      {/* Tier breakdown — inline, no cards */}
+      <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2 border-t border-white/[.06] pt-5">
+        <TierInline tier="Tier 02" assetId={assets.loadT2.id} value={`${t.tier2LoadKw} kW`} note="Reduce if required" />
+        <TierInline tier="Tier 03" assetId={assets.loadT3.id} value={`${t.tier3LoadKw} kW`} note="Shed if required" />
+        <TierInline tier="Total" assetId="LOAD" value={`${t.loadKw} kW`} note="All tiers" />
+      </div>
     </section>
+  );
+}
+
+function SourceNode({
+  assetId,
+  label,
+  value,
+  active,
+  variant,
+}: {
+  assetId: string;
+  label: string;
+  value: string;
+  active: boolean;
+  variant?: "grid";
+}) {
+  return (
+    <div className={cn("pf-source-node text-center", active && "border-[#a8c44a]/25")}>
+      <span className="asset-id">{assetId}</span>
+      <span className="text-xs text-[#8a9692]">{label}</span>
+      <span className={cn("text-lg font-semibold tracking-tight", active ? "text-[#e7ece9]" : "text-[#6d7874]")}>
+        {value}
+      </span>
+      {variant === "grid" && (
+        <span className="text-[10px] text-[#6d7874]">{active ? "Importing" : "Standby"}</span>
+      )}
+    </div>
+  );
+}
+
+function BranchNode({
+  assetId,
+  label,
+  value,
+  sub,
+  critical,
+}: {
+  assetId: string;
+  label: string;
+  value: string;
+  sub?: string;
+  critical?: boolean;
+}) {
+  return (
+    <div className={cn("pf-branch-node", critical && "pf-branch-node-critical")}>
+      <div>
+        <span className="asset-id">{assetId}</span>
+        <p className="text-xs text-[#8a9692]">{label}</p>
+      </div>
+      <div className="text-right">
+        <p className="text-base font-semibold text-[#e7ece9]">{value}</p>
+        {sub && <p className="text-[10px] text-[#6d7874]">{sub}</p>}
+      </div>
+    </div>
+  );
+}
+
+function MobileFlowRow({
+  assetId,
+  label,
+  value,
+  active,
+  critical,
+}: {
+  assetId: string;
+  label: string;
+  value: string;
+  active?: boolean;
+  critical?: boolean;
+}) {
+  return (
+    <div className={cn("pf-branch-node", critical && "pf-branch-node-critical", active && "border-l-[#a8c44a]/30")}>
+      <div>
+        <span className="asset-id">{assetId}</span>
+        <p className="text-xs text-[#8a9692]">{label}</p>
+      </div>
+      <p className="text-base font-semibold text-[#e7ece9]">{value}</p>
+    </div>
+  );
+}
+
+function TierInline({ tier, assetId, value, note }: { tier: string; assetId: string; value: string; note: string }) {
+  return (
+    <div className="flex items-baseline gap-3 text-sm">
+      <span className="asset-id">{assetId}</span>
+      <span className="text-[#8a9692]">{tier}</span>
+      <span className="font-medium text-[#e7ece9]">{value}</span>
+      <span className="text-xs text-[#6d7874]">{note}</span>
+    </div>
   );
 }

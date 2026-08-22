@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 const styles: Record<HealthState, string> = {
   healthy: "border-[#d8ff3e]/30 bg-[#d8ff3e]/10 text-[#d8ff3e]",
   watch: "border-[#f1bf70]/30 bg-[#f1bf70]/10 text-[#f1bf70]",
-  critical: "border-[#ff6b6b]/30 bg-[#ff6b6b]/10 text-[#ff6b6b]",
+  critical: "border-[#fa856e]/30 bg-[#fa856e]/10 text-[#fa856e]",
   neutral: "border-white/15 bg-white/[.04] text-[#aeb8b4]",
 };
 
@@ -27,6 +27,8 @@ export function StatusPill({
       )}
     >
       {state === "healthy" && <i className="live-dot" />}
+      {state === "critical" && <i className="h-1.5 w-1.5 rounded-full bg-[#fa856e] animate-pulse" />}
+      {state === "watch" && <i className="h-1.5 w-1.5 rounded-full bg-[#f1bf70]" />}
       {children}
     </span>
   );

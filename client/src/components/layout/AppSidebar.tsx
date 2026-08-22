@@ -1,6 +1,106 @@
 import { AlertTriangle, BrainCircuit, ChevronRight, LayoutDashboard, Map, Settings, Zap } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-/** Grid Atlas: the desktop rail is the visible SolarGrid operating-layer signature. */
-const navigation = [{ href: "/overview", label: "Overview", icon: LayoutDashboard, code: "01" }, { href: "/energy", label: "Energy", icon: Zap, code: "02" }, { href: "/intelligence", label: "Intelligence", icon: BrainCircuit, code: "03" }, { href: "/alerts", label: "Alerts", icon: AlertTriangle, badge: "3", code: "04" }, { href: "/feature-1", label: "Metering", icon: Map, code: "05" }];
-export function AppSidebar() { const [location] = useLocation(); return <aside className="sticky top-0 z-30 hidden h-screen w-[260px] shrink-0 flex-col border-r border-white/[0.075] bg-[#090e0f] px-4 py-5 lg:flex"><Link href="/overview" className="brand-anchor"><span className="brand-mark-shell"><img src="/manus-storage/solargrid-mark_2db2ffdf.png" alt="SolarGrid" className="h-12 w-12 rounded-2xl" /><i /></span><span><span className="block font-mono text-[9px] uppercase tracking-[0.22em] text-[#d8ff3e]">Smart energy platform</span><span className="brand-wordmark">solar<span>grid</span></span></span></Link><div className="nav-coordinate mt-8"><span>CRITICAL / INDIA</span><i /><span>ONLINE</span></div><div className="mt-4"><p className="px-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#66706d]">Instrument panel</p><nav className="nav-map mt-3 space-y-1">{navigation.map((item) => { const selected = location === item.href; const Icon = item.icon; return <Link key={item.href} href={item.href} className={cn("nav-instrument", selected && "nav-instrument-active")}><span className="nav-code">{item.code}</span><Icon size={17} strokeWidth={selected ? 2.5 : 1.8} /><span className="font-medium">{item.label}</span>{item.badge && <span className={cn("ml-auto flex h-5 min-w-5 items-center justify-center rounded-full px-1 font-mono text-[10px]", selected ? "bg-[#0c1110]/10 text-[#0c1110]" : "bg-[#fa856e]/15 text-[#fa856e]")}>{item.badge}</span>}<ChevronRight size={13} className="ml-auto opacity-0 transition group-hover:opacity-60" /></Link>; })}</nav></div><div className="mt-auto"><div className="rounded-[1.05rem_1.05rem_2.15rem_1.05rem] border border-[#d8ff3e]/15 bg-[linear-gradient(145deg,rgba(216,255,62,.09),rgba(216,255,62,.02))] p-3.5"><div className="flex items-center justify-between"><p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#d8ff3e]">System status</p><span className="square-pip" /></div><p className="mt-2 flex items-center gap-2 text-sm text-white"><i className="h-2 w-2 rounded-full bg-[#d8ff3e]" />Online</p><p className="mt-3 font-mono text-[10px] uppercase tracking-[.12em] text-[#a9b3af]">Critical infrastructure · India</p></div><button className="mt-4 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#9ea8a5] transition hover:bg-white/[0.055] hover:text-white"><Settings size={17} /><span>System settings</span><ChevronRight size={15} className="ml-auto" /></button></div></aside>; }
+import { facility, mockTelemetry } from "@/data/mockData";
+import { useTelemetry } from "@/contexts/SolarTrackingContext";
+
+const navigation = [
+  { href: "/overview", label: "Control", icon: LayoutDashboard, code: "01" },
+  { href: "/energy", label: "Energy", icon: Zap, code: "02" },
+  { href: "/intelligence", label: "Intelligence", icon: BrainCircuit, code: "03" },
+  { href: "/alerts", label: "Events", icon: AlertTriangle, code: "04", badge: "3" },
+  { href: "/feature-1", label: "Metering", icon: Map, code: "05" },
+];
+
+export function AppSidebar() {
+  const [location] = useLocation();
+  const t = useTelemetry();
+
+  return (
+    <aside className="control-rail sticky top-0 z-30 hidden h-screen w-[260px] shrink-0 flex-col px-4 py-5 lg:flex">
+      {/* Brand */}
+      <Link href="/overview" className="brand-anchor">
+        <span className="brand-mark-shell">
+          <img
+            src="/manus-storage/solargrid-mark_2db2ffdf.png"
+            alt="SolarGrid"
+            className="h-11 w-11 rounded-xl"
+          />
+        </span>
+        <span>
+          <span className="brand-wordmark text-[22px]">
+            solar<span>grid</span>
+          </span>
+          <span className="mt-1 block text-[10px] tracking-wide text-[#6d7874]">
+            Smart energy platform
+          </span>
+        </span>
+      </Link>
+
+      {/* Navigation */}
+      <nav className="mt-8 space-y-0.5">
+        {navigation.map((item) => {
+          const selected = location === item.href;
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "nav-instrument",
+                selected && "nav-instrument-active"
+              )}
+            >
+              <span className="nav-code">{item.code}</span>
+              <Icon size={16} strokeWidth={selected ? 2.2 : 1.7} />
+              <span className="font-medium">{item.label}</span>
+              {item.badge && (
+                <span
+                  className={cn(
+                    "ml-auto font-mono text-[10px]",
+                    selected ? "text-[#0c1110]/60" : "text-[#c47060]"
+                  )}
+                >
+                  {item.badge}
+                </span>
+              )}
+              <ChevronRight size={12} className="ml-auto opacity-0" />
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Facility block */}
+      <div className="facility-block mt-auto">
+        <p className="text-sm font-medium text-[#e7ece9]">{facility.name}</p>
+        <p className="facility-location mt-0.5">{facility.location}</p>
+
+        <div className="mt-4 space-y-0">
+          <div className="asset-status-row">
+            <span className="system-online">System</span>
+            <span className="text-xs text-[#8a9692]">Online</span>
+          </div>
+          <div className="asset-status-row">
+            <span className="asset-id">{mockTelemetry.site ? "PV-01" : ""}</span>
+            <span className="text-sm text-[#e7ece9]">{t.solarKw.toFixed(1)} kW</span>
+          </div>
+          <div className="asset-status-row">
+            <span className="asset-id">BESS-01</span>
+            <span className="text-sm text-[#e7ece9]">{t.batterySoc}%</span>
+          </div>
+          <div className="asset-status-row">
+            <span className="asset-id">GRID-01</span>
+            <span className="text-sm text-[#e7ece9]">
+              {t.gridConnected ? "Connected" : "Offline"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <button className="mt-4 flex w-full items-center gap-3 rounded-lg px-2 py-2 text-sm text-[#6d7874] transition hover:bg-white/[.04] hover:text-[#e7ece9]">
+        <Settings size={16} />
+        <span>Settings</span>
+      </button>
+    </aside>
+  );
+}

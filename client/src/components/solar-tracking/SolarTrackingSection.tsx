@@ -1,33 +1,43 @@
-import { SunMedium } from "lucide-react";
+import { assets } from "@/data/mockData";
 import { SolarTracking3D } from "./SolarTracking3D";
 import { SolarTrackingControls } from "./SolarTrackingControls";
 import { SolarTrackingStats } from "./SolarTrackingStats";
+import { useSolarTracking } from "@/contexts/SolarTrackingContext";
+import { cn } from "@/lib/utils";
 
 export function SolarTrackingSection() {
+  const { simulation } = useSolarTracking();
+  const isActive = simulation.trackingStatus === "ACTIVE";
+
   return (
-    <section className="operational-panel overflow-hidden p-5 sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <section className="open-section">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="section-label">Physical layer / demo simulation</p>
-          <h2 className="mt-2 flex items-center gap-2 text-xl font-semibold tracking-[-0.045em] text-white sm:text-2xl">
-            <SunMedium size={22} className="text-[#d8ff3e]" />
-            3D solar tracking
-          </h2>
-          <p className="mt-2 max-w-xl text-sm text-[#98a39f]">
-            Watch the tracker follow the sun across the day — generation feeds the dashboard below.
-          </p>
+          <p className="asset-id">{assets.tracker01.id}</p>
+          <h2 className="section-heading mt-1">{assets.tracker01.label}</h2>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="asset-id">{assets.pv01.id}</span>
+          <span className={cn("system-online", isActive && "text-[#a8c44a]")}>
+            {isActive ? "Tracking active" : simulation.trackingStatus}
+          </span>
         </div>
       </div>
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(260px,.6fr)]">
-        <SolarTracking3D />
+      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(240px,.35fr)]">
+        <div className="relative overflow-hidden rounded-lg border border-white/[.06] bg-[#0a0e0f]">
+          <SolarTracking3D />
+          <div className="absolute left-4 top-4 flex items-center gap-2">
+            <span className="asset-id asset-id-active">Live</span>
+            <span className="font-mono text-[11px] text-[#8a9692]">
+              {simulation.solarGenerationKw} kW
+            </span>
+          </div>
+        </div>
         <SolarTrackingStats />
       </div>
 
-      <div className="mt-5 border-t border-white/[.06] pt-5 lg:hidden">
-        <SolarTrackingControls />
-      </div>
-      <div className="mt-5 hidden border-t border-white/[.06] pt-5 lg:block">
+      <div className="mt-5 border-t border-white/[.06] pt-5">
         <SolarTrackingControls />
       </div>
     </section>

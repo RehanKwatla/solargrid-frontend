@@ -1,4 +1,45 @@
-import { BadgeIndianRupee, Building2, CircleGauge, FileClock, MapPinned } from "lucide-react";
-import { feature1Metering } from "@/data/mockData";
-/** Grid Atlas: the Metering instrument remains extensible and explicitly marks its data as demo-only. */
-export default function Feature1() { return <div className="dashboard-canvas px-5 py-7 sm:px-7 lg:px-8 lg:py-8"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="section-label">Metering instrument / demo data layer</p><h1 className="mt-2 text-3xl font-semibold tracking-[-.065em] text-white sm:text-[38px]">Government metering statistics.</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-[#98a39f]">A research-ready measurement register for future official reference data. No regulation or government statistic is represented as fact in this demo.</p></div><button className="action-button"><MapPinned size={15} />India reference view</button></div><section className="fleet-map mt-7 min-h-[250px] overflow-hidden p-5 sm:p-7"><div className="fleet-map-art" style={{ backgroundImage: "url('/manus-storage/solargrid-field_776643c4.png')" }} /><div className="relative z-10 flex min-h-[200px] flex-col"><div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[.13em] text-[#d8ff3e]"><FileClock size={14} />Research-ready integration zone</div><div className="mt-auto grid gap-3 sm:grid-cols-3"><div className="rounded-2xl border border-white/10 bg-[#0b1011]/70 p-4 backdrop-blur-md"><p className="section-label">Source posture</p><p className="mt-3 text-lg font-medium text-white">Mock only</p></div><div className="rounded-2xl border border-white/10 bg-[#0b1011]/70 p-4 backdrop-blur-md"><p className="section-label">Data connector</p><p className="mt-3 text-lg font-medium text-white">Staged</p></div><div className="rounded-2xl border border-white/10 bg-[#0b1011]/70 p-4 backdrop-blur-md"><p className="section-label">Schema status</p><p className="mt-3 text-lg font-medium text-[#d8ff3e]">Extensible</p></div></div></div></section><section className="mt-4 operational-panel overflow-hidden"><div className="flex items-center justify-between p-5 sm:p-6"><div><p className="section-label">Metering overview</p><h2 className="mt-2 text-xl font-semibold tracking-[-.045em] text-white">Demo measurement register</h2></div><BadgeIndianRupee size={19} className="text-[#d8ff3e]" /></div><div className="overflow-x-auto"><table className="w-full min-w-[700px] text-left"><thead className="border-y border-white/[.07] bg-white/[.02]"><tr className="font-mono text-[10px] uppercase tracking-[.12em] text-[#77817e]"><th className="px-5 py-3.5 font-medium sm:px-6">Metering overview</th><th className="px-5 py-3.5 font-medium">Current value</th><th className="px-5 py-3.5 font-medium">Required / reference value</th><th className="px-5 py-3.5 font-medium">Status</th><th className="px-5 py-3.5 font-medium">Source</th></tr></thead><tbody>{feature1Metering.map((item) => <tr key={item.metric} className="border-b border-white/[.06] text-sm transition hover:bg-white/[.028]"><td className="px-5 py-4 sm:px-6"><div className="flex items-center gap-3"><span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/[.035] text-[#d8ff3e]"><CircleGauge size={15} /></span><span className="font-medium text-[#e7ece9]">{item.metric}</span></div></td><td className="px-5 py-4 font-mono text-[12px] text-white">{item.current}</td><td className="px-5 py-4 font-mono text-[12px] text-[#b8c1be]">{item.reference}</td><td className="px-5 py-4"><span className="rounded-full border border-[#d8ff3e]/25 bg-[#d8ff3e]/[.08] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[.1em] text-[#d8ff3e]">{item.status}</span></td><td className="px-5 py-4 font-mono text-[11px] text-[#9aa5a0]">{item.source}</td></tr>)}</tbody></table></div></section><div className="mt-4 flex items-center gap-3 rounded-2xl border border-white/[.075] bg-white/[.025] p-4 text-sm text-[#aab4b0]"><Building2 size={18} className="text-[#d8ff3e]" /><p><span className="text-white">Demo note:</span> Replace these values only when research-backed reference data and approved meter integrations are available.</p></div></div>; }
+import { facility, feature1Metering } from "@/data/mockData";
+
+export default function Feature1() {
+  return (
+    <div className="dashboard-canvas px-5 py-6 sm:px-7 lg:px-8 lg:py-8">
+      <header>
+        <p className="facility-location">{facility.location}</p>
+        <h1 className="facility-name mt-1">Metering</h1>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#8a9692]">
+          Government metering statistics for {facility.name}. All values are mock/demo
+          until research-backed reference data and approved meter integrations are available.
+        </p>
+      </header>
+
+      <section className="mt-10 overflow-x-auto">
+        <table className="w-full min-w-[680px] text-left">
+          <thead>
+            <tr className="border-b border-white/[.08]">
+              <th className="pb-3 pr-4 text-left text-sm font-medium text-[#8a9692]">Metric</th>
+              <th className="pb-3 pr-4 text-left text-sm font-medium text-[#8a9692]">Current value</th>
+              <th className="pb-3 pr-4 text-left text-sm font-medium text-[#8a9692]">Reference value</th>
+              <th className="pb-3 pr-4 text-left text-sm font-medium text-[#8a9692]">Status</th>
+              <th className="pb-3 text-left text-sm font-medium text-[#8a9692]">Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            {feature1Metering.map((item) => (
+              <tr key={item.metric} className="border-b border-white/[.05]">
+                <td className="py-4 pr-4 text-sm font-medium text-[#e7ece9]">{item.metric}</td>
+                <td className="py-4 pr-4 font-mono text-sm text-[#e7ece9]">{item.current}</td>
+                <td className="py-4 pr-4 font-mono text-sm text-[#8a9692]">{item.reference}</td>
+                <td className="py-4 pr-4 text-sm text-[#c8e64a]">{item.status}</td>
+                <td className="py-4 font-mono text-xs text-[#6d7874]">{item.source}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <p className="mt-8 border-t border-white/[.06] pt-6 text-sm text-[#6d7874]">
+        Demo note: no regulation or government statistic is represented as fact in this module.
+      </p>
+    </div>
+  );
+}

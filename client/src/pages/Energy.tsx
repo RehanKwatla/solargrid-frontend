@@ -1,6 +1,104 @@
-import { ArrowDownRight, BatteryCharging, Download, SunMedium, TowerControl, Zap } from "lucide-react";
+import { Download } from "lucide-react";
 import { EnergyChart } from "@/components/charts/EnergyChart";
-import { mockTelemetry } from "@/data/mockData";
-/** Grid Atlas: energy analytics separate supply, demand, storage, and grid contribution for practical operator decisions. */
-const cards = [{ title: "Solar generation", caption: "On-site production against forecast", type: "solar" as const, icon: SunMedium }, { title: "Facility demand", caption: "Demand compared with available solar", type: "demand" as const, icon: Zap }, { title: "Battery power", caption: "Positive values indicate charging", type: "battery" as const, icon: BatteryCharging }, { title: "Grid consumption", caption: "Imported utility energy by hour", type: "grid" as const, icon: TowerControl }];
-export default function Energy() { const t = mockTelemetry; return <div className="dashboard-canvas px-5 py-7 sm:px-7 lg:px-8 lg:py-8"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="section-label">Energy / Apollo Care Campus</p><h1 className="mt-2 text-3xl font-semibold tracking-[-0.065em] text-white sm:text-[38px]">Energy with context.</h1><p className="mt-2 text-sm text-[#98a39f]">Historical mock telemetry reveals the relationship between production, demand, storage, and grid use.</p></div><button className="action-button"><Download size={15} />Export demo CSV</button></div><section className="mt-7 grid gap-4 xl:grid-cols-2">{cards.map(({ title, caption, type, icon: Icon }) => <article key={type} className="operational-panel p-5 sm:p-6"><div className="flex items-start justify-between"><div><p className="section-label">{caption}</p><h2 className="mt-2 text-xl font-semibold tracking-[-0.045em] text-white">{title}</h2></div><span className="node-icon"><Icon size={18} /></span></div><div className="mt-3"><EnergyChart type={type} /></div></article>)}</section><section className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(340px,.75fr)]"><article className="operational-panel p-5 sm:p-6"><p className="section-label">Current energy mix</p><h2 className="mt-2 text-xl font-semibold tracking-[-0.045em] text-white">What is carrying the facility now</h2><div className="mt-7 space-y-5">{[{ label: "Solar", value: 62, color: "bg-[#d8ff3e]", text: "42.5 kW" }, { label: "Battery", value: 16, color: "bg-[#c49bff]", text: "8.4 kW" }, { label: "Grid", value: 22, color: "bg-[#f1bf70]", text: "12.3 kW" }].map((item) => <div key={item.label}><div className="flex justify-between font-mono text-[10px] uppercase tracking-[.1em]"><span className="text-[#c9d2ce]">{item.label}</span><span className="text-white">{item.value}% · {item.text}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white/[.08]"><div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.value}%` }} /></div></div>)}</div></article><article className="operational-panel p-5 sm:p-6"><p className="section-label">Energy action</p><h2 className="mt-2 text-xl font-semibold tracking-[-0.045em] text-white">Keep solar available for the peak.</h2><p className="mt-4 text-sm leading-6 text-[#9ea8a4]">The current battery charge rate preserves stored energy while daytime solar offsets a meaningful share of facility demand.</p><div className="mt-7 flex items-end gap-2"><strong className="text-5xl font-semibold tracking-[-.075em] text-[#d8ff3e]">{t.batterySoc}</strong><span className="mb-2 font-mono text-xs text-[#a2aca8]">% STATE OF CHARGE</span></div><div className="mt-4 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.1em] text-[#d8ff3e]"><ArrowDownRight size={14} />Grid dependence reduced</div></article></section></div>; }
+import { mockTelemetry, facility } from "@/data/mockData";
+import { DayTimeline } from "@/components/dashboard/DayTimeline";
+
+export default function Energy() {
+  const t = mockTelemetry;
+
+  return (
+    <div className="dashboard-canvas px-5 py-6 sm:px-7 lg:px-8 lg:py-8">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="facility-location">{facility.location}</p>
+          <h1 className="facility-name mt-1">Energy</h1>
+          <p className="mt-2 max-w-xl text-sm text-[#8a9692]">
+            Production, demand, storage, and grid behavior at {facility.name}.
+          </p>
+        </div>
+        <button className="action-button">
+          <Download size={14} />
+          Export
+        </button>
+      </header>
+
+      <section className="mt-10">
+        <p className="asset-id">PV-01 vs LOAD</p>
+        <h2 className="section-heading mt-1">Solar vs facility demand</h2>
+        <div className="mt-6 border-t border-white/[.06] pt-6">
+          <EnergyChart type="solar" height={280} />
+        </div>
+      </section>
+
+      <section className="mt-10 grid gap-10 lg:grid-cols-[1.2fr_.8fr]">
+        <div>
+          <p className="asset-id">BESS-01</p>
+          <h2 className="section-heading mt-1">Battery state</h2>
+          <div className="mt-4 border-t border-white/[.06] pt-4">
+            <EnergyChart type="battery" height={180} />
+          </div>
+        </div>
+        <div>
+          <p className="asset-id">GRID-01</p>
+          <h2 className="section-heading mt-1">Grid import</h2>
+          <div className="mt-4 border-t border-white/[.06] pt-4">
+            <EnergyChart type="grid" height={180} />
+          </div>
+        </div>
+      </section>
+
+      <div className="section-divider mt-10" />
+
+      <section className="mt-8 grid gap-10 lg:grid-cols-[1.4fr_.6fr]">
+        <div>
+          <p className="asset-id">Energy mix</p>
+          <h2 className="section-heading mt-1">Current supply composition</h2>
+          <div className="mt-6 space-y-5">
+            {[
+              { label: "Solar · PV-01", value: 62, color: "bg-[#a8c44a]", text: `${t.solarKw} kW` },
+              { label: "Battery · BESS-01", value: 16, color: "bg-[#8a7eb8]", text: `${t.batteryKw} kW` },
+              { label: "Grid · GRID-01", value: 22, color: "bg-[#b89860]", text: `${t.gridKw} kW` },
+            ].map((item) => (
+              <div key={item.label}>
+                <div className="flex justify-between text-sm">
+                  <span className="text-[#8a9692]">{item.label}</span>
+                  <span className="text-[#e7ece9]">
+                    {item.value}% · {item.text}
+                  </span>
+                </div>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[.06]">
+                  <div
+                    className={`h-full rounded-full ${item.color}`}
+                    style={{ width: `${item.value}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="asset-id">BESS-01</p>
+          <h2 className="section-heading mt-1">Battery reserve</h2>
+          <p className="mt-6 text-5xl font-semibold tracking-tight text-[#e7ece9]">
+            {t.batterySoc}
+            <span className="ml-1 text-lg text-[#6d7874]">%</span>
+          </p>
+          <p className="mt-2 text-sm text-[#8a9692]">
+            Charging at {t.batteryKw} kW — preserving reserve for peak window.
+          </p>
+        </div>
+      </section>
+
+      <div className="section-divider mt-10" />
+
+      <section className="mt-8">
+        <p className="asset-id">Day cycle</p>
+        <h2 className="section-heading mt-1">Energy timeline</h2>
+        <div className="mt-4">
+          <DayTimeline />
+        </div>
+      </section>
+    </div>
+  );
+}
