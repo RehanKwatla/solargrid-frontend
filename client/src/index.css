@@ -1,11 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @custom-variant dark (&:is(.dark *));
 @import "./theme/colors.css";
+@import "./theme/typography.css";
 
 @theme inline {
-  --font-sans: "Inter", sans-serif;
+  --font-sans: "Space Grotesk", sans-serif;
   --color-background: var(--bg-primary);
   --color-foreground: var(--text-primary);
   --color-card: var(--surface);
@@ -24,6 +25,8 @@
     @apply bg-background text-foreground font-sans;
     min-width: 320px;
     transition: background-color 0.3s ease, color 0.3s ease;
+    background-image: linear-gradient(rgba(86, 103, 74, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(86, 103, 74, .055) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 
   button, a {
@@ -41,7 +44,6 @@
 }
 
 @layer components {
-  /* Modern clean scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -81,4 +83,11 @@
   .sidebar-transition {
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  .instrument-panel { border: 1px solid var(--border-color); background: var(--surface); box-shadow: 0 1px 0 rgba(27, 36, 22, .04); }
+  .instrument-label { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text-secondary); }
+  .datum-rule { position: relative; }
+  .datum-rule::before { content: ""; position: absolute; left: 0; top: 0; width: 36px; height: 2px; background: var(--accent); }
+  .technical-button { border: 1px solid var(--border-color); border-radius: 4px; background: var(--surface); transition: background-color .16s ease, border-color .16s ease, color .16s ease; }
+  .technical-button:hover { background: var(--surface-soft); border-color: var(--accent); }
 }

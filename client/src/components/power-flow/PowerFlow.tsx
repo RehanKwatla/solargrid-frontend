@@ -39,9 +39,9 @@ export function PowerFlow() {
         </div>
 
         {/* Energy Bus */}
-        <div className="w-full rounded-2xl bg-surface-soft border border-border shadow-sm flex justify-between items-center px-6 py-4 z-10 relative">
-          <span className="font-semibold text-foreground">Energy Bus</span>
-          <span className="inline-flex items-center rounded-full bg-healthy/10 px-2.5 py-0.5 text-xs font-semibold text-healthy border border-healthy/20">
+        <div className="w-full border-y border-border bg-surface-soft flex justify-between items-center px-6 py-4 z-10 relative">
+          <span className="font-mono text-xs font-medium uppercase tracking-[.08em] text-foreground">Energy Bus</span>
+          <span className="inline-flex items-center border border-healthy/30 bg-healthy/10 px-2 py-1 font-mono text-[9px] font-medium uppercase tracking-[.06em] text-healthy">
             {operatingState.mode}
           </span>
         </div>
@@ -89,8 +89,8 @@ export function PowerFlow() {
            <span className="text-border">↓</span>
         </div>
         
-        <div className="w-full rounded-xl bg-surface-soft border border-border p-3 text-center shadow-sm">
-           <span className="font-semibold text-foreground text-sm">Energy Bus</span>
+        <div className="w-full border-y border-border bg-surface-soft p-3 text-center">
+           <span className="font-mono text-xs font-medium uppercase tracking-[.08em] text-foreground">Energy Bus</span>
         </div>
         
         <div className="w-full text-center py-1">
@@ -108,8 +108,8 @@ export function PowerFlow() {
 
 function SourceNode({ assetId, label, value, active, colorClass }: any) {
   return (
-    <div className={cn("rounded-2xl border bg-surface p-4 w-48 text-center transition-all", active ? cn("shadow-sm", colorClass) : "border-border shadow-none opacity-80")}>
-      <div className="inline-flex items-center rounded-full bg-surface-soft px-2 py-0.5 text-[10px] font-semibold text-text-secondary border border-border mb-2">{assetId}</div>
+    <div className={cn("border bg-surface p-4 w-48 text-center transition-colors", active ? colorClass : "border-border opacity-80")}>
+      <div className="inline-flex items-center border border-border bg-surface-soft px-2 py-0.5 font-mono text-[9px] font-medium text-text-secondary mb-2">{assetId}</div>
       <div className="text-sm font-semibold text-foreground mb-1">{label}</div>
       <div className={cn("text-2xl font-bold", active ? "text-current" : "text-foreground")}>{value}</div>
     </div>
@@ -118,8 +118,8 @@ function SourceNode({ assetId, label, value, active, colorClass }: any) {
 
 function BranchNode({ assetId, label, value, sub, active, colorClass }: any) {
   return (
-    <div className={cn("rounded-2xl border bg-surface p-4 w-48 text-center transition-all", active ? cn("shadow-sm", colorClass) : "border-border shadow-none opacity-80")}>
-      <div className="inline-flex items-center rounded-full bg-surface-soft px-2 py-0.5 text-[10px] font-semibold text-text-secondary border border-border mb-2">{assetId}</div>
+    <div className={cn("border bg-surface p-4 w-48 text-center transition-colors", active ? colorClass : "border-border opacity-80")}>
+      <div className="inline-flex items-center border border-border bg-surface-soft px-2 py-0.5 font-mono text-[9px] font-medium text-text-secondary mb-2">{assetId}</div>
       <div className="text-sm font-semibold text-foreground mb-1">{label}</div>
       <div className={cn("text-2xl font-bold", active ? "text-current" : "text-foreground")}>{value}</div>
       {sub && <div className="text-[10px] font-medium mt-1 text-text-secondary">{sub}</div>}
@@ -129,9 +129,9 @@ function BranchNode({ assetId, label, value, sub, active, colorClass }: any) {
 
 function MobileNode({ assetId, label, value, active, colorClass }: any) {
   return (
-    <div className={cn("flex justify-between items-center rounded-xl border bg-surface p-4 transition-all", active ? "border-border shadow-sm" : "border-border shadow-none opacity-80")}>
+    <div className={cn("flex justify-between items-center border bg-surface p-4 transition-colors", active ? "border-border" : "border-border opacity-80")}>
       <div>
-        <div className="inline-flex items-center rounded-full bg-surface-soft px-2 py-0.5 text-[10px] font-semibold text-text-secondary border border-border mb-1">{assetId}</div>
+        <div className="inline-flex items-center border border-border bg-surface-soft px-2 py-0.5 font-mono text-[9px] font-medium text-text-secondary mb-1">{assetId}</div>
         <div className="text-sm font-semibold text-foreground">{label}</div>
       </div>
       <div className={cn("text-xl font-bold", active ? colorClass : 'text-foreground')}>{value}</div>

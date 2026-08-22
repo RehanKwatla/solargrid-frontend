@@ -24,11 +24,11 @@ export function EnergyMetrics() {
 
   return (
     <div className="w-full">
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_2fr] items-stretch">
+      <div className="grid gap-0 border border-border lg:grid-cols-[1.2fr_2fr] items-stretch">
         {/* Hero metric */}
-        <div className="rounded-2xl border border-transparent bg-primary text-primary-foreground shadow-md p-6 sm:p-8 flex flex-col justify-between">
+        <div className="bg-primary text-primary-foreground p-6 sm:p-8 flex flex-col justify-between">
           <div>
-            <div className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-xs font-semibold mb-6">
+            <div className="inline-flex items-center border border-white/30 bg-white/10 px-2 py-1 font-mono text-[9px] font-medium tracking-[.08em] mb-6">
               {assets.pv01.id}
             </div>
             <p className="text-6xl md:text-7xl font-bold tracking-tighter leading-none">
@@ -44,13 +44,13 @@ export function EnergyMetrics() {
         </div>
 
         {/* Supporting metrics */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3">
           {supporting.map((item) => (
-            <div key={item.label} className="rounded-xl border border-border bg-surface-soft p-4 flex flex-col justify-between hover:bg-surface hover:shadow-sm transition-all group">
+            <div key={item.label} className="border-b border-r border-border bg-surface-soft p-4 flex flex-col justify-between transition-colors hover:bg-surface group">
               <div>
                 <div className="flex items-center justify-between mb-3">
                   {item.assetId ? (
-                    <span className="inline-flex items-center rounded-full bg-surface px-2 py-0.5 text-[10px] font-semibold text-text-secondary border border-border">
+                    <span className="inline-flex items-center border border-border bg-surface px-2 py-0.5 font-mono text-[9px] font-medium text-text-secondary">
                       {item.assetId}
                     </span>
                   ) : (

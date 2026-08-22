@@ -1,5 +1,12 @@
 # Active Repository Tasks
 
+## Natural SolarGrid Design Refinement — Complete
+
+- [x] Audit the current route shell, tracker, charts, and visual system against the required Natural Web Design guidance.
+- [x] Refine the shared visual language and key overview modules into a more grounded, instrument-led composition without changing behavior.
+- [x] Render and inspect the primary desktop and mobile views; run typecheck and attempt production build.
+- [x] Record the design decision, verification, and follow-up in `memory.md`.
+
 - [x] Create durable agent guidance in `agents.md`.
 - [x] Record the current SolarGrid architecture and product context in `memory.md`.
 - [x] Save a verified checkpoint containing the repository guidance.

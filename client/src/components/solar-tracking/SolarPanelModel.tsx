@@ -58,7 +58,7 @@ export function SolarPanelModel({ panelAzimuth, panelTilt }: SolarPanelModelProp
       {/* Ground */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
         <circleGeometry args={[8, 48]} />
-        <meshStandardMaterial color="#1a2220" roughness={0.95} />
+        <meshStandardMaterial color="#5f7645" roughness={0.95} />
       </mesh>
 
       {/* Base */}

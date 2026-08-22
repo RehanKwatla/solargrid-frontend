@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SolarGrid — Power in Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rust:#5A2E25;      /* deep rust — primary environment / dark foundation */
+    --clay:#B5543A;      /* terracotta clay — active energy / movement */
+    --olive:#6F7F5F;     /* olive accent — healthy / stable / optimal */
+    --lime:#F0E6D8;      /* soft limestone — typography / clean surfaces */
+    --rust-dark:#3A1E18;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--rust); color:var(--lime);
+    font-family:'Inter',sans-serif; overflow-x:hidden;}
+  body{opacity:0; transition:opacity 0.6s ease;}
+  body.ready{opacity:1;}
+
+  canvas#webgl{position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; display:block;}
+
+  /* ============ BRUTALIST UI PRIMITIVES ============ */
+  .tag{
+    background:var(--rust-dark); color:var(--lime);
+    border:3px solid var(--lime);
+    box-shadow:5px 5px 0 var(--rust-dark);
+    padding:8px 12px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+  }
+  .card{
+    background:var(--rust-dark); color:var(--lime);
+    border:3px solid var(--lime);
+    box-shadow:7px 7px 0 rgba(0,0,0,0.35);
+    padding:16px 18px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .card .row{display:flex; justify-content:space-between; gap:22px; font-size:12px;
+    padding:5px 0; border-top:1px solid rgba(240,230,216,0.18); letter-spacing:0.04em;}
+  .card .row:first-of-type{border-top:none;}
+  .card .row .k{color:rgba(240,230,216,0.6);}
+  .card .row .v{color:var(--lime); font-weight:500;}
+  .card .v.active{color:var(--clay);}
+  .card .v.optimal{color:var(--olive);}
+  .card-head{font-size:12px; font-weight:600; letter-spacing:0.08em; margin-bottom:10px;
+    padding-bottom:10px; border-bottom:2px solid var(--lime); display:flex; align-items:center; gap:8px;}
+
+  .switch{width:26px; height:14px; border:2px solid var(--lime); position:relative; flex:none;}
+  .switch .thumb{position:absolute; top:1px; right:1px; width:8px; height:8px; background:var(--clay);}
+
+  /* ============ FIXED OVERLAY ELEMENTS ============ */
+  .wordmark{position:fixed; top:26px; left:26px; z-index:20;}
+  .wordmark .tag{font-family:'Fraunces',serif; font-size:14px; font-weight:700; letter-spacing:0.02em; text-transform:none;}
+
+  .status-tag{position:fixed; top:26px; right:26px; z-index:20; text-align:right; opacity:0; transition:opacity 0.5s ease;}
+  .status-tag.visible{opacity:1;}
+  .status-tag .time{font-size:16px; font-weight:600; display:block;}
+  .status-tag .state{font-size:10px; color:var(--clay); display:block; margin-top:2px;}
+
+  .telemetry{position:fixed; bottom:26px; left:26px; z-index:20; width:250px;
+    opacity:0; transform:translateY(10px); transition:opacity 0.5s ease, transform 0.5s ease;}
+  .telemetry.visible{opacity:1; transform:translateY(0);}
+
+  /* ============ SCROLL CONTENT ============ */
+  main{position:relative; z-index:10;}
+  .story{min-height:100vh; display:flex; align-items:center; padding:0 8vw;}
+  .story.right{justify-content:flex-end; text-align:right;}
+  .story-inner{max-width:540px; opacity:0; transform:translateY(20px);
+    transition:opacity 0.6s ease, transform 0.6s ease;}
+  .story-inner.visible{opacity:1; transform:translateY(0);}
+  .story.right .story-inner{margin-left:auto;}
+
+  .eyebrow{display:inline-block; margin-bottom:16px;}
+  h1,h2{font-family:'Fraunces',serif; font-weight:700; line-height:0.98;
+    font-size:clamp(2.4rem, 6vw, 5rem); margin:0 0 14px 0; letter-spacing:-0.01em;}
+  h1{color:var(--rust-dark);}
+  .story-inner p{color:rgba(240,230,216,0.75); font-size:1.05rem; line-height:1.6; margin:0 0 6px 0; max-width:440px;}
+  .story.right .story-inner p{margin-left:auto;}
+
+  .stat-line{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.06em;
+    margin-top:16px; color:var(--lime);}
+  .stat-line b{color:var(--clay);}
+  .stat-line .ok{color:var(--olive);}
+
+  .hero-mark{position:fixed; top:50%; left:26px; transform:translateY(-50%) rotate(-90deg); transform-origin:left center;
+    z-index:20; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.3em;
+    color:rgba(240,230,216,0.4); opacity:1; transition:opacity 0.4s ease;}
+
+  /* ============ FINAL DIAGRAM ============ */
+  .flow-diagram{display:flex; align-items:center; gap:10px; margin-top:22px; flex-wrap:wrap;}
+  .flow-node{border:3px solid var(--lime); background:var(--rust-dark); padding:10px 14px;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.06em;
+    box-shadow:4px 4px 0 rgba(0,0,0,0.3);}
+  .flow-node.active{background:var(--clay); color:var(--rust-dark); border-color:var(--rust-dark);}
+  .flow-arrow{color:var(--lime); font-size:16px;}
+
+  .cta-btn{margin-top:26px; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.08em;
+    color:var(--rust-dark); background:var(--clay); border:3px solid var(--rust-dark);
+    padding:14px 24px; cursor:pointer; text-transform:uppercase; font-weight:600;
+    box-shadow:6px 6px 0 var(--rust-dark); transition:transform 0.12s ease, box-shadow 0.12s ease;}
+  .cta-btn:hover{transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--rust-dark);}
+  .cta-btn:active{transform:translate(2px,2px); box-shadow:2px 2px 0 var(--rust-dark);}
+  .cta-btn:focus-visible{outline:3px solid var(--olive); outline-offset:3px;}
+
+  footer{position:relative; z-index:10; text-align:center; padding:40px 0 60px;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(240,230,216,0.45); letter-spacing:0.08em;}
+
+  @media (max-width:760px){
+    .story.right{text-align:left; justify-content:flex-start;}
+    .story.right .story-inner, .story.right .story-inner p{margin-left:0;}
+    .hero-mark{display:none;}
+    .telemetry{width:210px;}
+  }
+  @media (prefers-reduced-motion: reduce){ *{transition-duration:0.01ms !important;} }
+</style>
+</head>
+<body>
+
+<canvas id="webgl"></canvas>
+
+<div class="wordmark"><div class="tag">SOLARGRID</div></div>
+<div class="hero-mark">TRACKER-01 / PV-01</div>
+
+<div class="status-tag" id="statusTag">
+  <div class="tag">
+    <span class="time" id="tagTime">06:00</span>
+    <span class="state" id="tagState">SUNRISE</span>
+  </div>
+</div>
+
+<div class="telemetry" id="telemetry">
+  <div class="card">
+    <div class="card-head">SOLAR TRACKER / PV-01</div>
+    <div class="row"><span class="k">TRACKING</span><span class="v active" id="tTrack">STANDBY</span></div>
+    <div class="row"><span class="k">SUN</span><span class="v" id="tSun">0°</span></div>
+    <div class="row"><span class="k">PANEL</span><span class="v" id="tPanel">0°</span></div>
+    <div class="row"><span class="k">ALTITUDE</span><span class="v" id="tAlt">0°</span></div>
+    <div class="row"><span class="k">ALIGNMENT</span><span class="v" id="tAlign">0%</span></div>
+    <div class="row"><span class="k">OUTPUT</span><span class="v active" id="tOut">0.0 kW</span></div>
+    <div class="row"><span class="k">STATUS</span><span class="v"><span class="switch"><span class="thumb"></span></span></span></div>
+  </div>
+</div>
+
+<main>
+
+  <section class="story" id="s0">
+    <div class="story-inner">
+      <span class="eyebrow"><span class="tag">SOLARGRID</span></span>
+      <h1>POWER<br>IN MOTION.</h1>
+      <p>A solar-tracking energy system built for critical infrastructure.</p>
+      <div class="stat-line">06:00 <b>SUNRISE</b> — TRACKER READY</div>
+    </div>
+  </section>
+
+  <section class="story right" id="s1">
+    <div class="story-inner">
+      <span class="eyebrow"><span class="tag">STATE 02 — MORNING</span></span>
+      <h2>Follow<br>the sun.</h2>
+      <p>TRACKER-01 following sun. Azimuth and tilt adjust continuously, without manual input.</p>
+    </div>
+  </section>
+
+  <section class="story" id="s2">
+    <div class="story-inner">
+      <span class="eyebrow"><span class="tag">STATE 03 — MIDDAY</span></span>
+      <h2>Capture<br>more.</h2>
+      <p>Peak alignment. Peak output. The array holds a near-perfect angle to the sun overhead.</p>
+      <div class="stat-line">SOLAR GENERATION <b>42.5 kW</b> — ALIGNMENT <span class="ok">98%</span></div>
+    </div>
+  </section>
+
+  <section class="story right" id="s3">
+    <div class="story-inner">
+      <span class="eyebrow"><span class="tag">STATE 04 — ENERGY GENERATION</span></span>
+      <h2>Store<br>surplus.</h2>
+      <p>Captured energy is routed and balanced before it ever reaches a battery.</p>
+      <div class="stat-line">SOLAR PANEL <b>&rarr;</b> ENERGY BUS <b>&rarr;</b> SMART GRID</div>
+    </div>
+  </section>
+
+  <section class="story" id="s4">
+    <div class="story-inner">
+      <span class="eyebrow"><span class="tag">STATE 05 — AFTERNOON</span></span>
+      <p style="font-family:'Fraunces',serif; font-size:1.5rem; color:var(--lime); font-weight:600;">
+        Tracking continues without interruption.</p>
+    </div>
+  </section>
+
+  <section class="story right" id="s5">
+    <div class="story-inner">
+      <span class="eyebrow"><span class="tag">STATE 06 — SUNSET</span></span>
+      <h2>Protect what<br>matters.</h2>
+      <p>PV-01 continues tracking as light fades. Every reading logged for tomorrow's forecast.</p>
+      <div class="stat-line">18:00 SUNSET — OUTPUT <b>DECLINING</b></div>
+    </div>
+  </section>
+
+  <section class="story" id="s6" style="min-height:100vh;">
+    <div class="story-inner" style="max-width:640px;">
+      <span class="eyebrow"><span class="tag">STATE 07 — SMART GRID</span></span>
+      <h2 style="color:var(--rust-dark);">One system.<br>Every watt<br>accounted for.</h2>
+      <div class="flow-diagram" id="flowDiagram">
+        <div class="flow-node active">SOLAR</div><span class="flow-arrow">&rarr;</span>
+        <div class="flow-node">BATTERY</div><span class="flow-arrow">&rarr;</span>
+        <div class="flow-node">GRID</div><span class="flow-arrow">&rarr;</span>
+        <div class="flow-node">CRITICAL LOADS</div>
+      </div>
+      <button class="cta-btn" id="ctaBtn">Enter SolarGrid &rarr;</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>SOLARGRID — DIGITAL TWIN PROTOTYPE · SCROLL TO DRIVE THE SIMULATION</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var COLOR = {
+    rust: 0x5A2E25,
+    rustDark: 0x3A1E18,
+    clay: 0xB5543A,
+    olive: 0x6F7F5F,
+    lime: 0xF0E6D8
+  };
+
+  /* physical-world environment palette — independent of the brand UI palette above */
+  var ENV = {
+    SKY_HORIZON: '#CFEFFF',
+    SKY_UPPER: '#7EC8F5',
+    SKY_HORIZON_BRIGHT: '#E3F6FF',
+    SKY_UPPER_BRIGHT: '#8ED2F8',
+    GROUND_GREEN: '#6F8F55',
+    GROUND_LIGHT: '#89A86A',
+    GROUND_DARK: '#587345',
+    SUN_WARM: 0xFFF1B8,
+    HORIZON_LINE: 0x5C7A46,
+    ENERGY_GREEN: 0x4CAF6B
+  };
+
+  /* =========================================================
+     1. SCENE INITIALIZATION
+  ========================================================= */
+  var canvas = document.getElementById('webgl');
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(ENV.SKY_HORIZON);
+  scene.fog = new THREE.Fog(ENV.SKY_HORIZON, 20, 46);
+
+  var camera = new THREE.PerspectiveCamera(38, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.set(4.6, 2.5, 8.2);
+  camera.lookAt(0, 1.7, 0);
+
+  /* neutral daylight ambient — brand color stays out of the physical scene */
+  var ambient = new THREE.AmbientLight(0xfff2e0, 0.38);
+  scene.add(ambient);
+
+  var sunLight = new THREE.DirectionalLight(ENV.SUN_WARM, 1.1);
+  sunLight.position.set(-8, 3, 4);
+  sunLight.castShadow = true;
+  sunLight.shadow.mapSize.set(1536, 1536);
+  sunLight.shadow.camera.left = -8; sunLight.shadow.camera.right = 8;
+  sunLight.shadow.camera.top = 8; sunLight.shadow.camera.bottom = -8;
+  sunLight.shadow.camera.near = 1; sunLight.shadow.camera.far = 26;
+  sunLight.shadow.bias = -0.0015;
+  scene.add(sunLight, sunLight.target);
+
+  /* ---- sky dome: bright spring day, subtle horizon-blue -> upper-blue gradient ---- */
+  function makeSkyTexture(horizon, upper){
+    var c = document.createElement('canvas'); c.width = 8; c.height = 256;
+    var ctx = c.getContext('2d');
+    var g = ctx.createLinearGradient(0,256,0,0);
+    g.addColorStop(0, horizon); g.addColorStop(0.45, horizon); g.addColorStop(1, upper);
+    ctx.fillStyle = g; ctx.fillRect(0,0,8,256);
+    var tex = new THREE.CanvasTexture(c);
+    tex.encoding = THREE.sRGBEncoding;
+    return tex;
+  }
+  var skyGeo = new THREE.SphereGeometry(48, 24, 16);
+  var skyDawn = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({
+    map: makeSkyTexture(ENV.SKY_HORIZON, ENV.SKY_UPPER), side: THREE.BackSide, fog: false
+  }));
+  scene.add(skyDawn);
+  var skyMidday = new THREE.Mesh(skyGeo.clone(), new THREE.MeshBasicMaterial({
+    map: makeSkyTexture(ENV.SKY_HORIZON_BRIGHT, ENV.SKY_UPPER_BRIGHT), side: THREE.BackSide, fog: false, transparent: true, opacity: 0
+  }));
+  scene.add(skyMidday);
+
+  /* ---- distant horizon — low, muted green terrain line, nothing dominant ---- */
+  var terrain = new THREE.Mesh(
+    new THREE.PlaneGeometry(90, 3.4),
+    new THREE.MeshBasicMaterial({ color: ENV.HORIZON_LINE, fog: true })
+  );
+  terrain.position.set(0, 0.9, -38);
+  scene.add(terrain);
+
+  /* ---- ground: short maintained grass field, subtle procedural variation ---- */
+  function makeGroundTexture(){
+    var c = document.createElement('canvas'); c.width = c.height = 512;
+    var ctx = c.getContext('2d');
+    ctx.fillStyle = ENV.GROUND_GREEN; ctx.fillRect(0,0,512,512);
+    for (var m=0; m<16; m++){
+      var mx = Math.random()*512, my = Math.random()*512, mr = 60+Math.random()*90;
+      var mg = ctx.createRadialGradient(mx,my,0,mx,my,mr);
+      var tone = Math.random()>0.5 ? 'rgba(137,168,106,0.20)' : 'rgba(88,115,69,0.18)';
+      mg.addColorStop(0, tone); mg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(mx,my,mr,0,Math.PI*2); ctx.fill();
+    }
+    for (var i=0;i<500;i++){
+      var x = Math.random()*512, y = Math.random()*512;
+      ctx.fillStyle = Math.random()>0.5 ? 'rgba(137,168,106,0.14)' : 'rgba(88,115,69,0.12)';
+      ctx.fillRect(x,y,1.3,1.3);
+    }
+    var tex = new THREE.CanvasTexture(c);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(10,10);
+    tex.encoding = THREE.sRGBEncoding;
+    return tex;
+  }
+  var ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(90,90),
+    new THREE.MeshStandardMaterial({ map: makeGroundTexture(), roughness: 0.95, metalness: 0 })
+  );
+  ground.rotation.x = -Math.PI/2;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  /* ---- sparse grass tufts + one distant utility box (minimal, per spec) ---- */
+  function makeGrassTuft(){
+    var g = new THREE.Group();
+    var bladeMat = new THREE.MeshStandardMaterial({ color: 0x6f8f55, roughness: 0.9 });
+    for (var i=0;i<4;i++){
+      var blade = new THREE.Mesh(new THREE.ConeGeometry(0.015, 0.22+Math.random()*0.1, 4), bladeMat);
+      blade.position.set((Math.random()-0.5)*0.06, 0.1, (Math.random()-0.5)*0.06);
+      blade.rotation.z = (Math.random()-0.5)*0.5;
+      g.add(blade);
+    }
+    return g;
+  }
+  for (var gi=0; gi<7; gi++){
+    var tuft = makeGrassTuft();
+    var gang = Math.random()*Math.PI*2, grad = 1.4 + Math.random()*3.2;
+    tuft.position.set(Math.cos(gang)*grad, 0, Math.sin(gang)*grad);
+    scene.add(tuft);
+  }
+  var utilityBox = new THREE.Mesh(
+    new THREE.BoxGeometry(0.4,0.5,0.32),
+    new THREE.MeshStandardMaterial({ color: 0x555b52, roughness: 0.7, metalness: 0.2 })
+  );
+  utilityBox.position.set(-2.1, 0.25, 1.4);
+  utilityBox.castShadow = true; utilityBox.receiveShadow = true;
+  scene.add(utilityBox);
+
+  /* =========================================================
+     2. SUN SYSTEM — small believable disc, soft atmospheric glow
+  ========================================================= */
+  var sunMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(0.55, 24, 24),
+    new THREE.MeshBasicMaterial({ color: ENV.SUN_WARM, transparent: true, opacity: 1 })
+  );
+  scene.add(sunMesh);
+
+  function makeSunGlowTexture(){
+    var c = document.createElement('canvas'); c.width = c.height = 256;
+    var ctx = c.getContext('2d');
+    var g = ctx.createRadialGradient(128,128,0,128,128,128);
+    g.addColorStop(0, 'rgba(255,241,184,0.55)');
+    g.addColorStop(0.4, 'rgba(255,236,190,0.16)');
+    g.addColorStop(1, 'rgba(255,230,190,0)');
+    ctx.fillStyle = g; ctx.fillRect(0,0,256,256);
+    return new THREE.CanvasTexture(c);
+  }
+  var sunGlow = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: makeSunGlowTexture(), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false
+  }));
+  sunGlow.scale.set(3.2,3.2,1);
+  sunMesh.add(sunGlow);
+
+  /* =========================================================
+     3. SOLAR PANEL MODEL
+  ========================================================= */
+  var metalMat = new THREE.MeshStandardMaterial({ color: 0x3a3f45, metalness: 0.5, roughness: 0.55 }); // painted steel (motors/housings)
+  var darkMetalMat = new THREE.MeshStandardMaterial({ color: 0x4a4e52, metalness: 0.55, roughness: 0.5 }); // galvanized mast
+  var frameMat = new THREE.MeshStandardMaterial({ color: 0x8fa3b8, metalness: 0.75, roughness: 0.3 }); // brushed aluminum, cool blue-grey tone
+  var concreteMat = new THREE.MeshStandardMaterial({ color: 0x9a9186, roughness: 0.95, metalness: 0 });
+  var boltMat = new THREE.MeshStandardMaterial({ color: 0x2b2b2b, metalness: 0.6, roughness: 0.4 });
+  var oliveMat = new THREE.MeshStandardMaterial({ color: COLOR.olive, metalness: 0.3, roughness: 0.5 });
+
+  function makeCellTexture(){
+    var c = document.createElement('canvas'); c.width = 512; c.height = 320;
+    var ctx = c.getContext('2d');
+    ctx.fillStyle = '#0d2138'; ctx.fillRect(0,0,512,320);
+    var cols=10, rows=6, pad=4;
+    var cw = (512 - pad*(cols+1))/cols, ch = (320 - pad*(rows+1))/rows;
+    for (var r=0;r<rows;r++){
+      for (var col=0; col<cols; col++){
+        var x = pad+col*(cw+pad), y = pad+r*(ch+pad);
+        var grd = ctx.createLinearGradient(x,y,x+cw,y+ch);
+        grd.addColorStop(0,'#1c4468'); grd.addColorStop(1,'#0e2a44');
+        ctx.fillStyle = grd; ctx.fillRect(x,y,cw,ch);
+        ctx.strokeStyle = 'rgba(200,210,225,0.10)'; ctx.lineWidth = 1;
+        ctx.strokeRect(x+0.5,y+0.5,cw-1,ch-1);
+      }
+    }
+    var sheen = ctx.createLinearGradient(0,0,512,320);
+    sheen.addColorStop(0,'rgba(255,255,255,0.06)');
+    sheen.addColorStop(0.3,'rgba(255,255,255,0)');
+    ctx.fillStyle = sheen; ctx.fillRect(0,0,512,320);
+    var tex = new THREE.CanvasTexture(c);
+    tex.encoding = THREE.sRGBEncoding;
+    return tex;
+  }
+  var cellMat = new THREE.MeshStandardMaterial({
+    map: makeCellTexture(), metalness: 0.45, roughness: 0.18,
+    emissive: new THREE.Color(ENV.ENERGY_GREEN), emissiveIntensity: 0.02
+  });
+
+  var mount = new THREE.Group(); scene.add(mount);
+
+  /* fixed concrete foundation + bolts — does NOT rotate; only the head above it does */
+  var foundation = new THREE.Mesh(new THREE.CylinderGeometry(0.85,0.95,0.2,20), concreteMat);
+  foundation.position.y = 0.1;
+  foundation.receiveShadow = true; foundation.castShadow = true;
+  mount.add(foundation);
+  for (var b=0;b<8;b++){
+    var bang = (b/8)*Math.PI*2;
+    var bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,0.08,8), boltMat);
+    bolt.position.set(Math.cos(bang)*0.72, 0.2, Math.sin(bang)*0.72);
+    bolt.castShadow = true;
+    mount.add(bolt);
+  }
+  var controllerBox = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.3,0.16), metalMat);
+  controllerBox.position.set(0.62, 0.25, 0.5);
+  controllerBox.castShadow = true; controllerBox.receiveShadow = true;
+  mount.add(controllerBox);
+
+  var azimuthGroup = new THREE.Group(); mount.add(azimuthGroup);
+
+  var poleHeight = 3.3;
+  var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.09,0.13,poleHeight,12), darkMetalMat);
+  pole.position.y = poleHeight/2 + 0.16;
+  pole.castShadow = true;
+  azimuthGroup.add(pole);
+
+  var base = new THREE.Mesh(new THREE.CylinderGeometry(0.55,0.68,0.18,16), darkMetalMat);
+  base.position.y = 0.09;
+  base.castShadow = true; base.receiveShadow = true;
+  azimuthGroup.add(base);
+
+  var azimuthMotor = new THREE.Mesh(new THREE.BoxGeometry(0.42,0.26,0.42), metalMat);
+  azimuthMotor.position.y = 0.34;
+  azimuthMotor.castShadow = true;
+  azimuthGroup.add(azimuthMotor);
+
+  /* olive accent band on azimuth motor — physical "stable/optimal" indicator */
+  var azimuthBand = new THREE.Mesh(new THREE.BoxGeometry(0.44,0.05,0.44), oliveMat);
+  azimuthBand.position.y = 0.34;
+  azimuthGroup.add(azimuthBand);
+
+  var tiltPivot = new THREE.Group();
+  tiltPivot.position.y = poleHeight + 0.16;
+  azimuthGroup.add(tiltPivot);
+
+  var tiltMotor = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.32,0.36), metalMat);
+  tiltMotor.position.set(0,0,0.22);
+  tiltMotor.castShadow = true;
+  tiltPivot.add(tiltMotor);
+
+  var panelGroup = new THREE.Group();
+  panelGroup.rotation.x = -Math.PI/2; // baseline flat, facing up
+  tiltPivot.add(panelGroup);
+
+  var panelW = 3.2, panelH = 1.9, panelT = 0.08;
+  var frame = new THREE.Mesh(new THREE.BoxGeometry(panelW+0.1, panelH+0.1, panelT), frameMat);
+  frame.castShadow = true; frame.receiveShadow = true;
+  panelGroup.add(frame);
+
+  var cells = new THREE.Mesh(new THREE.PlaneGeometry(panelW-0.12, panelH-0.12), cellMat);
+  cells.position.z = panelT/2 + 0.006;
+  cells.castShadow = true;
+  panelGroup.add(cells);
+
+  /* green accent strip along the panel's lower edge — brightens with output */
+  var energyStripMat = new THREE.MeshStandardMaterial({
+    color: ENV.ENERGY_GREEN, emissive: new THREE.Color(ENV.ENERGY_GREEN), emissiveIntensity: 0.05, metalness: 0.1, roughness: 0.6
+  });
+  var energyStrip = new THREE.Mesh(new THREE.BoxGeometry(panelW, 0.05, 0.02), energyStripMat);
+  energyStrip.position.set(0, -panelH/2 - 0.02, panelT/2 + 0.01);
+  panelGroup.add(energyStrip);
+
+  /* =========================================================
+     4. ENERGY VISUALIZATION — flat dashed line, not a particle cloud
+  ========================================================= */
+  var DASH_COUNT = 10;
+  var dashMat = new THREE.MeshBasicMaterial({ color: ENV.ENERGY_GREEN, transparent: true, opacity: 0 });
+  var dashes = [];
+  var energyGroup = new THREE.Group();
+  energyGroup.position.set(0, poleHeight + 0.5, 0);
+  for (var i=0;i<DASH_COUNT;i++){
+    var dash = new THREE.Mesh(new THREE.BoxGeometry(0.09,0.16,0.09), dashMat);
+    dash.position.y = (i/DASH_COUNT) * 3.4;
+    energyGroup.add(dash);
+    dashes.push(dash);
+  }
+  scene.add(energyGroup);
+
+  /* =========================================================
+     5. RESIZE
+  ========================================================= */
+  function onResize(){
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+  window.addEventListener('resize', onResize);
+  onResize();
+
+  /* =========================================================
+     6. TRACKING CALCULATIONS / helpers
+  ========================================================= */
+  function lerp(a,b,t){ return a+(b-a)*t; }
+  function clamp(v,a,b){ return Math.max(a, Math.min(b,v)); }
+
+  var colorDawn = new THREE.Color(0xFFC97A);   // soft warm yellow / golden low-angle light
+  var colorMidday = new THREE.Color(0xFFF8E6); // clean bright overhead daylight
+  var tmpColor = new THREE.Color();
+  var bgDawn = new THREE.Color(0xD7EFFB);   // pale morning sky haze
+  var bgMidday = new THREE.Color(0x8FCBF2); // fuller bright spring-day blue
+  var bgTmp = new THREE.Color();
+
+  var current = { panAz:0, panTilt:60*Math.PI/180, energy:0, align:0 };
+
+  /* =========================================================
+     7. SCROLL CONTROLLER
+  ========================================================= */
+  var maxScroll = 1;
+  function computeMaxScroll(){ maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight); }
+  computeMaxScroll();
+  window.addEventListener('resize', computeMaxScroll);
+
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.story'));
+  var storyInners = sections.map(function(s){ return s.querySelector('.story-inner'); });
+
+  var STATE_LABELS = [
+    { t:0.00, label:'SUNRISE' },
+    { t:0.20, label:'MORNING' },
+    { t:0.50, label:'PEAK SOLAR' },
+    { t:0.60, label:'GENERATING' },
+    { t:0.75, label:'AFTERNOON' },
+    { t:0.90, label:'SUNSET' },
+    { t:0.98, label:'SMART GRID' }
+  ];
+  function stateLabelFor(p){
+    var out = STATE_LABELS[0].label;
+    for (var i=0;i<STATE_LABELS.length;i++){ if (p >= STATE_LABELS[i].t) out = STATE_LABELS[i].label; }
+    return out;
+  }
+
+  /* =========================================================
+     8. UI TELEMETRY
+  ========================================================= */
+  var telemetry = document.getElementById('telemetry');
+  var statusTag = document.getElementById('statusTag');
+  var revealed = false;
+
+  var tTrack = document.getElementById('tTrack'), tSun = document.getElementById('tSun'),
+      tPanel = document.getElementById('tPanel'), tAlt = document.getElementById('tAlt'),
+      tAlign = document.getElementById('tAlign'), tOut = document.getElementById('tOut'),
+      tagTime = document.getElementById('tagTime'), tagState = document.getElementById('tagState'),
+      flowDiagram = document.getElementById('flowDiagram');
+
+  function formatClock(dayProgress){
+    var totalMin = Math.round(lerp(6*60, 18*60, dayProgress));
+    var h = Math.floor(totalMin/60), m = totalMin%60;
+    return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;
+  }
+
+  function updateUI(progress, dayProgress, sunAzDeg, sunAltDeg){
+    if (!revealed && progress > 0.01){
+      telemetry.classList.add('visible');
+      statusTag.classList.add('visible');
+      revealed = true;
+    }
+    var panAzDeg = Math.round(current.panAz * 180/Math.PI);
+    var panTiltDeg = Math.round(current.panTilt * 180/Math.PI);
+    var alignPct = Math.round(current.align*100);
+    var outKw = (current.energy/100 * 42.5);
+
+    tTrack.textContent = progress > 0.02 && progress < 0.97 ? 'ACTIVE' : 'STANDBY';
+    tSun.textContent = sunAzDeg + '°';
+    tPanel.textContent = panAzDeg + '°';
+    tAlt.textContent = sunAltDeg + '°';
+    tAlign.textContent = alignPct + '%';
+    tAlign.className = 'v' + (alignPct >= 85 ? ' optimal' : '');
+    tOut.textContent = outKw.toFixed(1) + ' kW';
+
+    tagTime.textContent = formatClock(dayProgress);
+    tagState.textContent = stateLabelFor(progress);
+
+    if (progress > 0.95){
+      var nodes = flowDiagram.querySelectorAll('.flow-node');
+      var reveal = clamp((progress-0.95)/0.05, 0, 1);
+      var steps = Math.ceil(reveal * nodes.length);
+      nodes.forEach(function(n, idx){ n.classList.toggle('active', idx < steps); });
+    }
+
+    var vh = window.innerHeight, center = vh/2;
+    for (var i=0;i<sections.length;i++){
+      var rect = sections[i].getBoundingClientRect();
+      var dist = Math.abs((rect.top+rect.height/2) - center);
+      storyInners[i].classList.toggle('visible', dist < vh*0.62);
+    }
+  }
+
+  document.getElementById('ctaBtn').addEventListener('click', function(){
+    window.scrollTo({ top:0, behavior: reduceMotion ? 'auto':'smooth' });
+  });
+
+  /* subtle mouse parallax — never overrides scroll */
+  var mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', function(e){
+    mouseX = (e.clientX/window.innerWidth - 0.5);
+    mouseY = (e.clientY/window.innerHeight - 0.5);
+  });
+
+  /* =========================================================
+     9. ANIMATION LOOP (scene, camera, energy, tracking combined)
+  ========================================================= */
+  var damp = reduceMotion ? 1 : 0.08;
+
+  function animate(){
+    requestAnimationFrame(animate);
+
+    var progress = clamp(window.scrollY / maxScroll, 0, 1);
+    var dayProgress = clamp(progress/0.9, 0, 1);
+    var dayAngle = dayProgress * Math.PI;
+    var altNorm = Math.sin(dayAngle);
+
+    var R = 9;
+    var targetSunX = -R*Math.cos(dayAngle);
+    var targetSunY = 1 + altNorm*5.0;
+    var targetSunZ = -3.5;
+    sunMesh.position.x = lerp(sunMesh.position.x, targetSunX, damp);
+    sunMesh.position.y = lerp(sunMesh.position.y, targetSunY, damp);
+    sunMesh.position.z = lerp(sunMesh.position.z, targetSunZ, damp);
+
+    var sunFade = 1 - clamp((progress-0.93)/0.05, 0, 1);
+    sunMesh.material.opacity = sunFade;
+    sunGlow.material.opacity = sunFade;
+    sunMesh.visible = sunFade > 0.01;
+
+    sunLight.position.copy(sunMesh.position);
+    sunLight.target.position.set(0,1.6,0);
+
+    tmpColor.copy(colorDawn).lerp(colorMidday, altNorm);
+    sunLight.color.copy(tmpColor);
+    sunLight.intensity = lerp(0.5, 1.6, altNorm);
+    ambient.intensity = lerp(0.2, 0.34, altNorm);
+
+    skyMidday.material.opacity = altNorm * 0.9;
+
+    bgTmp.copy(bgDawn).lerp(bgMidday, altNorm);
+    scene.background.copy(bgTmp);
+    scene.fog.color.copy(bgTmp);
+
+    sunLight.shadow.radius = lerp(4, 1.4, altNorm); // long soft shadows at dawn/dusk, tighter at midday
+
+    var targetPanAz = (dayAngle - Math.PI/2) * 0.85;
+    var targetPanTilt = lerp(62,8,altNorm) * Math.PI/180;
+    current.panAz = lerp(current.panAz, targetPanAz, damp);
+    current.panTilt = lerp(current.panTilt, targetPanTilt, damp);
+    current.align = lerp(current.align, Math.pow(altNorm,1.3), damp);
+    current.energy = lerp(current.energy, Math.pow(altNorm,1.15)*100, damp);
+
+    azimuthGroup.rotation.y = current.panAz;
+    tiltPivot.rotation.x = current.panTilt;
+
+    /* physical indicators respond to state, not a floating HUD */
+    cellMat.emissiveIntensity = lerp(0.02, 0.32, current.energy/100);
+    energyStripMat.emissiveIntensity = lerp(0.05, 0.9, current.energy/100);
+    oliveMat.color.set(current.align > 0.8 ? COLOR.olive : 0x4a5240);
+
+    /* energy dashes rise in sequence, opacity tied to output */
+    var active = current.energy/100;
+    dashMat.opacity = active * 0.85;
+    for (var i=0;i<DASH_COUNT;i++){
+      var y = dashes[i].position.y + (reduceMotion?0.006:0.02);
+      if (y > 3.4) y = 0;
+      dashes[i].position.y = y;
+    }
+
+    /* restrained camera orbit + subtle parallax */
+    var camAngle = progress*0.5 - 0.55 + (reduceMotion?0:mouseX*0.04);
+    var camRadius = lerp(9.2, 11.5, clamp((progress-0.9)/0.1,0,1));
+    var camHeight = lerp(2.6, 3.6, progress) + (reduceMotion?0:mouseY*0.2);
+    camera.position.x = Math.sin(camAngle)*camRadius;
+    camera.position.z = Math.cos(camAngle)*camRadius;
+    camera.position.y = camHeight;
+    camera.lookAt(0,1.7,0);
+
+    var sunAzDeg = Math.round((dayAngle*180/Math.PI) - 90);
+    var sunAltDeg = Math.round(altNorm*62);
+    updateUI(progress, dayProgress, sunAzDeg, sunAltDeg);
+
+    renderer.render(scene, camera);
+  }
+
+  window.addEventListener('load', function(){
+    document.body.classList.add('ready');
+    computeMaxScroll();
+    animate();
+  });
+})();
+</script>
+</body>
+</html>
