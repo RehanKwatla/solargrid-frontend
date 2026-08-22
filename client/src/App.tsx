@@ -16,7 +16,7 @@ function Router() { return <DashboardLayout><Switch><Route path="/"><Redirect to
 export default function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="dark">
+      <ThemeProvider defaultTheme="light" switchable={true}>
         <SolarTrackingProvider>
           <TooltipProvider>
             <Toaster theme="dark" position="bottom-right" />

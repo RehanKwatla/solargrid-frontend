@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { EventStream } from "@/components/alerts/EventStream";
 import { alerts, facility } from "@/data/mockData";
+import { cn } from "@/lib/utils";
 
 export default function Alerts() {
   const [acknowledgedIds, setAcknowledgedIds] = useState<number[]>([]);
@@ -12,24 +13,30 @@ export default function Alerts() {
   const info = alerts.filter((a) => a.state === "healthy").length;
 
   return (
-    <div className="dashboard-canvas px-5 py-6 sm:px-7 lg:px-8 lg:py-8">
-      <header>
-        <p className="facility-location">{facility.location}</p>
-        <h1 className="facility-name mt-1">System events</h1>
-        <p className="mt-2 text-sm text-[#8a9692]">
-          Operational event log for {facility.name}.
-        </p>
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-5xl mx-auto">
+      <header className="flex flex-wrap items-end justify-between gap-4 pb-4">
+        <div>
+          <div className="inline-flex items-center rounded-full bg-surface-soft px-3 py-1 text-xs font-semibold text-text-secondary mb-4">
+            {facility.location}
+          </div>
+          <h1 className="heading-xl text-foreground">
+            System events
+          </h1>
+          <p className="mt-2 text-sm text-text-secondary">
+            Operational event log for {facility.name}.
+          </p>
+        </div>
       </header>
 
-      {/* Severity summary — inline, not cards */}
-      <section className="mt-8 flex flex-wrap gap-8 border-b border-white/[.06] pb-6">
-        <SeverityCount label="Critical" count={critical} color="text-[#c47060]" />
-        <SeverityCount label="Warning" count={warnings} color="text-[#b89860]" />
-        <SeverityCount label="Info" count={info} color="text-[#6d7874]" />
+      {/* Severity summary */}
+      <section className="flex flex-wrap gap-4 pb-6">
+        <SeverityCount label="Critical" count={critical} colorClass="text-danger bg-danger/10" />
+        <SeverityCount label="Warning" count={warnings} colorClass="text-warning bg-warning/10" />
+        <SeverityCount label="Info" count={info} colorClass="text-healthy bg-healthy/10" />
       </section>
 
       {/* Event stream */}
-      <section className="mt-6">
+      <section className="rounded-2xl border border-border bg-surface shadow-sm p-6">
         <EventStream
           items={alerts}
           acknowledgedIds={acknowledgedIds}
@@ -43,16 +50,18 @@ export default function Alerts() {
 function SeverityCount({
   label,
   count,
-  color,
+  colorClass,
 }: {
   label: string;
   count: number;
-  color: string;
+  colorClass: string;
 }) {
   return (
-    <div>
-      <p className={`text-3xl font-semibold tracking-tight ${color}`}>{count}</p>
-      <p className="mt-1 text-sm text-[#8a9692]">{label}</p>
+    <div className="rounded-xl border border-border bg-surface shadow-sm p-5 min-w-[140px] flex-1 sm:flex-none flex items-center justify-between sm:flex-col sm:items-start">
+      <p className="text-sm font-semibold text-text-secondary">{label}</p>
+      <div className={cn("mt-2 inline-flex items-center justify-center rounded-lg px-3 py-1 text-2xl font-bold", colorClass)}>
+        {count}
+      </div>
     </div>
   );
 }

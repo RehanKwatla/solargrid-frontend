@@ -26,69 +26,70 @@ export function SolarTrackingControls() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <div className="flex items-center justify-between gap-2">
-          <p className="section-label">Time of day</p>
-          <span className="font-mono text-xs text-[#d8ff3e]">{formattedTime}</span>
+      <div className="flex flex-col gap-4">
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-semibold text-foreground">Time of day</span>
+            <span className="inline-flex items-center rounded-md bg-accent/10 px-2 py-1 text-xs font-semibold text-accent">
+              {formattedTime}
+            </span>
+          </div>
+          
+          <div className="flex gap-2">
+            {PRESETS.map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setPreset(id)}
+                className={cn(
+                  "flex-1 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
+                  activePreset === id
+                    ? "bg-accent text-primary-foreground"
+                    : "bg-surface border border-border text-text-secondary hover:bg-surface-soft hover:text-foreground"
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-5">
+             <div className="flex items-center justify-between text-xs font-medium text-text-secondary mb-3">
+               <span>{String(SIMULATION.sunriseHour).padStart(2, "0")}:00</span>
+               <span>{String(SIMULATION.sunsetHour).padStart(2, "0")}:00</span>
+             </div>
+             <Slider
+               min={SIMULATION.sunriseHour}
+               max={SIMULATION.sunsetHour}
+               step={0.05}
+               value={[Math.min(Math.max(simulation.timeOfDay, SIMULATION.sunriseHour), SIMULATION.sunsetHour)]}
+               onValueChange={([value]) => setTimeOfDay(value)}
+               className="py-1"
+             />
+          </div>
         </div>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {PRESETS.map(({ id, label }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setPreset(id)}
-              className={cn(
-                "rounded-lg border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.1em] transition-colors",
-                activePreset === id
-                  ? "border-[#d8ff3e]/50 bg-[#d8ff3e]/15 text-[#d8ff3e]"
-                  : "border-white/10 bg-white/[.03] text-[#9aa5a0] hover:border-white/20 hover:text-white"
-              )}
-            >
-              {label}
+
+        <div className="flex gap-2 mt-2">
+          {simulation.isPlaying ? (
+            <button type="button" onClick={pause} className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-border bg-surface text-foreground px-4 py-2.5 text-sm font-semibold shadow-sm transition-colors hover:bg-surface-soft">
+              <Pause size={16} />
+              Pause
             </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[10px] text-[#7d8784]">
-            {String(SIMULATION.sunriseHour).padStart(2, "0")}:00
-          </span>
-          <span className="font-mono text-[10px] text-[#7d8784]">
-            {String(SIMULATION.sunsetHour).padStart(2, "0")}:00
-          </span>
-        </div>
-        <Slider
-          className="mt-2"
-          min={SIMULATION.sunriseHour}
-          max={SIMULATION.sunsetHour}
-          step={0.05}
-          value={[Math.min(Math.max(simulation.timeOfDay, SIMULATION.sunriseHour), SIMULATION.sunsetHour)]}
-          onValueChange={([value]) => setTimeOfDay(value)}
-        />
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {simulation.isPlaying ? (
-          <button type="button" onClick={pause} className="action-button">
-            <Pause size={14} />
-            Pause
+          ) : (
+            <button type="button" onClick={play} className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-healthy text-white px-4 py-2.5 text-sm font-semibold shadow-sm transition-colors hover:bg-healthy/90">
+              <Play size={16} />
+              Play Day
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={reset}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-text-secondary shadow-sm transition-colors hover:bg-surface-soft hover:text-foreground"
+            aria-label="Reset simulation"
+          >
+            <RotateCcw size={16} />
           </button>
-        ) : (
-          <button type="button" onClick={play} className="action-button">
-            <Play size={14} />
-            Play day simulation
-          </button>
-        )}
-        <button
-          type="button"
-          onClick={reset}
-          className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[.03] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.1em] text-[#aeb8b4] transition-colors hover:border-white/20 hover:text-white"
-        >
-          <RotateCcw size={14} />
-          Reset
-        </button>
+        </div>
       </div>
     </div>
   );

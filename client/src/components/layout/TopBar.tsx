@@ -1,10 +1,11 @@
-import { Bell, Clock, Menu, Search } from "lucide-react";
+import { Bell, Clock, Menu, Search, Moon, Sun, User } from "lucide-react";
 import { useLocation } from "wouter";
 import { useSolarTracking } from "@/contexts/SolarTrackingContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { facility } from "@/data/mockData";
 
 const titles: Record<string, string> = {
-  "/overview": "Control",
+  "/overview": "Energy overview",
   "/energy": "Energy",
   "/intelligence": "Intelligence",
   "/alerts": "Events",
@@ -14,51 +15,79 @@ const titles: Record<string, string> = {
 export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
   const [location] = useLocation();
   const { formattedTime } = useSolarTracking();
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-20 flex h-[60px] items-center justify-between border-b border-white/[0.06] bg-[#0b1011]/92 px-5 backdrop-blur-xl sm:px-7 lg:px-8">
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-20 flex h-[72px] items-center justify-between border-b border-border bg-background/95 backdrop-blur px-5 sm:px-7 lg:px-8 transition-colors duration-300">
+      <div className="flex items-center gap-4">
         <button
           onClick={onMenuClick}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/[.08] text-[#8a9692] lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-foreground hover:bg-surface-soft transition-colors lg:hidden"
           aria-label="Open navigation"
         >
-          <Menu size={17} />
+          <Menu size={20} />
         </button>
         <div>
-          <p className="hidden text-sm font-medium text-[#e7ece9] sm:block">
-            {titles[location] ?? "Control"}
+          <div className="hidden items-center gap-2 text-sm text-text-secondary sm:flex">
+            <span>SolarGrid</span>
+            <span>/</span>
+            <span>{facility.name}</span>
+          </div>
+          <p className="font-sans text-lg font-semibold text-foreground sm:mt-1">
+            {titles[location] ?? "Overview"}
           </p>
-          <p className="facility-location sm:hidden">{facility.name}</p>
         </div>
       </div>
 
-      <div className="hidden items-center gap-2 sm:flex">
-        <span className="text-sm text-[#8a9692]">{facility.name}</span>
-        <span className="text-[#4a5450]">·</span>
-        <span className="facility-location">{facility.location}</span>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <div className="hidden items-center gap-1.5 sm:flex">
-          <Clock size={12} className="text-[#6d7874]" />
-          <span className="font-mono text-[11px] text-[#8a9692]">{formattedTime}</span>
-          <span className="system-online ml-1">Live</span>
+      <div className="flex items-center gap-3 sm:gap-6">
+        <div className="hidden items-center gap-2 sm:flex">
+          <Clock size={16} className="text-text-secondary" />
+          <span className="font-sans text-sm font-medium text-text-primary">
+            {formattedTime}
+          </span>
+          <span className="ml-2 flex items-center gap-1.5 rounded-full bg-surface-soft px-2.5 py-1 text-xs font-medium text-success">
+            <span className="h-1.5 w-1.5 rounded-full bg-success"></span>
+            System Online
+          </span>
         </div>
-        <button
-          className="hidden h-9 items-center gap-2 rounded-lg border border-white/[.08] px-3 font-mono text-[10px] text-[#6d7874] transition hover:border-white/[.14] hover:text-[#e7ece9] md:flex"
-          aria-label="Search assets"
-        >
-          <Search size={14} />
-          Search
-        </button>
-        <button
-          className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-white/[.08] text-[#8a9692] transition hover:text-[#e7ece9]"
-          aria-label="Events"
-        >
-          <Bell size={16} />
-          <i className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#c47060]" />
-        </button>
+        
+        <div className="h-6 w-px bg-border hidden sm:block"></div>
+
+        <div className="flex items-center gap-2">
+          <button
+            className="flex h-10 w-10 items-center justify-center rounded-full text-text-secondary hover:bg-surface-soft hover:text-foreground transition-colors"
+            aria-label="Search"
+          >
+            <Search size={18} />
+          </button>
+          
+          <button
+            className="relative flex h-10 w-10 items-center justify-center rounded-full text-text-secondary hover:bg-surface-soft hover:text-foreground transition-colors"
+            aria-label="Notifications"
+          >
+            <Bell size={18} />
+            <span className="absolute top-2 right-2.5 flex h-2 w-2 rounded-full bg-danger"></span>
+          </button>
+
+          {toggleTheme && (
+            <button
+              onClick={toggleTheme}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-text-secondary hover:bg-surface-soft hover:text-foreground transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
+          )}
+
+          <div className="h-6 w-px bg-border mx-1"></div>
+
+          <button
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-soft text-primary hover:bg-primary/10 transition-colors"
+            aria-label="User profile"
+          >
+            <User size={18} />
+          </button>
+        </div>
       </div>
     </header>
   );

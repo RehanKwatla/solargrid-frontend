@@ -22,26 +22,28 @@ export function SolarTrackingStats() {
 
   return (
     <div className="flex h-full flex-col">
-      <p className="asset-id">Telemetry</p>
+      <h3 className="text-lg font-semibold text-foreground mb-4">
+        Telemetry
+      </h3>
 
-      <dl className="mt-4 flex-1 space-y-0">
+      <dl className="flex-1 flex flex-col justify-center space-y-4">
         {rows.map(({ label, key, unit, highlight, isStatus }) => {
           const value = simulation[key];
           return (
             <div
               key={key}
-              className="flex items-center justify-between gap-4 border-b border-white/[.05] py-3 last:border-0"
+              className="flex items-center justify-between"
             >
-              <dt className="text-sm text-[#8a9692]">{label}</dt>
+              <dt className="text-sm font-medium text-text-secondary">{label}</dt>
               <dd
                 className={cn(
-                  "font-mono text-sm tabular-nums",
-                  highlight || isStatus ? "text-[#c8e64a]" : "text-[#e7ece9]"
+                  "text-sm font-semibold tabular-nums",
+                  highlight || isStatus ? "text-accent" : "text-foreground"
                 )}
               >
                 {value}
                 {unit && (
-                  <span className="ml-0.5 text-[10px] text-[#6d7874]">{unit}</span>
+                  <span className="ml-0.5 text-text-secondary font-medium">{unit}</span>
                 )}
               </dd>
             </div>

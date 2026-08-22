@@ -21,48 +21,45 @@ export function MetricBlock({
 }) {
   const accent =
     state === "healthy"
-      ? "text-[#d8ff3e]"
+      ? "text-healthy"
       : state === "watch"
-        ? "text-[#f1bf70]"
+        ? "text-warning"
         : state === "critical"
-          ? "text-[#ff6b6b]"
-          : "text-[#aeb8b4]";
+          ? "text-danger"
+          : "text-text-secondary";
 
   const iconBg =
     state === "healthy"
-      ? "bg-[#d8ff3e]/8 border-[#d8ff3e]/20"
+      ? "bg-healthy/10 text-healthy"
       : state === "watch"
-        ? "bg-[#f1bf70]/8 border-[#f1bf70]/20"
+        ? "bg-warning/10 text-warning"
         : state === "critical"
-          ? "bg-[#ff6b6b]/8 border-[#ff6b6b]/20"
-          : "bg-white/[.04] border-white/[.1]";
+          ? "bg-danger/10 text-danger"
+          : "bg-surface-soft text-text-secondary";
 
   return (
-    <article className="metric-block operational-panel relative overflow-hidden p-4 sm:p-5">
-      {/* Subtle top accent line */}
-      <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/[.06] to-transparent" />
-
+    <article className="rounded-xl border border-border bg-surface p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
       <div className="flex items-start justify-between gap-2">
-        <p className="section-label">{label}</p>
+        <p className="text-sm font-semibold text-text-secondary">{label}</p>
         {Icon && (
-          <span className={cn("inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border", iconBg)}>
-            <Icon size={14} className={accent} />
+          <span className={cn("inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg", iconBg)}>
+            <Icon size={16} />
           </span>
         )}
       </div>
 
-      <div className="mt-2.5 flex items-baseline gap-1.5">
-        <span className="kpi-value">{value}</span>
+      <div className="mt-3 flex items-baseline gap-1.5">
+        <span className="text-3xl font-bold text-foreground tracking-tight">{value}</span>
         {unit && (
-          <span className="font-mono text-[11px] text-[#9aa5a0]">{unit}</span>
+          <span className="text-sm font-medium text-text-secondary">{unit}</span>
         )}
       </div>
 
-      <div className="mt-2.5 flex items-center justify-between gap-2">
-        <span className={cn("font-mono text-[10px] uppercase tracking-[0.1em]", accent)}>
+      <div className="mt-4 flex items-center justify-between gap-2 pt-3 border-t border-border">
+        <span className={cn("text-xs font-semibold", accent)}>
           {change}
         </span>
-        <span className="text-xs text-[#7d8784]">{note}</span>
+        <span className="text-xs text-text-secondary">{note}</span>
       </div>
     </article>
   );
