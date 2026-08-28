@@ -90,4 +90,18 @@
   .datum-rule::before { content: ""; position: absolute; left: 0; top: 0; width: 36px; height: 2px; background: var(--accent); }
   .technical-button { border: 1px solid var(--border-color); border-radius: 4px; background: var(--surface); transition: background-color .16s ease, border-color .16s ease, color .16s ease; }
   .technical-button:hover { background: var(--surface-soft); border-color: var(--accent); }
+
+  .dashboard-shell { position: relative; isolation: isolate; overflow: clip; }
+  .dashboard-energy-field { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .82; }
+  .dashboard-energy-field__strands { position: sticky; top: 0; height: 100vh; max-height: 100vh; }
+
+  @media (max-width: 1023px) {
+    .dashboard-energy-field { opacity: .56; }
+    .dashboard-energy-field__strands { height: 78vh; }
+  }
+
+  @media (max-width: 640px) {
+    .dashboard-energy-field { opacity: .38; }
+    .dashboard-energy-field__strands { height: 62vh; }
+  }
 }

@@ -1,5 +1,25 @@
 # Active Repository Tasks
 
+## Charcoal Light Theme — In Progress
+
+- [x] Replace only light-theme semantic color tokens with the approved charcoal, limestone, olive, and terracotta palette.
+- [x] Retune light-mode chart and tooltip colors that bypass semantic tokens; leave existing dark-mode branches unchanged.
+- [x] Visually verify light and dark modes, then run typecheck and production build.
+- [x] Record the palette decision and verification in `memory.md`.
+
+## Locked Version 4 Intro Adoption — Complete
+
+- [x] Replace the served root intro with an exact copy of approved Version 4.
+- [x] Keep dashboard entry handling outside the locked Version 4 source.
+- [x] Verify source identity and the root-to-dashboard flow, then update memory.
+
+## Shared Dashboard Energy Field — Complete
+
+- [x] Add one OGL-based Strands component and a dashboard-level background host.
+- [x] Tune the shared layer for restrained SolarGrid dark and light palettes, reduced motion, and responsive density.
+- [x] Verify the dashboard shell visually and run typecheck and production build.
+- [x] Record the implementation and verification in `memory.md`.
+
 ## Natural SolarGrid Design Refinement — Complete
 
 - [x] Audit the current route shell, tracker, charts, and visual system against the required Natural Web Design guidance.
