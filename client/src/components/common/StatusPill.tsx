@@ -3,10 +3,10 @@ import type { HealthState } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 
 const styles: Record<HealthState, string> = {
-  healthy: "border-[#d8ff3e]/30 bg-[#d8ff3e]/10 text-[#d8ff3e]",
-  watch: "border-[#f1bf70]/30 bg-[#f1bf70]/10 text-[#f1bf70]",
-  critical: "border-[#fa856e]/30 bg-[#fa856e]/10 text-[#fa856e]",
-  neutral: "border-white/15 bg-white/[.04] text-[#aeb8b4]",
+  healthy: "pill-healthy",
+  watch: "pill-warning",
+  critical: "pill-danger",
+  neutral: "pill-muted",
 };
 
 export function StatusPill({
@@ -21,15 +21,21 @@ export function StatusPill({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em]",
+        "pill",
         styles[state],
         className
       )}
     >
-      {state === "healthy" && <i className="live-dot" />}
-      {state === "critical" && <i className="h-1.5 w-1.5 rounded-full bg-[#fa856e] animate-pulse" />}
-      {state === "watch" && <i className="h-1.5 w-1.5 rounded-full bg-[#f1bf70]" />}
+      <span
+        className={cn(
+          "status-dot",
+          state === "healthy" && "healthy pulse",
+          state === "watch" && "warning",
+          state === "critical" && "critical"
+        )}
+      />
       {children}
     </span>
   );
 }
+

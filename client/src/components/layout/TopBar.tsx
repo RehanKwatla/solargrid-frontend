@@ -18,74 +18,74 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-20 flex h-[72px] items-center justify-between border-b border-border bg-background/95 backdrop-blur px-5 sm:px-7 lg:px-8 transition-colors duration-300">
-      <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-20 flex h-[60px] w-full max-w-full min-w-0 items-center justify-between border-b border-border bg-background/95 backdrop-blur px-3 sm:px-5 lg:px-6 xl:px-8 transition-colors duration-200 gap-2">
+      <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-shrink-0">
         <button
           onClick={onMenuClick}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-foreground hover:bg-surface-soft transition-colors lg:hidden"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-soft hover:text-foreground transition-colors lg:hidden"
           aria-label="Open navigation"
         >
-          <Menu size={20} />
+          <Menu size={19} />
         </button>
-        <div>
-          <div className="hidden items-center gap-2 text-sm text-text-secondary sm:flex">
-            <span>SolarGrid</span>
-            <span>/</span>
-            <span>{facility.name}</span>
+        <div className="min-w-0">
+          <div className="hidden items-center gap-1.5 text-[0.72rem] text-text-tertiary sm:flex min-w-0">
+            <span className="shrink-0 font-medium">SolarGrid</span>
+            <span className="shrink-0">/</span>
+            <span className="truncate font-medium">{facility.name}</span>
           </div>
-          <p className="font-sans text-lg font-semibold text-foreground sm:mt-1">
+          <p className="font-sans text-[0.95rem] font-semibold text-foreground sm:mt-0.5 truncate leading-tight">
             {titles[location] ?? "Overview"}
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 sm:gap-6">
-        <div className="hidden items-center gap-2 sm:flex">
-          <Clock size={16} className="text-text-secondary" />
-          <span className="font-sans text-sm font-medium text-text-primary">
+      <div className="flex items-center gap-1.5 sm:gap-3 lg:gap-5 flex-shrink-0 min-w-0">
+        <div className="hidden items-center gap-2 sm:flex min-w-0">
+          <Clock size={14} className="text-text-tertiary shrink-0" />
+          <span className="font-mono text-[0.75rem] font-medium text-text-secondary shrink-0 whitespace-nowrap tabular-nums">
             {formattedTime}
           </span>
-          <span className="ml-2 flex items-center gap-1.5 rounded-full bg-surface-soft px-2.5 py-1 text-xs font-medium text-success">
-            <span className="h-1.5 w-1.5 rounded-full bg-success"></span>
-            System Online
+          <span className="ml-1 flex items-center gap-1.5 rounded-full bg-[var(--healthy-bg)] px-2 py-0.5 text-[0.68rem] font-medium text-[var(--healthy)] shrink-0 whitespace-nowrap border border-[var(--healthy-ring)]/20">
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--healthy)] shrink-0"></span>
+            <span className="hidden sm:inline">System Online</span>
           </span>
         </div>
         
-        <div className="h-6 w-px bg-border hidden sm:block"></div>
+        <div className="h-5 w-px bg-border hidden sm:block shrink-0"></div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-0.5 sm:gap-1.5 shrink-0">
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-full text-text-secondary hover:bg-surface-soft hover:text-foreground transition-colors"
+            className="hidden sm:flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-text-tertiary hover:bg-surface-soft hover:text-foreground transition-colors"
             aria-label="Search"
           >
-            <Search size={18} />
+            <Search size={16} />
           </button>
           
           <button
-            className="relative flex h-10 w-10 items-center justify-center rounded-full text-text-secondary hover:bg-surface-soft hover:text-foreground transition-colors"
+            className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-text-tertiary hover:bg-surface-soft hover:text-foreground transition-colors"
             aria-label="Notifications"
           >
-            <Bell size={18} />
-            <span className="absolute top-2 right-2.5 flex h-2 w-2 rounded-full bg-danger"></span>
+            <Bell size={16} />
+            <span className="absolute top-1.5 right-1.5 flex h-[6px] w-[6px] rounded-full bg-danger shrink-0 ring-2 ring-background"></span>
           </button>
 
           {toggleTheme && (
             <button
               onClick={toggleTheme}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-text-secondary hover:bg-surface-soft hover:text-foreground transition-colors"
+              className="hidden sm:flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-text-tertiary hover:bg-surface-soft hover:text-foreground transition-colors"
               aria-label="Toggle theme"
             >
-              {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+              {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
             </button>
           )}
 
-          <div className="h-6 w-px bg-border mx-1"></div>
+          <div className="h-4 w-px bg-border mx-0.5 sm:mx-1 shrink-0 hidden sm:block"></div>
 
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-soft text-primary hover:bg-primary/10 transition-colors"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-soft text-text-tertiary hover:bg-accent/10 hover:text-foreground transition-colors"
             aria-label="User profile"
           >
-            <User size={18} />
+            <User size={16} />
           </button>
         </div>
       </div>

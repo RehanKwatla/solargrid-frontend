@@ -64,6 +64,23 @@
 - [x] Enhance Intelligence page: forecast cards with distinct border colors (solar=lime, demand=amber), tier flow visualization, improved tier dispatch cards.
 - [x] Run typecheck (`tsc --noEmit`) and production build (`vite build`) — both pass.
 
+## Dashboard Responsive Layout & Overflow Fix — Complete
+
+- [x] Audit root layout: html, body, #root, dashboard-shell, main content, sidebar width constraints
+- [x] Fix viewport containers: add width:100%, max-width:100%, min-width:0, box-sizing:border-box to root elements
+- [x] Fix Overview.tsx grid blowout: replace bare `Xfr` columns with `minmax(0,Xfr)` in all 4 responsive section grids
+- [x] Remove fixed max-w-[1440px] overview container that ignored sidebar offset
+- [x] Rewrite SolarTrackingSection internal layout: replace fixed `2xl:w-72 shrink-0` flex row with responsive grid `minmax(0,1.15fr) minmax(260px,0.85fr)`, break earlier at xl breakpoint
+- [x] Fix time-of-day preset controls: add flex-wrap + responsive min-width (50% below sm), shrink padding; prevent Night button clipping and horizontal overflow
+- [x] Fix PowerFlow diagram: replace fixed `px-10/px-16/px-32` padding with responsive steps, replace fixed `w-48` node cards with flexible `flex-1 max-w` sizing
+- [x] Fix EnergyMetrics grid: add minmax() columns, responsive padding, truncation and whitespace handling for hero value and supporting metric cells
+- [x] Fix TopBar: reduce padding, tighten gaps, hide secondary actions below breakpoints, add truncation and shrink-0 on static labels
+- [x] Harden AppSidebar: add max-w constraints and overflow-x-hidden
+- [x] Run `tsc --noEmit` → PASS (zero errors)
+- [x] Run `vite build` → PASS (completed successfully with existing pre-existing warnings only)
+- [x] Run GetDiagnostics → PASS (empty array)
+- [x] Confirm intro page / SolarGrid 3D animation untouched (solargrid-intro.html and SolarGridIntro.tsx unchanged)
+
 ### Remaining weaknesses / follow-up
 
 - [ ] No real telemetry integration — all data is mock. When live data arrives, the SolarTrackingContext and api.ts service seams are ready.

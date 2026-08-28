@@ -25,26 +25,26 @@ export function SolarTrackingControls() {
   })();
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-col gap-4">
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-semibold text-foreground">Time of day</span>
-            <span className="inline-flex items-center rounded-md bg-accent/10 px-2 py-1 text-xs font-semibold text-accent">
+    <div className="space-y-4 w-full min-w-0">
+      <div className="flex flex-col gap-3.5 w-full min-w-0">
+        <div className="w-full min-w-0">
+          <div className="flex items-center justify-between mb-2.5 w-full min-w-0 gap-2">
+            <span className="text-[0.84rem] font-semibold text-foreground shrink-0">Time of day</span>
+            <span className="inline-flex items-center rounded-md bg-[var(--accent-bg)] px-2 py-0.5 text-[0.72rem] font-semibold text-[var(--accent)] shrink-0 whitespace-nowrap tabular-nums">
               {formattedTime}
             </span>
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-1.5 w-full min-w-0">
             {PRESETS.map(({ id, label }) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => setPreset(id)}
                 className={cn(
-                  "flex-1 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
+                  "flex-1 min-w-[calc(50%-3px)] sm:min-w-0 rounded-md px-2 sm:px-3 py-1.5 text-[0.72rem] font-semibold transition-colors whitespace-nowrap",
                   activePreset === id
-                    ? "bg-accent text-primary-foreground"
+                    ? "bg-[var(--healthy-bg)] text-[var(--healthy)] border border-[var(--healthy-ring)]/30"
                     : "bg-surface border border-border text-text-secondary hover:bg-surface-soft hover:text-foreground"
                 )}
               >
@@ -53,10 +53,10 @@ export function SolarTrackingControls() {
             ))}
           </div>
 
-          <div className="mt-5">
-             <div className="flex items-center justify-between text-xs font-medium text-text-secondary mb-3">
-               <span>{String(SIMULATION.sunriseHour).padStart(2, "0")}:00</span>
-               <span>{String(SIMULATION.sunsetHour).padStart(2, "0")}:00</span>
+          <div className="mt-4 w-full min-w-0">
+             <div className="flex items-center justify-between text-text-tertiary mb-2 w-full min-w-0">
+               <span className="font-mono text-[9px] font-medium tracking-wide shrink-0">{String(SIMULATION.sunriseHour).padStart(2, "0")}:00</span>
+               <span className="font-mono text-[9px] font-medium tracking-wide shrink-0">{String(SIMULATION.sunsetHour).padStart(2, "0")}:00</span>
              </div>
              <Slider
                min={SIMULATION.sunriseHour}
@@ -64,30 +64,30 @@ export function SolarTrackingControls() {
                step={0.05}
                value={[Math.min(Math.max(simulation.timeOfDay, SIMULATION.sunriseHour), SIMULATION.sunsetHour)]}
                onValueChange={([value]) => setTimeOfDay(value)}
-               className="py-1"
+               className="py-1 w-full min-w-0"
              />
           </div>
         </div>
 
-        <div className="flex gap-2 mt-2">
+        <div className="flex gap-2 w-full min-w-0">
           {simulation.isPlaying ? (
-            <button type="button" onClick={pause} className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-border bg-surface text-foreground px-4 py-2.5 text-sm font-semibold shadow-sm transition-colors hover:bg-surface-soft">
-              <Pause size={16} />
+            <button type="button" onClick={pause} className="flex-1 min-w-0 h-9 flex items-center justify-center gap-2 rounded-md border border-border bg-surface text-foreground px-3 sm:px-4 text-[0.81rem] font-semibold transition-colors hover:bg-surface-soft whitespace-nowrap">
+              <Pause size={14} className="shrink-0" />
               Pause
             </button>
           ) : (
-            <button type="button" onClick={play} className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-healthy text-white px-4 py-2.5 text-sm font-semibold shadow-sm transition-colors hover:bg-healthy/90">
-              <Play size={16} />
+            <button type="button" onClick={play} className="flex-1 min-w-0 h-9 flex items-center justify-center gap-2 rounded-md bg-accent px-3 sm:px-4 text-[0.81rem] font-semibold transition-colors hover:opacity-90 whitespace-nowrap" style={{ color: "#0b1205" }}>
+              <Play size={14} className="shrink-0" />
               Play Day
             </button>
           )}
           <button
             type="button"
             onClick={reset}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-text-secondary shadow-sm transition-colors hover:bg-surface-soft hover:text-foreground"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-text-tertiary transition-colors hover:bg-surface-soft hover:text-foreground hover:border-border-strong"
             aria-label="Reset simulation"
           >
-            <RotateCcw size={16} />
+            <RotateCcw size={14} />
           </button>
         </div>
       </div>

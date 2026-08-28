@@ -21,30 +21,21 @@ export function SolarTrackingStats() {
   const { simulation } = useSolarTracking();
 
   return (
-    <div className="flex h-full flex-col">
-      <h3 className="text-lg font-semibold text-foreground mb-4">
-        Telemetry
-      </h3>
+    <div className="flex h-full w-full min-w-0 flex-col">
+      <div className="mb-3">
+        <span className="pill pill-muted !text-[0.6rem]">TELEMETRY · TRACKER-01</span>
+      </div>
 
-      <dl className="flex-1 flex flex-col justify-center space-y-4">
-        {rows.map(({ label, key, unit, highlight, isStatus }) => {
+      <dl className="flex-1 flex flex-col gap-0 w-full min-w-0">
+        {rows.map(({ label, key, unit, highlight, isStatus }, i) => {
           const value = simulation[key];
+          const shouldAccent = highlight || isStatus;
           return (
-            <div
-              key={key}
-              className="flex items-center justify-between"
-            >
-              <dt className="text-sm font-medium text-text-secondary">{label}</dt>
-              <dd
-                className={cn(
-                  "text-sm font-semibold tabular-nums",
-                  highlight || isStatus ? "text-accent" : "text-foreground"
-                )}
-              >
+            <div key={key} className={cn("telemetry-row py-2", i < rows.length - 1 && "border-b border-border/50")}>
+              <dt className="label !text-[0.78rem]">{label}</dt>
+              <dd className={cn("value !text-[0.84rem]", shouldAccent && "accent")}>
                 {value}
-                {unit && (
-                  <span className="ml-0.5 text-text-secondary font-medium">{unit}</span>
-                )}
+                {unit && <span className="unit">{unit}</span>}
               </dd>
             </div>
           );

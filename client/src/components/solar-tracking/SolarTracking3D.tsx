@@ -50,7 +50,7 @@ export function SolarTracking3D() {
   const isActive = simulation.trackingStatus === "ACTIVE";
 
   return (
-    <div className="relative h-[min(52vh,420px)] min-h-[280px] w-full overflow-hidden bg-[#b9d8e6]">
+    <div className="relative h-[min(52vh,420px)] min-h-[280px] w-full overflow-hidden bg-[#a8c8d8] dark:bg-[#1a2e1c]">
       <Canvas
         shadows
         camera={{ position: [7, 5, 7], fov: 42 }}
@@ -64,14 +64,14 @@ export function SolarTracking3D() {
 
       {/* Live status overlay — bottom left */}
       <div className="absolute bottom-3 left-3 pointer-events-none">
-        <div className="flex items-center gap-2 border border-[#4c5d49] bg-[#e9f1df]/90 px-2.5 py-1.5">
+        <div className="flex items-center gap-2 border border-[var(--accent-soft)] bg-surface/90 backdrop-blur-sm px-2.5 py-1.5">
           <i
             className={cn(
               "h-1.5 w-1.5 rounded-full",
-              isActive ? "bg-[#668f2e] animate-pulse" : "bg-[#7d8784]"
+              isActive ? "bg-[var(--healthy)] animate-pulse" : "bg-[var(--text-tertiary)]"
             )}
           />
-          <span className="font-mono text-[9px] uppercase tracking-[.1em] text-[#354631]">
+          <span className="font-mono text-[9px] uppercase tracking-[.1em] text-[var(--text-secondary)]">
             {formattedTime} · {simulation.trackingStatus}
           </span>
         </div>
@@ -79,11 +79,11 @@ export function SolarTracking3D() {
 
       {/* Generation overlay — bottom right */}
       <div className="absolute bottom-3 right-3 pointer-events-none">
-        <div className="flex items-baseline gap-1 border border-[#4c5d49] bg-[#e9f1df]/90 px-2.5 py-1.5">
-          <span className="text-lg font-semibold tracking-[-.04em] text-[#405f23]">
+        <div className="flex items-baseline gap-1 border border-[var(--accent-soft)] bg-surface/90 backdrop-blur-sm px-2.5 py-1.5">
+          <span className="text-lg font-semibold tracking-[-.04em] text-[var(--accent)]">
             {simulation.solarGenerationKw}
           </span>
-          <span className="font-mono text-[10px] text-[#53634f]">kW</span>
+          <span className="font-mono text-[10px] text-[var(--text-secondary)]">kW</span>
         </div>
       </div>
     </div>

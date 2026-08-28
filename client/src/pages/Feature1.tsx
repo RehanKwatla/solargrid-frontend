@@ -3,32 +3,30 @@ import { cn } from "@/lib/utils";
 
 export default function Feature1() {
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
-      <header className="flex flex-wrap items-end justify-between gap-4 pb-4">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-5 max-w-7xl mx-auto">
+      <header className="flex flex-wrap items-end justify-between gap-4 pb-3">
         <div>
-          <div className="inline-flex items-center rounded-full bg-surface-soft px-3 py-1 text-xs font-semibold text-text-secondary mb-4">
-            {facility.location}
-          </div>
+          <div className="instrument-label mb-2">{facility.code} · {facility.location}</div>
           <h1 className="heading-xl text-foreground">
             Metering
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-text-secondary">
+          <p className="mt-2 max-w-2xl text-[0.84rem] text-text-secondary">
             Government metering statistics for {facility.name}. All values are mock/demo
             until research-backed reference data and approved meter integrations are available.
           </p>
         </div>
       </header>
 
-      <section className="rounded-2xl border border-border bg-surface shadow-sm overflow-hidden">
+      <section className="card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[680px] text-left border-collapse">
+          <table className="w-full min-w-[640px] text-left border-collapse">
             <thead>
-              <tr className="border-b border-border bg-surface-soft">
-                <th className="p-4 text-left text-sm font-semibold text-foreground">Metric</th>
-                <th className="p-4 text-left text-sm font-semibold text-foreground">Current value</th>
-                <th className="p-4 text-left text-sm font-semibold text-foreground">Reference value</th>
-                <th className="p-4 text-left text-sm font-semibold text-foreground">Status</th>
-                <th className="p-4 text-left text-sm font-semibold text-foreground">Source</th>
+              <tr className="border-b border-border">
+                <th className="p-4 font-mono text-[0.62rem] font-medium tracking-[0.08em] uppercase text-text-secondary">Metric</th>
+                <th className="p-4 font-mono text-[0.62rem] font-medium tracking-[0.08em] uppercase text-text-secondary">Current value</th>
+                <th className="p-4 font-mono text-[0.62rem] font-medium tracking-[0.08em] uppercase text-text-secondary">Reference value</th>
+                <th className="p-4 font-mono text-[0.62rem] font-medium tracking-[0.08em] uppercase text-text-secondary">Status</th>
+                <th className="p-4 font-mono text-[0.62rem] font-medium tracking-[0.08em] uppercase text-text-secondary">Source</th>
               </tr>
             </thead>
             <tbody>
@@ -36,25 +34,26 @@ export default function Feature1() {
                 <tr 
                   key={item.metric} 
                   className={cn(
-                    "border-b border-border transition-colors hover:bg-surface-soft",
+                    "border-b border-border transition-colors hover:bg-surface-soft/50",
                     i === feature1Metering.length - 1 && "border-b-0"
                   )}
                 >
-                  <td className="p-4 text-sm font-medium text-foreground">
+                  <td className="p-4 text-[0.84rem] font-medium text-foreground">
                     {item.metric}
                   </td>
-                  <td className="p-4 text-sm font-semibold text-foreground">
+                  <td className="p-4 text-[0.84rem] font-semibold text-foreground tabular-nums">
                     {item.current}
                   </td>
-                  <td className="p-4 text-sm text-text-secondary">
+                  <td className="p-4 text-[0.81rem] text-text-secondary tabular-nums">
                     {item.reference}
                   </td>
                   <td className="p-4">
-                    <span className="inline-flex items-center rounded-full bg-healthy/10 px-2.5 py-0.5 text-xs font-semibold text-healthy">
+                    <span className="pill pill-healthy !text-[0.65rem] !py-0.5 !px-2">
+                      <span className="status-dot healthy" style={{ width: 5, height: 5 }} />
                       {item.status}
                     </span>
                   </td>
-                  <td className="p-4 text-xs text-text-secondary">
+                  <td className="p-4 text-[0.75rem] text-text-tertiary font-mono">
                     {item.source}
                   </td>
                 </tr>
@@ -64,8 +63,8 @@ export default function Feature1() {
         </div>
       </section>
 
-      <p className="mt-8 pt-4 text-xs text-text-secondary text-center">
-        Demo note: no regulation or government statistic is represented as fact in this module.
+      <p className="mt-6 pt-3 text-[0.72rem] text-text-tertiary text-center font-mono">
+        Demo note — no regulation or government statistic is represented as fact in this module
       </p>
     </div>
   );

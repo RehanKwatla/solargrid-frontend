@@ -8,17 +8,17 @@ export function DayTimeline() {
         <div key={node.time} className="flex-1 min-w-[72px] text-center relative group">
           {/* Connector line */}
           {index < dayTimeline.length - 1 && (
-            <div className="absolute top-1.5 left-1/2 right-[-50%] h-[1px] bg-border z-0" />
+            <div className="absolute top-[7px] left-[calc(50%+5px)] right-[-50%] h-[1px] bg-border z-0" />
           )}
           
           <div 
             className={cn(
-              "w-2.5 h-2.5 rounded-full mx-auto mb-3 relative z-10 transition-colors",
-              node.active ? "bg-accent shadow-[0_0_8px_rgba(140,198,63,0.5)]" : "bg-border group-hover:bg-border/80"
+              "w-2.5 h-2.5 rounded-full mx-auto mb-2.5 relative z-10 transition-colors",
+              node.active ? "bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_oklab,var(--accent)_40%,transparent)]" : "bg-border group-hover:bg-border-strong"
             )} 
           />
-          <p className="text-[10px] font-semibold text-text-secondary">{node.time}</p>
-          <p className="text-[11px] text-text-secondary mt-0.5">{node.label}</p>
+          <p className="font-mono text-[9px] font-medium tracking-wide text-text-tertiary">{node.time}</p>
+          <p className="text-[10px] text-text-secondary mt-0.5 font-medium">{node.label}</p>
         </div>
       ))}
     </div>

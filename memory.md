@@ -78,6 +78,33 @@ Avoid generic bright SaaS panels, purple gradients, rounded-card monoculture, de
 | 2026-08-23 | Added one shared OGL Strands energy-field backdrop to `DashboardLayout` only. The field uses restrained Grid Atlas palettes for dark/light themes, capped DPR, pointer-event isolation, responsive opacity/height, `prefers-reduced-motion` static rendering, and WebGL/observer cleanup. The root SolarGrid intro and all dashboard content/behavior remain outside the change. | `npm run check` and a direct `npx tsc --noEmit` passed. Automated browser QA confirmed readable desktop dark and mobile views, one Strands canvas on dashboard routes, and no Strands canvas on `/` while the intro remains present. Direct Vite builds consistently transformed 2,884 modules but did not return a completion result before the local execution limit; existing undefined analytics template warnings were emitted. `pnpm check` remains blocked by pnpm build-script approval for existing tooling. |
 | 2026-08-23 | Adopted Version 4 (`solargrid-brutalist-hero (4).html`) as the exact, served root intro; Version 3 is prohibited. The `SolarGridIntro` iframe host adds the dashboard transition externally, leaving the locked HTML—including scene and CTA markup—byte-for-byte intact. | SHA-256 hashes for Version 4 and `client/public/solargrid-intro.html` match. Browser QA confirmed `/` loads the intro canvas and its Enter SolarGrid CTA, then transitions to `/overview`, where one Strands canvas is present. `npx tsc --noEmit` and `npx vite build` passed; Vite reported the pre-existing undefined analytics-template and large-chunk warnings. |
 | 2026-08-23 | Rethemed the switchable light dashboard mode to the approved charcoal palette: charcoal canvas/surfaces, limestone typography, olive routine state, and terracotta attention state. Updated light-only Energy chart, tooltip, active-dot, energy-field, tracker-overlay, and slider-thumb values; `.dark` token and component branches remain unchanged. | Automated browser QA confirmed `#1C1C1A` canvas and no white Overview/Energy DOM surfaces in light mode, then toggled back to the existing `#151914` dark canvas. `npm run check` and `git diff --check` passed. `npm run build` began successfully and transformed modules but did not return a completion result before the local command limit; it emitted the existing undefined analytics-template warnings. |
+| 2026-08-28 | **Dashboard responsive layout root-cause fix.** Replaced viewport-oblivious fixed widths and bare `fr` grid columns with constrained sizing across the stack. Root: html/body/#root/dashboard-shell now have width:100%, max-width:100%, min-width:0, and explicit box-sizing. Overview grid columns all use `minmax(0, Xfr)` instead of bare fractions — the classic CSS grid blowout issue. Fixed-width overview container `max-w-[1440px]` replaced with fluid `w-full max-w-full`. SolarTrackingSection internal layout rebuilt from `flex-row + 2xl:w-72 shrink-0` (forced min-width) to `xl:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)]`, allowing both 3D canvas and telemetry to compress. Time-of-day preset buttons wrapped with `flex-wrap` and `min-w-[50%-gap]` on narrow columns to eliminate Night button clipping instead of forcing a 4-across row. PowerFlow diagram: removed `px-32` and `px-16` hard paddings (replaced with responsive stepped padding) and replaced fixed `w-48` node cards with `flex-1 max-w-[170–192px] min-w-0`. EnergyMetrics grid rewritten with minmax columns, responsive padding, truncation guards. TopBar padding and gaps reduced; secondary actions (search, theme toggle, dividers) now hide below sm/lg with proper shrink-0 + truncate on labels. Sidebar hardened with max-w and `overflow-x-hidden`. Locked intro page / 3D landing animation (solargrid-intro.html, SolarGridIntro.tsx iframe host) were deliberately not touched. | `npx tsc --noEmit` → 0 errors. `npm run build` → 0 exit code (2,884 modules transformed; existing undefined-analytics-template and chunk-size warnings retained as baseline). `GetDiagnostics` → empty array (no IDE diagnostics). Dev server opened on /overview via OpenPreview. Grep audit of remaining fixed widths confirms they are confined to dialogs, tables wrapped inside overflow-x-auto, and mobile tab bars with appropriate containers. |
+
+## Last completed changes — 2026-08-28 Final Design Polish
+
+| Change | Details |
+| --- | --- |
+| Color tokens refined | Light theme warmed (#f0f2eb), accent darkened to #4d7a1e for contrast. Dark theme stepped deeper (#0e110d/#131711/#191e16). Grid texture tokenized. |
+| TopBar compacted | 72px → 60px, breadcrumbs refined, system status uses semantic tokens. |
+| AppSidebar compacted | 268px → 256px, nav items tightened, brand mark scaled down. |
+| SolarTracking theme-aware | All hardcoded hex overlays replaced with theme tokens (--accent-soft, --healthy-bg, --surface). |
+| PowerFlow cleaned | Node cards refined, connectors with duration-300 transitions, semantic accent borders. |
+| EnergyMetrics refined | Hero card cleaned, supporting metric grid standardized. |
+| Energy page | Green battery card → themed panel. Supply bars standardized. Cards use consistent radius. |
+| Intelligence page | Dispatch card uses bg-[var(--accent)] for reliable contrast. Load tiers cleaned. |
+| Alerts page | Severity counts redesigned as grid with dot indicators. |
+| Metering table | instrument-label headers, monospace source column. |
+| NotFound | Replaced hardcoded coral with semantic danger tokens. |
+| EnergyChart | Space Grotesk/IBM Plex Mono fonts, theme-aware tooltip styling. |
+| EventStream | Severity borders use ring/30 tokens. |
+| SolarTrackingControls | Preset buttons use healthy-bg tokens, buttons reduced to h-9. |
+| SolarTrackingStats | Row dividers, consistent telemetry layout. |
+| DayTimeline | Active dot uses accent color-mix glow. |
+| Mobile components | TabBar touch targets refined, Navigation drawer compacted. |
+| Bug fix | Overview.tsx assets import fixed (was undefined local declaration). |
+| Landing page | Completely untouched (SolarGridIntro.tsx, solargrid-intro.html). |
+
+**Verification:** `npx tsc --noEmit` → 0 errors. `npx vite build` → 2,884 modules, 0 errors. |
 
 ## Open opportunities
 

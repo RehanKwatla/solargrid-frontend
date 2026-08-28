@@ -14,7 +14,7 @@ export function MobileTabBar() {
   const [location] = useLocation();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around bg-surface/90 backdrop-blur-md border-t border-border pb-safe pt-1 lg:hidden" aria-label="Primary navigation">
+    <nav className="fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around bg-surface/95 backdrop-blur-md border-t border-border pb-safe lg:hidden" aria-label="Primary navigation">
       {tabs.map(({ href, label, icon: Icon }) => {
         const selected = location === href;
         return (
@@ -22,17 +22,17 @@ export function MobileTabBar() {
             key={href}
             href={href}
             className={cn(
-              "flex flex-col items-center justify-center gap-1 min-w-[64px] py-2 px-1 transition-colors",
-              selected ? "text-primary" : "text-text-secondary"
+              "flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1.5 px-1 transition-colors",
+              selected ? "text-[var(--accent)]" : "text-text-tertiary"
             )}
           >
             <div className={cn(
-              "flex items-center justify-center rounded-full p-1",
-              selected ? "bg-primary/10" : ""
+              "flex items-center justify-center rounded-lg p-1 transition-colors",
+              selected ? "bg-[var(--accent-bg)]" : ""
             )}>
-              <Icon size={20} strokeWidth={selected ? 2.5 : 2} />
+              <Icon size={18} strokeWidth={selected ? 2.5 : 2} />
             </div>
-            <span className="text-[10px] font-semibold">{label}</span>
+            <span className="text-[9px] font-semibold leading-tight">{label}</span>
           </Link>
         );
       })}

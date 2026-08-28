@@ -13,30 +13,28 @@ export default function Alerts() {
   const info = alerts.filter((a) => a.state === "healthy").length;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-5xl mx-auto">
-      <header className="flex flex-wrap items-end justify-between gap-4 pb-4">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-5 max-w-5xl mx-auto">
+      <header className="flex flex-wrap items-end justify-between gap-4 pb-3">
         <div>
-          <div className="inline-flex items-center rounded-full bg-surface-soft px-3 py-1 text-xs font-semibold text-text-secondary mb-4">
-            {facility.location}
-          </div>
+          <div className="instrument-label mb-2">{facility.code} · {facility.location}</div>
           <h1 className="heading-xl text-foreground">
             System events
           </h1>
-          <p className="mt-2 text-sm text-text-secondary">
-            Operational event log for {facility.name}.
+          <p className="mt-2 text-[0.84rem] text-text-secondary">
+            Operational event log for {facility.name}
           </p>
         </div>
       </header>
 
       {/* Severity summary */}
-      <section className="flex flex-wrap gap-4 pb-6">
-        <SeverityCount label="Critical" count={critical} colorClass="text-danger bg-danger/10" />
-        <SeverityCount label="Warning" count={warnings} colorClass="text-warning bg-warning/10" />
-        <SeverityCount label="Info" count={info} colorClass="text-healthy bg-healthy/10" />
+      <section className="grid grid-cols-3 gap-3 sm:gap-4 pb-3">
+        <SeverityCount label="Critical" count={critical} colorClass="text-[var(--danger)] bg-[var(--danger-bg)]" dotClass="bg-[var(--danger)]" />
+        <SeverityCount label="Warning" count={warnings} colorClass="text-[var(--warning)] bg-[var(--warning-bg)]" dotClass="bg-[var(--warning)]" />
+        <SeverityCount label="Info" count={info} colorClass="text-[var(--healthy)] bg-[var(--healthy-bg)]" dotClass="bg-[var(--healthy)]" />
       </section>
 
       {/* Event stream */}
-      <section className="rounded-2xl border border-border bg-surface shadow-sm p-6">
+      <section className="card p-5 sm:p-6">
         <EventStream
           items={alerts}
           acknowledgedIds={acknowledgedIds}
@@ -51,16 +49,21 @@ function SeverityCount({
   label,
   count,
   colorClass,
+  dotClass,
 }: {
   label: string;
   count: number;
   colorClass: string;
+  dotClass: string;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-surface shadow-sm p-5 min-w-[140px] flex-1 sm:flex-none flex items-center justify-between sm:flex-col sm:items-start">
-      <p className="text-sm font-semibold text-text-secondary">{label}</p>
-      <div className={cn("mt-2 inline-flex items-center justify-center rounded-lg px-3 py-1 text-2xl font-bold", colorClass)}>
-        {count}
+    <div className={cn("rounded-lg border border-border bg-surface p-3.5 sm:p-4 flex items-center gap-3 min-w-0")}>
+      <span className={cn("h-2 w-2 rounded-full shrink-0", dotClass)} />
+      <div className="min-w-0 flex-1">
+        <p className="text-[0.72rem] font-medium text-text-secondary truncate">{label}</p>
+        <p className={cn("text-xl sm:text-2xl font-bold tabular-nums leading-tight mt-0.5", colorClass)}>
+          {count}
+        </p>
       </div>
     </div>
   );

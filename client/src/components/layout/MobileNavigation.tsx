@@ -25,30 +25,30 @@ export function MobileNavigation({ open, onClose }: { open: boolean; onClose: ()
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
-      <aside className="relative flex h-full w-[min(300px,85vw)] flex-col bg-surface border-r border-border p-5 shadow-2xl transition-transform">
-        <div className="flex items-center justify-between mb-8">
-          <Link href="/overview" onClick={onClose} className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-lg shadow-sm">
+      <aside className="relative flex h-full w-[min(280px,85vw)] flex-col bg-surface border-r border-border p-4 shadow-2xl transition-transform">
+        <div className="flex items-center justify-between mb-6">
+          <Link href="/overview" onClick={onClose} className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm shadow-sm">
               SG
             </div>
             <div>
-              <span className="block font-sans text-lg font-bold tracking-tight text-foreground leading-tight">
+              <span className="block font-sans text-[0.95rem] font-bold tracking-tight text-foreground leading-tight">
                 SolarGrid
               </span>
-              <span className="block font-sans text-[11px] font-medium text-text-secondary">
+              <span className="block font-mono text-[9px] font-medium text-text-tertiary tracking-wide">
                 Energy Platform
               </span>
             </div>
           </Link>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-soft text-text-secondary hover:text-foreground transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-soft text-text-tertiary hover:text-foreground transition-colors"
           >
             <X size={16} />
           </button>
         </div>
 
-        <nav className="space-y-1 flex-1">
+        <nav className="space-y-0.5 flex-1">
           {links.map((item) => {
             const selected = location === item.href;
             const Icon = item.icon;
@@ -58,19 +58,19 @@ export function MobileNavigation({ open, onClose }: { open: boolean; onClose: ()
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "group flex items-center gap-3 rounded-xl px-3 py-3 font-sans text-sm font-medium transition-colors",
+                  "group flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 font-sans text-[0.84rem] font-medium transition-colors",
                   selected
-                    ? "bg-primary/10 text-primary"
+                    ? "bg-[var(--accent-bg)] text-[var(--accent-strong)]"
                     : "text-text-secondary hover:bg-surface-soft hover:text-foreground"
                 )}
               >
-                <Icon size={18} strokeWidth={selected ? 2.5 : 2} className="shrink-0" />
+                <Icon size={17} strokeWidth={selected ? 2.5 : 2} className="shrink-0" />
                 <span>{item.label}</span>
                 {item.badge && (
                   <span
                     className={cn(
-                      "ml-auto flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold",
-                      selected ? "bg-primary text-primary-foreground" : "bg-danger text-white"
+                      "ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold tabular-nums",
+                      selected ? "bg-[var(--accent)] text-primary-foreground" : "bg-[var(--danger)] text-white"
                     )}
                   >
                     {item.badge}
@@ -81,34 +81,34 @@ export function MobileNavigation({ open, onClose }: { open: boolean; onClose: ()
           })}
         </nav>
 
-        <div className="mt-auto rounded-2xl bg-surface-soft p-4">
-          <p className="font-sans text-sm font-semibold text-foreground">
+        <div className="mt-auto rounded-lg bg-surface-soft p-3.5 border border-border/50">
+          <p className="font-sans text-[0.84rem] font-semibold text-foreground">
             {facility.name}
           </p>
-          <p className="font-sans text-xs font-medium text-text-secondary mt-0.5 mb-4">
+          <p className="font-mono text-[9px] font-medium text-text-tertiary mt-0.5 mb-3 tracking-wide">
             {facility.location}
           </p>
 
-          <div className="space-y-2 border-t border-border/50 pt-3">
-            <div className="flex justify-between items-center font-sans text-xs">
-              <span className="text-text-secondary font-medium">System</span>
-              <span className="flex items-center gap-1.5 text-success font-medium">
-                <span className="status-dot healthy"></span> Online
+          <div className="space-y-1.5 border-t border-border/50 pt-2.5">
+            <div className="flex justify-between items-center text-[0.75rem]">
+              <span className="text-text-tertiary font-medium">System</span>
+              <span className="flex items-center gap-1.5 text-[var(--healthy)] font-medium">
+                <span className="status-dot healthy" style={{ width: 5, height: 5 }}></span> Online
               </span>
             </div>
-            <div className="flex justify-between items-center font-sans text-xs">
-              <span className="text-text-secondary font-medium">Solar PV</span>
-              <span className="text-foreground font-semibold">{t.solarKw.toFixed(1)} kW</span>
+            <div className="flex justify-between items-center text-[0.75rem]">
+              <span className="text-text-tertiary font-medium">Solar PV</span>
+              <span className="text-foreground font-semibold tabular-nums">{t.solarKw.toFixed(1)} kW</span>
             </div>
-            <div className="flex justify-between items-center font-sans text-xs">
-              <span className="text-text-secondary font-medium">Battery</span>
-              <span className="text-foreground font-semibold">{t.batterySoc}%</span>
+            <div className="flex justify-between items-center text-[0.75rem]">
+              <span className="text-text-tertiary font-medium">Battery</span>
+              <span className="text-foreground font-semibold tabular-nums">{t.batterySoc}%</span>
             </div>
           </div>
         </div>
 
-        <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-surface border border-border px-4 py-3 text-sm font-semibold text-text-secondary transition-colors hover:bg-surface-soft hover:text-foreground">
-          <Settings size={16} />
+        <button className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-surface border border-border px-4 py-2.5 text-[0.81rem] font-semibold text-text-tertiary transition-colors hover:bg-surface-soft hover:text-foreground">
+          <Settings size={15} />
           <span>Settings</span>
         </button>
       </aside>

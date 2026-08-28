@@ -6,6 +6,7 @@ export type AlertItem = { id: number; title: string; detail: string; time: strin
 
 export const facility = {
   name: "Apollo Care Campus",
+  code: "SG-ACC-01",
   location: "Pune · India",
   timezone: "Asia/Kolkata",
 };
