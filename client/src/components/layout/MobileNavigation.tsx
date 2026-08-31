@@ -30,8 +30,8 @@ export function MobileNavigation({ open, onClose }: { open: boolean; onClose: ()
       <aside className="relative flex h-full w-[min(280px,85vw)] flex-col bg-surface border-r border-border p-4 shadow-2xl transition-transform">
         <div className="flex items-center justify-between mb-6">
           <Link href="/overview" onClick={onClose} className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm shadow-sm">
-              SG
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--accent-soft)] bg-surface-soft p-1 shadow-sm">
+              <img src="/logo.png" alt="SolarGrid Logo" className="h-full w-full object-contain" />
             </div>
             <div>
               <span className="block font-sans text-[0.95rem] font-bold tracking-tight text-foreground leading-tight">

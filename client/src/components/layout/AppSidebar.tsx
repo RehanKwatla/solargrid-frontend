@@ -42,8 +42,8 @@ export function AppSidebar({ isCollapsed, onToggleCollapse }: AppSidebarProps) {
       <div className="flex flex-col min-w-0">
         {/* Brand */}
         <div className={cn("flex items-center mb-6", isCollapsed ? "justify-center" : "gap-2.5 px-0.5")}>
-          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[var(--accent-soft)] bg-primary text-primary-foreground font-bold text-sm shadow-[var(--shadow-sm)]">
-            <span className="leading-none -mt-px">SG</span>
+          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--accent-soft)] bg-surface-soft p-1 shadow-[var(--shadow-sm)]">
+            <img src="/logo.png" alt="SolarGrid Logo" className="h-full w-full object-contain" />
           </div>
           {!isCollapsed && (
             <div className="overflow-hidden min-w-0">
