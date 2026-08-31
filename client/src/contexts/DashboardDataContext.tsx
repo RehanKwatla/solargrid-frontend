@@ -21,6 +21,9 @@ import {
   useEnergySharingQuery,
   useEnergyTransactionsQuery,
   useEnergyPeersQuery,
+  useHospitalLoadsQuery,
+  useLoadAuditLogsQuery,
+  useEmergencyModeQuery,
   type SupabaseQueryResult,
 } from "@/hooks/useSupabaseData";
 import { api } from "@/services/api";
@@ -39,6 +42,10 @@ import type {
   EnergySharingSummary,
   EnergyTransaction,
   EnergyPeer,
+  HospitalLoad,
+  LoadAuditLog,
+  EmergencyModeState,
+  PriorityLevel,
 } from "@/data/types";
 
 type DashboardDataContextValue = {
@@ -56,6 +63,9 @@ type DashboardDataContextValue = {
   energySharing: EnergySharingSummary | null;
   energyTransactions: EnergyTransaction[];
   energyPeers: EnergyPeer[];
+  hospitalLoads: HospitalLoad[];
+  loadAuditLogs: LoadAuditLog[];
+  emergencyMode: EmergencyModeState;
 
   /* Status per domain */
   telemetryStatus: DataSourceStatus;
@@ -71,6 +81,9 @@ type DashboardDataContextValue = {
   energySharingStatus: DataSourceStatus;
   energyTransactionsStatus: DataSourceStatus;
   energyPeersStatus: DataSourceStatus;
+  hospitalLoadsStatus: DataSourceStatus;
+  loadAuditLogsStatus: DataSourceStatus;
+  emergencyModeStatus: DataSourceStatus;
 
   /* Aggregate */
   overallStatus: DataSourceStatus;
@@ -81,6 +94,17 @@ type DashboardDataContextValue = {
   recordEnergyTransaction: (
     tx: Omit<EnergyTransaction, "id" | "created_at">
   ) => Promise<EnergyTransaction>;
+  updateHospitalLoadPriority: (
+    loadId: string,
+    newPriority: PriorityLevel,
+    reason: string,
+    operator: string
+  ) => Promise<void>;
+  toggleEmergencyMode: (
+    active: boolean,
+    operator: string,
+    reason: string
+  ) => Promise<void>;
 };
 
 const DashboardDataContext = createContext<DashboardDataContextValue | null>(null);
@@ -118,10 +142,16 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
   const energySharing = useEnergySharingQuery();
   const energyTransactions = useEnergyTransactionsQuery();
   const energyPeers = useEnergyPeersQuery();
+  const hospitalLoadsQuery = useHospitalLoadsQuery();
+  const loadAuditLogsQuery = useLoadAuditLogsQuery();
+  const emergencyModeQuery = useEmergencyModeQuery();
 
   // Local optimistic/added transactions state to reflect immediate submissions
   const [localTransactions, setLocalTransactions] = useState<EnergyTransaction[]>([]);
   const [localSummaryOverride, setLocalSummaryOverride] = useState<Partial<EnergySharingSummary> | null>(null);
+  const [localLoadsOverride, setLocalLoadsOverride] = useState<Record<string, Partial<HospitalLoad>>>({});
+  const [localAuditLogs, setLocalAuditLogs] = useState<LoadAuditLog[]>([]);
+  const [localEmergencyModeOverride, setLocalEmergencyModeOverride] = useState<EmergencyModeState | null>(null);
 
   const mergedTransactions = [
     ...localTransactions,
@@ -135,6 +165,25 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
       }
     : null;
 
+  const mergedHospitalLoads: HospitalLoad[] = (hospitalLoadsQuery.data ?? []).map((load) => {
+    if (localLoadsOverride[load.id]) {
+      return { ...load, ...localLoadsOverride[load.id] };
+    }
+    return load;
+  });
+
+  const mergedAuditLogs: LoadAuditLog[] = [
+    ...localAuditLogs,
+    ...(loadAuditLogsQuery.data ?? []),
+  ];
+
+  const mergedEmergencyMode: EmergencyModeState = localEmergencyModeOverride ?? (emergencyModeQuery.data ?? {
+    is_active: false,
+    activated_at: null,
+    activated_by: null,
+    mode_label: "Standard Operations Mode",
+  });
+
   const overallStatus = combineStatuses(
     telemetry.status,
     energyHistory.status,
@@ -147,7 +196,10 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     facility.status,
     energySharing.status,
     energyTransactions.status,
-    energyPeers.status
+    energyPeers.status,
+    hospitalLoadsQuery.status,
+    loadAuditLogsQuery.status,
+    emergencyModeQuery.status
   );
 
   const errors = [
@@ -163,6 +215,9 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     energySharing.status.error,
     energyTransactions.status.error,
     energyPeers.status.error,
+    hospitalLoadsQuery.status.error,
+    loadAuditLogsQuery.status.error,
+    emergencyModeQuery.status.error,
   ].filter(Boolean);
 
   const refetchAll = () => {
@@ -179,6 +234,9 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     energySharing.refetch();
     energyTransactions.refetch();
     energyPeers.refetch();
+    hospitalLoadsQuery.refetch();
+    loadAuditLogsQuery.refetch();
+    emergencyModeQuery.refetch();
   };
 
   const recordEnergyTransaction = async (
@@ -221,6 +279,51 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     return created;
   };
 
+  const updateHospitalLoadPriority = async (
+    loadId: string,
+    newPriority: PriorityLevel,
+    reason: string,
+    operator: string
+  ): Promise<void> => {
+    const result = await api.updateLoadPriority(loadId, newPriority, reason, operator);
+
+    // Apply optimistic updates
+    setLocalLoadsOverride((prev) => ({
+      ...prev,
+      [loadId]: {
+        priority: result.load.priority,
+        status: result.load.status,
+        protection_status: result.load.protection_status,
+        updated_at: result.load.updated_at,
+      },
+    }));
+
+    setLocalAuditLogs((prev) => [result.audit, ...prev]);
+  };
+
+  const toggleEmergencyMode = async (
+    active: boolean,
+    operator: string,
+    reason: string
+  ): Promise<void> => {
+    const result = await api.setEmergencyMode(active, operator, reason);
+    setLocalEmergencyModeOverride(result);
+
+    // Record audit entry for emergency activation
+    const emergencyAudit: LoadAuditLog = {
+      id: `audit-${Date.now()}`,
+      facility_id: "SG-ACC-01",
+      timestamp: new Date().toISOString(),
+      operator: operator || "Clinical Operations Controller",
+      load_id: "ALL_LOADS",
+      load_name: active ? "Emergency Critical Load Mode Engaged" : "Emergency Mode Disengaged",
+      previous_priority: active ? "NORMAL" : "CRITICAL",
+      new_priority: active ? "CRITICAL" : "NORMAL",
+      reason: reason || (active ? "Grid emergency load preservation initiated" : "Resumed normal schedule"),
+    };
+    setLocalAuditLogs((prev) => [emergencyAudit, ...prev]);
+  };
+
   const value: DashboardDataContextValue = {
     telemetry: telemetry.data,
     energyHistory: energyHistory.data ?? [],
@@ -235,6 +338,9 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     energySharing: mergedSummary,
     energyTransactions: mergedTransactions,
     energyPeers: energyPeers.data ?? [],
+    hospitalLoads: mergedHospitalLoads,
+    loadAuditLogs: mergedAuditLogs,
+    emergencyMode: mergedEmergencyMode,
 
     telemetryStatus: telemetry.status,
     energyStatus: energyHistory.status,
@@ -249,11 +355,16 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     energySharingStatus: energySharing.status,
     energyTransactionsStatus: energyTransactions.status,
     energyPeersStatus: energyPeers.status,
+    hospitalLoadsStatus: hospitalLoadsQuery.status,
+    loadAuditLogsStatus: loadAuditLogsQuery.status,
+    emergencyModeStatus: emergencyModeQuery.status,
 
     overallStatus,
     anyError: errors.length > 0 ? errors[0]! : null,
     refetchAll,
     recordEnergyTransaction,
+    updateHospitalLoadPriority,
+    toggleEmergencyMode,
   };
 
   return (

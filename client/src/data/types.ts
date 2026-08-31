@@ -256,6 +256,65 @@ export type EnergyPeer = {
 };
 
 /* ────────────────────────────────────────────
+ * Hospital Critical Load Management
+ * ──────────────────────────────────────────── */
+
+export type PriorityLevel = "CRITICAL" | "HIGH" | "NORMAL" | "NON-CRITICAL";
+export type LoadStatus = "Protected" | "Active" | "Curtailable" | "Standby" | "Shed";
+export type EnergySourceType = "Solar + Battery" | "Grid Protected" | "BESS Reserve" | "Hybrid Priority";
+
+export type HospitalLoad = {
+  id: string;
+  facility_id: string;
+  building: string;
+  floor: string;
+  department: string;
+  room: string;
+  equipment_name: string;
+  current_kw: number;
+  rated_kw: number;
+  priority: PriorityLevel;
+  status: LoadStatus;
+  source: EnergySourceType;
+  protection_status: "100% Protected" | "Guaranteed" | "Curtailable" | "Shed";
+  updated_at: string;
+};
+
+export type LoadAllocationResult = {
+  available_power_kw: number;
+  total_demand_kw: number;
+  critical_kw: number;
+  critical_allocation_percent: number;
+  high_kw: number;
+  high_allocation_percent: number;
+  normal_kw: number;
+  normal_allocation_percent: number;
+  non_critical_kw: number;
+  non_critical_allocation_percent: number;
+  curtailment_recommended_kw: number;
+  runtime_buffer_minutes: number;
+};
+
+export type LoadAuditLog = {
+  id: string;
+  facility_id: string;
+  timestamp: string;
+  operator: string;
+  load_id: string;
+  load_name: string;
+  previous_priority: PriorityLevel;
+  new_priority: PriorityLevel;
+  reason: string;
+};
+
+export type EmergencyModeState = {
+  is_active: boolean;
+  activated_at: string | null;
+  activated_by: string | null;
+  mode_label: string;
+};
+
+/* ────────────────────────────────────────────
  * Dashboard Aggregated State
  * ──────────────────────────────────────────── */
 
@@ -273,6 +332,9 @@ export type DashboardDataState = {
   energySharing: EnergySharingSummary | null;
   energyTransactions: EnergyTransaction[];
   energyPeers: EnergyPeer[];
+  hospitalLoads: HospitalLoad[];
+  loadAuditLogs: LoadAuditLog[];
+  emergencyMode: EmergencyModeState;
 };
 
 export type DataSourceStatus = {

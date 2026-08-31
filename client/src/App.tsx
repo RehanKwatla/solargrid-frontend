@@ -8,6 +8,7 @@ import { SolarTrackingProvider } from "./contexts/SolarTrackingContext";
 import { DashboardDataProvider } from "./contexts/DashboardDataContext";
 import { DashboardLayout } from "./layouts/DashboardLayout";
 import Alerts from "./pages/Alerts";
+import CriticalLoads from "./pages/CriticalLoads";
 import Energy from "./pages/Energy";
 import EnergySharing from "./pages/EnergySharing";
 import Feature1 from "./pages/Feature1";
@@ -25,6 +26,8 @@ function DashboardRoutes() {
           <Route path="/energy" component={Energy} />
           <Route path="/energy-sharing" component={EnergySharing} />
           <Route path="/sharing"><Redirect to="/energy-sharing" /></Route>
+          <Route path="/critical-loads" component={CriticalLoads} />
+          <Route path="/loads"><Redirect to="/critical-loads" /></Route>
           <Route path="/intelligence" component={Intelligence} />
           <Route path="/alerts" component={Alerts} />
           <Route path="/feature-1" component={Feature1} />

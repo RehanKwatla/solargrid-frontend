@@ -12,6 +12,9 @@ import {
   mockEnergySharingSummary,
   mockEnergyTransactions,
   mockEnergyPeers,
+  mockHospitalLoads,
+  mockLoadAuditLogs,
+  mockEmergencyModeState,
 } from "@/data/mockData";
 import type {
   TelemetryReading,
@@ -25,6 +28,10 @@ import type {
   EnergySharingSummary,
   EnergyTransaction,
   EnergyPeer,
+  HospitalLoad,
+  LoadAuditLog,
+  EmergencyModeState,
+  PriorityLevel,
 } from "@/data/types";
 
 /**
@@ -401,5 +408,151 @@ export const api = {
       created_at: new Date().toISOString(),
     };
     return newTx;
+  },
+
+  async getHospitalLoads(): Promise<HospitalLoad[]> {
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data, error } = await supabase
+          .from("hospital_loads")
+          .select("*")
+          .order("priority", { ascending: true });
+        if (error) throw error;
+        return (data ?? []) as HospitalLoad[];
+      } catch {
+        // Fall through to mock
+      }
+    }
+    await wait();
+    return mockHospitalLoads as HospitalLoad[];
+  },
+
+  async updateLoadPriority(
+    loadId: string,
+    newPriority: PriorityLevel,
+    reason: string,
+    operator: string
+  ): Promise<{ load: HospitalLoad; audit: LoadAuditLog }> {
+    const existing = mockHospitalLoads.find((l) => l.id === loadId) ?? mockHospitalLoads[0];
+    const prevPriority = existing.priority;
+
+    const auditEntry: LoadAuditLog = {
+      id: `audit-${Date.now()}`,
+      facility_id: "SG-ACC-01",
+      timestamp: new Date().toISOString(),
+      operator: operator || "Authorized Clinical Operator",
+      load_id: loadId,
+      load_name: existing.equipment_name,
+      previous_priority: prevPriority,
+      new_priority: newPriority,
+      reason,
+    };
+
+    if (isSupabaseConfigured && supabase) {
+      const [loadRes, auditRes] = await Promise.all([
+        supabase
+          .from("hospital_loads")
+          .update({
+            priority: newPriority,
+            status: newPriority === "CRITICAL" ? "Protected" : "Active",
+            protection_status: newPriority === "CRITICAL" ? "100% Protected" : newPriority === "HIGH" ? "Guaranteed" : "Curtailable",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", loadId)
+          .select()
+          .single(),
+        supabase
+          .from("load_audit_logs")
+          .insert([auditEntry])
+          .select()
+          .single(),
+      ]);
+
+      if (loadRes.error) throw loadRes.error;
+      return {
+        load: loadRes.data as HospitalLoad,
+        audit: (auditRes.data ?? auditEntry) as LoadAuditLog,
+      };
+    }
+
+    await wait(300);
+    const updatedLoad: HospitalLoad = {
+      ...existing,
+      priority: newPriority,
+      status: newPriority === "CRITICAL" ? "Protected" : "Active",
+      protection_status: newPriority === "CRITICAL" ? "100% Protected" : newPriority === "HIGH" ? "Guaranteed" : "Curtailable",
+      updated_at: new Date().toISOString(),
+    };
+
+    return { load: updatedLoad, audit: auditEntry };
+  },
+
+  async getLoadAuditLogs(): Promise<LoadAuditLog[]> {
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data, error } = await supabase
+          .from("load_audit_logs")
+          .select("*")
+          .order("timestamp", { ascending: false });
+        if (error) throw error;
+        return (data ?? []) as LoadAuditLog[];
+      } catch {
+        // Fall through to mock
+      }
+    }
+    await wait();
+    return mockLoadAuditLogs as LoadAuditLog[];
+  },
+
+  async getEmergencyModeState(): Promise<EmergencyModeState> {
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data, error } = await supabase
+          .from("emergency_mode_state")
+          .select("*")
+          .eq("id", "current_state")
+          .single();
+        if (error) throw error;
+        return data as EmergencyModeState;
+      } catch {
+        // Fall through to mock
+      }
+    }
+    await wait();
+    return mockEmergencyModeState as EmergencyModeState;
+  },
+
+  async setEmergencyMode(
+    isActive: boolean,
+    operator: string,
+    reason: string
+  ): Promise<EmergencyModeState> {
+    const newState: EmergencyModeState = {
+      is_active: isActive,
+      activated_at: isActive ? new Date().toISOString() : null,
+      activated_by: isActive ? (operator || "Lead Clinical Engineer") : null,
+      mode_label: isActive ? "Emergency Critical Load Preservation Mode" : "Standard Operations Mode",
+    };
+
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase
+        .from("emergency_mode_state")
+        .upsert({
+          id: "current_state",
+          facility_id: "SG-ACC-01",
+          is_active: newState.is_active,
+          activated_at: newState.activated_at,
+          activated_by: newState.activated_by,
+          mode_label: newState.mode_label,
+          updated_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      return data as EmergencyModeState;
+    }
+
+    await wait(250);
+    return newState;
   },
 };

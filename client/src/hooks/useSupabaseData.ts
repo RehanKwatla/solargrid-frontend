@@ -22,6 +22,9 @@ import {
   mockEnergySharingSummary,
   mockEnergyTransactions,
   mockEnergyPeers,
+  mockHospitalLoads,
+  mockLoadAuditLogs,
+  mockEmergencyModeState,
 } from "@/data/mockData";
 import type {
   TelemetryReading,
@@ -38,6 +41,9 @@ import type {
   EnergySharingSummary,
   EnergyTransaction,
   EnergyPeer,
+  HospitalLoad,
+  LoadAuditLog,
+  EmergencyModeState,
 } from "@/data/types";
 
 /* ────────────────────────────────────────────
@@ -585,5 +591,75 @@ export function useEnergyPeersQuery(): SupabaseQueryResult<EnergyPeer[]> {
     "energy_sharing_peers",
     fetchEnergyPeers,
     mockEnergyPeers
+  );
+}
+
+/* ────────────────────────────────────────────
+ * Hospital Critical Loads Hook
+ * ──────────────────────────────────────────── */
+
+async function fetchHospitalLoads(): Promise<HospitalLoad[] | null> {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("hospital_loads")
+    .select("*")
+    .order("priority", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as HospitalLoad[];
+}
+
+export function useHospitalLoadsQuery(): SupabaseQueryResult<HospitalLoad[]> {
+  return useSupabaseQuery(
+    "hospital_loads",
+    fetchHospitalLoads,
+    mockHospitalLoads,
+    30_000
+  );
+}
+
+/* ────────────────────────────────────────────
+ * Load Audit Logs Hook
+ * ──────────────────────────────────────────── */
+
+async function fetchLoadAuditLogs(): Promise<LoadAuditLog[] | null> {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("load_audit_logs")
+    .select("*")
+    .order("timestamp", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as LoadAuditLog[];
+}
+
+export function useLoadAuditLogsQuery(): SupabaseQueryResult<LoadAuditLog[]> {
+  return useSupabaseQuery(
+    "load_audit_logs",
+    fetchLoadAuditLogs,
+    mockLoadAuditLogs,
+    30_000
+  );
+}
+
+/* ────────────────────────────────────────────
+ * Emergency Mode Hook
+ * ──────────────────────────────────────────── */
+
+async function fetchEmergencyMode(): Promise<EmergencyModeState | null> {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("emergency_mode_state")
+    .select("*")
+    .eq("id", "current_state")
+    .single();
+  if (error) throw error;
+  return data as EmergencyModeState;
+}
+
+export function useEmergencyModeQuery(): SupabaseQueryResult<EmergencyModeState> {
+  return useSupabaseQuery(
+    "emergency_mode_state",
+    fetchEmergencyMode,
+    mockEmergencyModeState,
+    15_000
   );
 }
