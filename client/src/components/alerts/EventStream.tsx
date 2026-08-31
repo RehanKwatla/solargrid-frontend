@@ -1,6 +1,18 @@
-import type { AlertItem } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 import { Check, CheckCircle2 } from "lucide-react";
+
+/** Flexible alert item type — works with both mock AlertItem and Supabase AlertRecord */
+type AlertItemLike = {
+  id: number | string;
+  title: string;
+  detail: string;
+  time: string;
+  state: "critical" | "watch" | "healthy";
+  site: string;
+  status: "Open" | "Acknowledged";
+  assetId?: string;
+  asset_id?: string;
+};
 
 const severityLabel: Record<string, string> = {
   critical: "Critical",
@@ -14,7 +26,7 @@ export function EventStream({
   acknowledgedIds = [],
   onAcknowledge,
 }: {
-  items: AlertItem[];
+  items: AlertItemLike[];
   limit?: number;
   acknowledgedIds?: number[];
   onAcknowledge?: (id: number) => void;
@@ -24,9 +36,12 @@ export function EventStream({
   return (
     <div className={cn(limit ? "space-y-2" : "space-y-3")}>
       {visible.map((event) => {
+        const numericId =
+          typeof event.id === "number" ? event.id : parseInt(String(event.id), 10) || 0;
         const acknowledged =
-          event.status === "Acknowledged" || acknowledgedIds.includes(event.id);
+          event.status === "Acknowledged" || acknowledgedIds.includes(numericId);
         const severity = severityLabel[event.state] ?? event.state;
+        const assetLabel = event.assetId ?? event.asset_id ?? "SYSTEM";
 
         return (
           <article
@@ -55,7 +70,7 @@ export function EventStream({
                     {event.time}
                   </span>
                   <span className="pill pill-muted !py-0 !px-1.5 !text-[0.6rem]">
-                    {event.assetId ?? "SYSTEM"}
+                    {assetLabel}
                   </span>
                 </div>
                 <p className="mt-0.5 text-[0.81rem] font-semibold text-foreground leading-snug truncate">
@@ -84,7 +99,7 @@ export function EventStream({
               {onAcknowledge && (
                 <button
                   disabled={acknowledged}
-                  onClick={() => onAcknowledge(event.id)}
+                  onClick={() => onAcknowledge(numericId)}
                   className={cn(
                     "inline-flex items-center gap-1 rounded-md px-2 py-1 text-[0.72rem] font-medium transition-colors",
                     acknowledged
@@ -95,7 +110,7 @@ export function EventStream({
                   {acknowledged ? (
                     <>
                       <CheckCircle2 size={12} className="text-[var(--healthy)]" />
-                      <span>Ack'd</span>
+                      <span>Ack&apos;d</span>
                     </>
                   ) : (
                     <>

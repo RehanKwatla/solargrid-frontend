@@ -50,7 +50,7 @@ export function SolarTracking3D() {
   const isActive = simulation.trackingStatus === "ACTIVE";
 
   return (
-    <div className="relative h-[min(52vh,420px)] min-h-[280px] w-full overflow-hidden bg-[#a8c8d8] dark:bg-[#1a2e1c]">
+    <div className="relative h-[280px] sm:h-[300px] w-full min-w-0 overflow-hidden bg-[#a8c8d8] dark:bg-[#1a2e1c]">
       <Canvas
         shadows
         camera={{ position: [7, 5, 7], fov: 42 }}

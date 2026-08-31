@@ -19,7 +19,7 @@ The product's current promise is: **the focused operating layer for teams who ne
 | Visual system | **Grid Atlas**: blue-black graphite surfaces, low-key field imagery, Space Grotesk display type, IBM Plex Mono utility text, micro-grid texture, and Signal Lime for selected/live/healthy state. |
 | Signal Lime | `#D8FF3E`; reserve it for selected navigation, live or healthy state, decisive numerals, and locator geometry. Amber (#f1bf70) and coral (#fa856e) are reserved for watch and critical conditions. |
 | UI components | Reusable components are grouped by function beneath `components/layout`, `dashboard`, `power-flow`, `charts`, `alerts`, `solar-tracking`, and `common`. |
-| Data and services | `data/mockData.ts` contains typed prototype data. `services/api.ts` and `websocket.ts` are intentionally client-safe seams, not live integrations. |
+| Data and services | `data/mockData.ts` contains typed prototype data. `data/types.ts` has comprehensive Supabase schema types. `services/api.ts` queries Supabase when configured, falls back to mock. `hooks/useSupabaseData.ts` provides domain-specific data hooks. `contexts/DashboardDataContext.tsx` aggregates all data with loading/error/status. `lib/supabase.ts` initializes the Supabase client from VITE_ env vars. |
 | Visual assets | Brand mark and visual imagery are stored through managed `/manus-storage/` URLs. Do not copy large media into the project tree. |
 | 3D Intro source of truth | `solargrid-brutalist-hero (4).html` is the sole approved, locked source/reference for the root 3D intro. Never use or merge `solargrid-brutalist-hero (3).html`; do not alter Version 4's scene, environment, tracker architecture, animation, telemetry, final Smart Grid state, or Enter SolarGrid button. Dashboard enhancements—including Strands—begin only after entering the dashboard. |
 | Operating modes | 4 modes: Self-Powered, Cost Saving, Emergency Watch, Grid Backup. Currently hardcoded to Self-Powered. |
@@ -105,6 +105,51 @@ Avoid generic bright SaaS panels, purple gradients, rounded-card monoculture, de
 | Landing page | Completely untouched (SolarGridIntro.tsx, solargrid-intro.html). |
 
 **Verification:** `npx tsc --noEmit` → 0 errors. `npx vite build` → 2,884 modules, 0 errors. |
+
+## Phase 1: Dashboard Data Layer — Complete
+
+| Change | Details |
+| --- | --- |
+| Supabase client | Created `lib/supabase.ts` — initializes client from VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY env vars. Returns null when unconfigured, enabling seamless mock fallback. |
+| Typed data models | Created `data/types.ts` — comprehensive TypeScript interfaces for all dashboard data: TelemetryReading, EnergyHistoryPoint, OperatingModeRecord, ForecastData, OptimizationDecision, LoadTier, AlertRecord, MeteringRecord, PredictedDemand, Facility, DataSourceStatus. |
+| DataState components | Created `components/common/DataState.tsx` — reusable loading, error, empty, not-available, stale indicator, last-updated timestamp, and data source badge (live/mock/unavailable) components. |
+| DashboardDataContext | Created `contexts/DashboardDataContext.tsx` — central provider aggregating all Supabase queries with per-domain loading/error/status. When Supabase is not configured, all data falls back to existing mock values. |
+| API service updated | Rewrote `services/api.ts` — each method now checks isSupabaseConfigured, queries live backend, catches errors, and falls back to mock data. Returns consistent typed shapes. |
+| useSupabaseQuery hooks | Created `hooks/useSupabaseData.ts` — generic Supabase query hook with auto-polling, stale detection, error handling, and mock fallback. 10 domain-specific hooks: telemetry (30s poll), energy history, operating mode, forecast, optimization, load tiers, alerts (60s poll), metering, predicted demand, facility. |
+| App.tsx updated | Wrapped DashboardRoutes in DashboardDataProvider — data context available to all dashboard pages. |
+| Overview page | Consumes DashboardDataContext for facility, operatingMode, optimization, alerts. Shows DataSourceBadge, LastUpdated, DataEmpty when backend unavailable. |
+| Energy page | Consumes DashboardDataContext for telemetry. Shows DataEmpty for missing battery SOC, supply composition uses live values when available. |
+| Intelligence page | Consumes DashboardDataContext for forecast, optimization, loadTiers, predictedDemand. Shows predicted demand section only when live Supabase data exists. |
+| Alerts page | Consumes DashboardDataContext for alerts. Shows severity counts from live data. |
+| Metering page | Consumes DashboardDataContext for metering records. Shows mock notice only when data source is mock. |
+| TopBar | Shows backend status indicator: "Backend Live" (green pulse), "Simulated" (gray), or "Offline" (red) based on overallStatus. |
+| PowerFlow | Prefers Supabase telemetry when live, falls back to SolarTracking simulation telemetry. |
+| EnergyMetrics | Prefers Supabase telemetry when live, falls back to SolarTracking simulation telemetry. Shows ValueNA when data unavailable. |
+| EventStream | Updated to accept both old AlertItem (number id) and new AlertRecord (string id) formats via AlertItemLike type. |
+| .env template | Created with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY placeholders. |
+| @supabase/supabase-js | Installed as production dependency. |
+
+**Data flow architecture:**
+- `Supabase client` → `useSupabaseQuery` hooks → `DashboardDataContext` → page components
+- `SolarTrackingContext` (3D simulation) → `useTelemetry()` hook → PowerFlow, EnergyMetrics (fallback path)
+- `api.ts` service → available for non-context consumers (websocket, external integrations)
+
+**When Supabase is not configured (current state):**
+- All hooks return mock data with `kind: "mock"` status
+- DataSourceBadge shows "MOCK DATA" on pages
+- TopBar shows "Simulated" indicator
+- No console errors, no failed network requests
+
+**When Supabase IS configured:**
+- Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env
+- Hooks will query Supabase tables: telemetry_readings, energy_history, operating_modes, solar_forecasts, load_forecasts, optimization_decisions, load_tiers, alerts, metering_records, predicted_demand, facilities
+- If a table doesn't exist, falls back to mock with error message in status
+- DataSourceBadge shows "LIVE BACKEND" on pages
+- TopBar shows "Backend Live" green pulse indicator
+- Auto-polling: telemetry every 30s, alerts every 60s
+- Stale detection: marks data as stale after 2 minutes without refresh
+
+**Verification:** `npx tsc --noEmit` → 0 errors. `npx vite build` → 2,933 modules, 0 errors. SolarGridIntro page, solargrid-intro.html, ThemeContext, SolarTrackingContext all untouched. All routes functional.
 
 ## Open opportunities
 
