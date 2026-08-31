@@ -224,6 +224,8 @@ export type EnergySharingSummary = {
   today_earnings_inr: number;
   pending_earnings_inr: number;
   avg_selling_rate_inr: number;
+  avg_buying_rate_inr?: number;
+  avoided_cost_inr?: number;
   total_energy_sold_kwh: number;
   sharing_status: SharingStatus;
   updated_at: string;

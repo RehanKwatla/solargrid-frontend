@@ -141,6 +141,8 @@ export const mockEnergySharingSummary = {
   today_earnings_inr: 2614,
   pending_earnings_inr: 1088,
   avg_selling_rate_inr: 6.80,
+  avg_buying_rate_inr: 6.35,
+  avoided_cost_inr: 34820,
   total_energy_sold_kwh: 2713.2,
   sharing_status: "Active Sharing" as const,
   updated_at: new Date().toISOString(),
