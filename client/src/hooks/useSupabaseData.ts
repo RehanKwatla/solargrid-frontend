@@ -19,6 +19,9 @@ import {
   alerts,
   feature1Metering,
   facility,
+  mockEnergySharingSummary,
+  mockEnergyTransactions,
+  mockEnergyPeers,
 } from "@/data/mockData";
 import type {
   TelemetryReading,
@@ -32,6 +35,9 @@ import type {
   PredictedDemand,
   Facility,
   DataSourceStatus,
+  EnergySharingSummary,
+  EnergyTransaction,
+  EnergyPeer,
 } from "@/data/types";
 
 /* ────────────────────────────────────────────
@@ -55,13 +61,19 @@ function useSupabaseQuery<T>(
   mockFallback: T,
   intervalMs?: number
 ): SupabaseQueryResult<T> {
-  const [data, setData] = useState<T | null>(null);
-  const [status, setStatus] = useState<DataSourceStatus>({
-    kind: "unavailable",
-    lastUpdated: null,
+  const fetcherRef = useRef(fetcher);
+  fetcherRef.current = fetcher;
+
+  const mockFallbackRef = useRef(mockFallback);
+  mockFallbackRef.current = mockFallback;
+
+  const [data, setData] = useState<T | null>(() => (!isSupabaseConfigured ? mockFallback : null));
+  const [status, setStatus] = useState<DataSourceStatus>(() => ({
+    kind: !isSupabaseConfigured ? "mock" : "unavailable",
+    lastUpdated: !isSupabaseConfigured ? new Date() : null,
     isStale: false,
     error: null,
-  });
+  }));
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const mountedRef = useRef(true);
@@ -75,12 +87,15 @@ function useSupabaseQuery<T>(
     async function run() {
       if (!isSupabaseConfigured || !supabase) {
         if (mountedRef.current) {
-          setData(mockFallback);
-          setStatus({
-            kind: "mock",
-            lastUpdated: new Date(),
-            isStale: false,
-            error: null,
+          setData(mockFallbackRef.current);
+          setStatus((prev) => {
+            if (prev.kind === "mock" && prev.lastUpdated) return prev;
+            return {
+              kind: "mock",
+              lastUpdated: new Date(),
+              isStale: false,
+              error: null,
+            };
           });
           setError(null);
         }
@@ -88,7 +103,7 @@ function useSupabaseQuery<T>(
       }
 
       try {
-        const result = await fetcher();
+        const result = await fetcherRef.current();
         if (mountedRef.current) {
           if (result !== null) {
             setData(result);
@@ -100,8 +115,7 @@ function useSupabaseQuery<T>(
             });
             setError(null);
           } else {
-            // Table might not exist yet — fall back to mock
-            setData(mockFallback);
+            setData(mockFallbackRef.current);
             setStatus({
               kind: "mock",
               lastUpdated: new Date(),
@@ -114,7 +128,7 @@ function useSupabaseQuery<T>(
       } catch (err) {
         if (mountedRef.current) {
           const msg = err instanceof Error ? err.message : String(err);
-          setData(mockFallback);
+          setData(mockFallbackRef.current);
           setStatus({
             kind: "mock",
             lastUpdated: new Date(),
@@ -136,7 +150,7 @@ function useSupabaseQuery<T>(
       mountedRef.current = false;
       if (timer) clearInterval(timer);
     };
-  }, [refreshKey, tableName, fetcher, mockFallback, intervalMs]);
+  }, [refreshKey, tableName, intervalMs]);
 
   // Mark as stale after 2 minutes
   useEffect(() => {
@@ -502,4 +516,74 @@ async function fetchFacility(): Promise<Facility | null> {
 
 export function useFacilityQuery(): SupabaseQueryResult<Facility> {
   return useSupabaseQuery("facilities", fetchFacility, mockFacility());
+}
+
+/* ────────────────────────────────────────────
+ * Energy Sharing Summary Hook
+ * ──────────────────────────────────────────── */
+
+async function fetchEnergySharingSummary(): Promise<EnergySharingSummary | null> {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("energy_sharing_summary")
+    .select("*")
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .single();
+  if (error) throw error;
+  return data as EnergySharingSummary;
+}
+
+export function useEnergySharingQuery(): SupabaseQueryResult<EnergySharingSummary> {
+  return useSupabaseQuery(
+    "energy_sharing_summary",
+    fetchEnergySharingSummary,
+    mockEnergySharingSummary,
+    30_000
+  );
+}
+
+/* ────────────────────────────────────────────
+ * Energy Transactions Hook
+ * ──────────────────────────────────────────── */
+
+async function fetchEnergyTransactions(): Promise<EnergyTransaction[] | null> {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("energy_transactions")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as EnergyTransaction[];
+}
+
+export function useEnergyTransactionsQuery(): SupabaseQueryResult<EnergyTransaction[]> {
+  return useSupabaseQuery(
+    "energy_transactions",
+    fetchEnergyTransactions,
+    mockEnergyTransactions,
+    30_000
+  );
+}
+
+/* ────────────────────────────────────────────
+ * Energy Peers Hook
+ * ──────────────────────────────────────────── */
+
+async function fetchEnergyPeers(): Promise<EnergyPeer[] | null> {
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("energy_sharing_peers")
+    .select("*")
+    .order("distance_km", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as EnergyPeer[];
+}
+
+export function useEnergyPeersQuery(): SupabaseQueryResult<EnergyPeer[]> {
+  return useSupabaseQuery(
+    "energy_sharing_peers",
+    fetchEnergyPeers,
+    mockEnergyPeers
+  );
 }

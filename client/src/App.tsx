@@ -9,6 +9,7 @@ import { DashboardDataProvider } from "./contexts/DashboardDataContext";
 import { DashboardLayout } from "./layouts/DashboardLayout";
 import Alerts from "./pages/Alerts";
 import Energy from "./pages/Energy";
+import EnergySharing from "./pages/EnergySharing";
 import Feature1 from "./pages/Feature1";
 import Intelligence from "./pages/Intelligence";
 import Overview from "./pages/Overview";
@@ -22,6 +23,8 @@ function DashboardRoutes() {
           <Route path="/overview" component={Overview} />
           <Route path="/dashboard"><Redirect to="/overview" /></Route>
           <Route path="/energy" component={Energy} />
+          <Route path="/energy-sharing" component={EnergySharing} />
+          <Route path="/sharing"><Redirect to="/energy-sharing" /></Route>
           <Route path="/intelligence" component={Intelligence} />
           <Route path="/alerts" component={Alerts} />
           <Route path="/feature-1" component={Feature1} />

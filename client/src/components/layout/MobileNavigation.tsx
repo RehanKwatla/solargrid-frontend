@@ -1,4 +1,4 @@
-import { AlertTriangle, BrainCircuit, LayoutDashboard, Map, Settings, X, Zap } from "lucide-react";
+import { AlertTriangle, ArrowLeftRight, BrainCircuit, LayoutDashboard, Map, Settings, X, Zap } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { facility } from "@/data/mockData";
@@ -7,6 +7,7 @@ import { useTelemetry } from "@/contexts/SolarTrackingContext";
 const links = [
   { href: "/overview", label: "Overview", icon: LayoutDashboard },
   { href: "/energy", label: "Energy", icon: Zap },
+  { href: "/energy-sharing", label: "Energy Sharing", icon: ArrowLeftRight },
   { href: "/intelligence", label: "Intelligence", icon: BrainCircuit },
   { href: "/alerts", label: "Events", icon: AlertTriangle, badge: "3" },
   { href: "/feature-1", label: "Metering", icon: Map },

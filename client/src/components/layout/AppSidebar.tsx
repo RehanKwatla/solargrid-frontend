@@ -1,4 +1,4 @@
-import { AlertTriangle, BrainCircuit, ChevronLeft, ChevronRight, LayoutDashboard, Map, Settings, Zap } from "lucide-react";
+import { AlertTriangle, ArrowLeftRight, BrainCircuit, ChevronLeft, ChevronRight, LayoutDashboard, Map, Settings, Zap } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { facility } from "@/data/mockData";
@@ -8,6 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 const navigation = [
   { href: "/overview", label: "Overview", icon: LayoutDashboard },
   { href: "/energy", label: "Energy", icon: Zap },
+  { href: "/energy-sharing", label: "Energy Sharing", icon: ArrowLeftRight },
   { href: "/intelligence", label: "Intelligence", icon: BrainCircuit },
   { href: "/alerts", label: "Events", icon: AlertTriangle, badge: "3" },
   { href: "/feature-1", label: "Metering", icon: Map },

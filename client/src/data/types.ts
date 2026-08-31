@@ -201,6 +201,61 @@ export type PredictedDemand = {
 };
 
 /* ────────────────────────────────────────────
+ * Energy Sharing & Microgrid Peer Trading
+ * ──────────────────────────────────────────── */
+
+export type SharingStatus =
+  | "Active Sharing"
+  | "Surplus Available"
+  | "Requesting Support"
+  | "Balanced"
+  | "Idle";
+
+export type EnergySharingSummary = {
+  id: string;
+  facility_id: string;
+  available_energy_kwh: number;
+  energy_shared_kwh: number;
+  energy_received_kwh: number;
+  credit_balance_kwh: number;
+  credit_rate_inr_per_kwh: number;
+  credits_earned: number;
+  total_earnings_inr: number;
+  today_earnings_inr: number;
+  pending_earnings_inr: number;
+  avg_selling_rate_inr: number;
+  total_energy_sold_kwh: number;
+  sharing_status: SharingStatus;
+  updated_at: string;
+};
+
+export type TransactionType = "Sold" | "Bought" | "Shared" | "Received";
+export type TransactionStatus = "Completed" | "Pending" | "Settled" | "Failed";
+
+export type EnergyTransaction = {
+  id: string;
+  facility_id: string;
+  type: TransactionType;
+  amount_kwh: number;
+  rate_inr: number;
+  total_amount_inr: number;
+  status: TransactionStatus;
+  peer_entity: string;
+  notes?: string;
+  created_at: string;
+};
+
+export type EnergyPeer = {
+  id: string;
+  name: string;
+  type: "hospital_wing" | "clinic" | "microgrid_feeder" | "storage_facility";
+  distance_km: number;
+  demand_status: "High Demand" | "Surplus" | "Balanced" | "Critical";
+  available_capacity_kwh: number;
+  current_rate_inr: number;
+};
+
+/* ────────────────────────────────────────────
  * Dashboard Aggregated State
  * ──────────────────────────────────────────── */
 
@@ -215,6 +270,9 @@ export type DashboardDataState = {
   metering: MeteringRecord[];
   predictedDemand: PredictedDemand | null;
   facility: Facility | null;
+  energySharing: EnergySharingSummary | null;
+  energyTransactions: EnergyTransaction[];
+  energyPeers: EnergyPeer[];
 };
 
 export type DataSourceStatus = {

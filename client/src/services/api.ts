@@ -9,6 +9,9 @@ import {
   optimizationDecision as mockOptimization,
   priorityDispatch as mockPriorityDispatch,
   solarForecast as mockSolarForecast,
+  mockEnergySharingSummary,
+  mockEnergyTransactions,
+  mockEnergyPeers,
 } from "@/data/mockData";
 import type {
   TelemetryReading,
@@ -19,6 +22,9 @@ import type {
   LoadTier,
   AlertRecord,
   MeteringRecord,
+  EnergySharingSummary,
+  EnergyTransaction,
+  EnergyPeer,
 } from "@/data/types";
 
 /**
@@ -323,5 +329,77 @@ export const api = {
       status: m.status,
       source: m.source,
     }));
+  },
+
+  async getEnergySharingSummary(): Promise<EnergySharingSummary> {
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data, error } = await supabase
+          .from("energy_sharing_summary")
+          .select("*")
+          .order("updated_at", { ascending: false })
+          .limit(1)
+          .single();
+        if (error) throw error;
+        return data as EnergySharingSummary;
+      } catch {
+        // Fall through to mock
+      }
+    }
+    await wait();
+    return mockEnergySharingSummary as EnergySharingSummary;
+  },
+
+  async getEnergyTransactions(): Promise<EnergyTransaction[]> {
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data, error } = await supabase
+          .from("energy_transactions")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return (data ?? []) as EnergyTransaction[];
+      } catch {
+        // Fall through to mock
+      }
+    }
+    await wait();
+    return mockEnergyTransactions as EnergyTransaction[];
+  },
+
+  async getEnergyPeers(): Promise<EnergyPeer[]> {
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data, error } = await supabase
+          .from("energy_sharing_peers")
+          .select("*")
+          .order("distance_km", { ascending: true });
+        if (error) throw error;
+        return (data ?? []) as EnergyPeer[];
+      } catch {
+        // Fall through to mock
+      }
+    }
+    await wait();
+    return mockEnergyPeers as EnergyPeer[];
+  },
+
+  async createEnergyTransaction(transaction: Omit<EnergyTransaction, "id" | "created_at">): Promise<EnergyTransaction> {
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase
+        .from("energy_transactions")
+        .insert([transaction])
+        .select()
+        .single();
+      if (error) throw error;
+      return data as EnergyTransaction;
+    }
+    await wait(250);
+    const newTx: EnergyTransaction = {
+      ...transaction,
+      id: `tx-${Date.now()}`,
+      created_at: new Date().toISOString(),
+    };
+    return newTx;
   },
 };
