@@ -33,6 +33,13 @@
 
 > Future agents must add their task-specific checklist items here before substantial implementation work, then mark them complete only after verification.
 
+## Critical Loads UI Fix — In Progress
+
+- [x] Locate the existing Critical Loads route, modal, and supporting mock data.
+- [x] Make the Set Priority modal and its backdrop fully opaque while preserving its layout and controls.
+- [x] Limit the page to one representative critical load for ICU, OT, and Emergency & Trauma.
+- [ ] Verify the route at 100% zoom, run `pnpm check` and `pnpm build`, then record the result in memory.
+
 ## Attached Guidance Update — Complete
 
 - [x] Review the attached guided prompt and map its requirements to the current SolarGrid architecture.

@@ -83,7 +83,7 @@ export function EditPriorityModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[480px] bg-surface border border-border p-6 shadow-2xl">
+      <DialogContent className="sm:max-w-[480px] !bg-[#10150f] border border-border p-6 shadow-[0_24px_64px_rgba(0,0,0,0.6)]">
         <DialogHeader>
           <div className="flex items-center gap-2.5 mb-1">
             <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground font-bold">

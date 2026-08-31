@@ -115,7 +115,7 @@ export function CriticalLoadOverview() {
               <span className="ml-1 font-mono text-xs font-bold text-[var(--danger)]">kW</span>
             </p>
             <p className="text-[0.72rem] text-[var(--danger)]/80 mt-1 font-semibold truncate">
-              ICU & Surgical Life Support
+              ICU · OT · Emergency & Trauma
             </p>
           </div>
         </div>
@@ -134,7 +134,7 @@ export function CriticalLoadOverview() {
               <span className="ml-1 font-mono text-xs font-medium text-text-tertiary">kW</span>
             </p>
             <p className="text-[0.72rem] text-text-secondary mt-1 font-medium truncate">
-              Emergency & Diagnostics
+              No representative loads
             </p>
           </div>
         </div>
@@ -153,7 +153,7 @@ export function CriticalLoadOverview() {
               <span className="ml-1 font-mono text-xs font-medium text-text-tertiary">kW</span>
             </p>
             <p className="text-[0.72rem] text-text-secondary mt-1 font-medium truncate">
-              General Inpatient Wards
+              No representative loads
             </p>
           </div>
         </div>
@@ -172,7 +172,7 @@ export function CriticalLoadOverview() {
               <span className="ml-1 font-mono text-xs font-medium text-text-tertiary">kW</span>
             </p>
             <p className="text-[0.72rem] text-text-secondary mt-1 font-medium truncate">
-              Kitchen & Facilities
+              No representative loads
             </p>
           </div>
         </div>

@@ -154,3 +154,9 @@ Avoid generic bright SaaS panels, purple gradients, rounded-card monoculture, de
 ## Open opportunities
 
 The next highest-value product increments are live inverter/weather/battery telemetry, interactive asset topology with drill-down, and action workflows for alert acknowledgement and storage dispatch. The current `operatingState` and service seams were deliberately shaped so all demo states can later be supplied by one validated system-state feed. Treat these as opportunities, not commitments; validate scope and integration readiness before implementation.
+
+## Last completed changes — 2026-08-31
+
+| Change | Details | Verification |
+| --- | --- | --- |
+| Critical Loads UI correction | Limited hospital critical-load mock data to one CRITICAL, Solar + Battery, 100% Protected representative load for ICU, OT, and Emergency & Trauma. Made the Set Priority dialog an opaque `#10150f` graphite surface with an elevated shadow and replaced the shared dialog backdrop with `bg-black/70`; priority-editing controls and semantic priority colors remain intact. Updated priority overview and audit references to the reduced department set. | `npm run check` passed and `git diff --check` passed. `npm run build` transformed 2,988 modules but did not complete before the local execution window, with only existing analytics-template warnings. `pnpm check/build` was blocked by existing ignored-build-script approval. Local HTTP checks reached the Critical Loads route, but the embedded visual-review browser could not connect to the local development host, so 100% zoom visual QA remains outstanding in `todo.md`. |
