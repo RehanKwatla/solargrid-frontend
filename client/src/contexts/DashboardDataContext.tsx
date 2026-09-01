@@ -105,6 +105,7 @@ type DashboardDataContextValue = {
     operator: string,
     reason: string
   ) => Promise<void>;
+  acknowledgeAlert: (alertId: string | number) => Promise<void>;
 };
 
 const DashboardDataContext = createContext<DashboardDataContextValue | null>(null);
@@ -242,13 +243,16 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
   const recordEnergyTransaction = async (
     tx: Omit<EnergyTransaction, "id" | "created_at">
   ): Promise<EnergyTransaction> => {
-    const created = await api.createEnergyTransaction(tx);
+    const res = await api.createEnergyTransaction(tx);
+    const created = res.transaction;
 
     // Prepend locally for immediate UI reactivity
     setLocalTransactions((prev) => [created, ...prev]);
 
-    // Update summary metrics optimistically
-    if (mergedSummary) {
+    // Update summary metrics
+    if (res.summary) {
+      setLocalSummaryOverride(res.summary);
+    } else if (mergedSummary) {
       if (tx.type === "Sold") {
         setLocalSummaryOverride((prev) => ({
           ...prev,
@@ -276,6 +280,9 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
       }
     }
 
+    energySharing.refetch();
+    energyTransactions.refetch();
+
     return created;
   };
 
@@ -299,6 +306,8 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     }));
 
     setLocalAuditLogs((prev) => [result.audit, ...prev]);
+    hospitalLoadsQuery.refetch();
+    loadAuditLogsQuery.refetch();
   };
 
   const toggleEmergencyMode = async (
@@ -322,6 +331,13 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
       reason: reason || (active ? "Grid emergency load preservation initiated" : "Resumed normal schedule"),
     };
     setLocalAuditLogs((prev) => [emergencyAudit, ...prev]);
+    emergencyModeQuery.refetch();
+    operatingMode.refetch();
+  };
+
+  const acknowledgeAlert = async (alertId: string | number): Promise<void> => {
+    await api.acknowledgeAlert(alertId);
+    alerts.refetch();
   };
 
   const value: DashboardDataContextValue = {
@@ -365,6 +381,7 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     recordEnergyTransaction,
     updateHospitalLoadPriority,
     toggleEmergencyMode,
+    acknowledgeAlert,
   };
 
   return (

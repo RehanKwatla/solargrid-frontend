@@ -7,14 +7,18 @@ export function PowerFlow() {
   const { telemetry: dbTelemetry, telemetryStatus, operatingMode } = useDashboardData();
   const simTelemetry = useTelemetry();
 
-  // Prefer live Supabase data, fall back to simulation
+  // Prefer live Supabase / Backend data, fall back to simulation
   const t =
     telemetryStatus.kind === "live" && dbTelemetry
       ? {
           solarKw: dbTelemetry.solar_generation_kw ?? 0,
           gridKw: dbTelemetry.grid_import_kw ?? 0,
           batterySoc: dbTelemetry.battery_soc_percent ?? 0,
-          batteryKw: dbTelemetry.battery_charge_kw ?? dbTelemetry.battery_discharge_kw ?? 0,
+          batteryKw: dbTelemetry.battery_charge_kw
+            ? dbTelemetry.battery_charge_kw
+            : dbTelemetry.battery_discharge_kw
+            ? -dbTelemetry.battery_discharge_kw
+            : 0,
           loadKw: dbTelemetry.total_load_kw ?? 0,
           criticalLoadKw: dbTelemetry.critical_load_kw ?? 0,
           gridConnected: dbTelemetry.grid_connected ?? false,

@@ -8,6 +8,8 @@ import { facility as fallbackFacility } from "@/data/mockData";
 const titles: Record<string, string> = {
   "/overview": "Energy overview",
   "/energy": "Energy",
+  "/critical-loads": "Critical Load Management",
+  "/energy-sharing": "Energy Sharing & Peer Trading",
   "/intelligence": "Intelligence",
   "/alerts": "Events",
   "/feature-1": "Metering",

@@ -1,4 +1,5 @@
-import { energyHistory } from "@/data/mockData";
+import { useDashboardData } from "@/contexts/DashboardDataContext";
+import type { EnergyHistoryPoint } from "@/data/types";
 import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -37,8 +38,18 @@ const getConfiguration = (isDark: boolean) => ({
   },
 });
 
-export function EnergyChart({ type, height = 220 }: { type: "solar" | "demand" | "battery" | "grid"; height?: number }) { 
+export function EnergyChart({
+  type,
+  height = 220,
+  data: propData,
+}: {
+  type: "solar" | "demand" | "battery" | "grid";
+  height?: number;
+  data?: EnergyHistoryPoint[];
+}) { 
   const { theme } = useTheme();
+  const { energyHistory } = useDashboardData();
+  const chartData = propData || energyHistory;
   const isDark = theme === "dark";
   const configuration = getConfiguration(isDark);
   const chart = configuration[type]; 
@@ -48,7 +59,7 @@ export function EnergyChart({ type, height = 220 }: { type: "solar" | "demand" |
   return (
     <div style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={energyHistory} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+        <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
           <defs>
             <linearGradient id={`${type}Fill`} x1="0" x2="0" y1="0" y2="1">
               <stop offset="0%" stopColor={chart.color} stopOpacity={isDark ? 0.18 : 0.12} />

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { energyHistory } from "@/data/mockData";
+import { useState, useMemo } from "react";
+import { useDashboardData } from "@/contexts/DashboardDataContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 import {
@@ -16,28 +16,31 @@ import {
 } from "recharts";
 import { BarChart3, TrendingUp, Zap } from "lucide-react";
 
-// Synthetic revenue settlement progression data based on energyHistory
-const settlementHistory = energyHistory.map((point, index) => {
-  const cumulativeRevenue = Math.round(point.solar * 6.8 * (index + 1) * 0.4);
-  const avoidedCost = Math.round(point.demand * 7.5 * (index + 1) * 0.5);
-  const sharedKwh = Math.round(Math.max(0, point.solar - point.demand) * 1.5);
-
-  return {
-    time: point.time,
-    solar: point.solar,
-    demand: point.demand,
-    grid: point.grid,
-    battery: point.battery,
-    shared: sharedKwh,
-    revenue: cumulativeRevenue,
-    avoidedCost: avoidedCost,
-  };
-});
-
 export function MeteringAnalyticsCharts() {
   const { theme } = useTheme();
+  const { energyHistory } = useDashboardData();
   const isDark = theme === "dark";
   const [activeTab, setActiveTab] = useState<"balance" | "grid_shared" | "revenue">("balance");
+
+  // Revenue settlement progression data dynamically derived from live energyHistory
+  const settlementHistory = useMemo(() => {
+    return energyHistory.map((point, index) => {
+      const cumulativeRevenue = Math.round(point.solar * 6.8 * (index + 1) * 0.4);
+      const avoidedCost = Math.round(point.demand * 7.5 * (index + 1) * 0.5);
+      const sharedKwh = Math.round(Math.max(0, point.solar - point.demand) * 1.5);
+
+      return {
+        time: point.time,
+        solar: point.solar,
+        demand: point.demand,
+        grid: point.grid,
+        battery: point.battery,
+        shared: sharedKwh,
+        revenue: cumulativeRevenue,
+        avoidedCost: avoidedCost,
+      };
+    });
+  }, [energyHistory]);
 
   const gridColor = isDark ? "#2a3226" : "#d4d9ca";
   const textColor = isDark ? "#95a38c" : "#5a6554";

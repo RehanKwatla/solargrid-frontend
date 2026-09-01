@@ -10,15 +10,19 @@ import {
 
 export default function Alerts() {
   const [acknowledgedIds, setAcknowledgedIds] = useState<number[]>([]);
-  const acknowledge = (id: number) =>
-    setAcknowledgedIds((ids) => (ids.includes(id) ? ids : [...ids, id]));
 
   const {
     facility,
     alerts,
     alertsStatus,
     facilityStatus,
+    acknowledgeAlert,
   } = useDashboardData();
+
+  const acknowledge = (id: number) => {
+    setAcknowledgedIds((ids) => (ids.includes(id) ? ids : [...ids, id]));
+    acknowledgeAlert(id).catch(console.error);
+  };
 
   const facilityCode = facility?.code ?? "—";
   const facilityLocation = facility?.location ?? "—";

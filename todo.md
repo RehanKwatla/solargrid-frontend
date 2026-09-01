@@ -1,24 +1,12 @@
 # Active Repository Tasks
 
-## Charcoal Light Theme — In Progress
+## Runtime Error and Landing Restoration — In Progress
 
-- [x] Replace only light-theme semantic color tokens with the approved charcoal, limestone, olive, and terracotta palette.
-- [x] Retune light-mode chart and tooltip colors that bypass semantic tokens; leave existing dark-mode branches unchanged.
-- [x] Visually verify light and dark modes, then run typecheck and production build.
-- [x] Record the palette decision and verification in `memory.md`.
-
-## Locked Version 4 Intro Adoption — Complete
-
-- [x] Replace the served root intro with an exact copy of approved Version 4.
-- [x] Keep dashboard entry handling outside the locked Version 4 source.
-- [x] Verify source identity and the root-to-dashboard flow, then update memory.
-
-## Shared Dashboard Energy Field — Complete
-
-- [x] Add one OGL-based Strands component and a dashboard-level background host.
-- [x] Tune the shared layer for restrained SolarGrid dark and light palettes, reduced motion, and responsive density.
-- [x] Verify the dashboard shell visually and run typecheck and production build.
-- [x] Record the implementation and verification in `memory.md`.
+- [ ] Reproduce and trace the live runtime exception to its source.
+- [ ] Apply the smallest root-cause correction without disturbing unrelated working-tree changes.
+- [ ] Trace and restore the landing overlay’s CSS viewport scale while preserving the 3D animation.
+- [ ] Verify all requested routes, landing scroll behavior, viewport sizes, and browser zoom levels.
+- [ ] Run the project type check and production build, then record the repair in memory.
 
 ## Natural SolarGrid Design Refinement — Complete
 
@@ -32,13 +20,6 @@
 - [x] Save a verified checkpoint containing the repository guidance.
 
 > Future agents must add their task-specific checklist items here before substantial implementation work, then mark them complete only after verification.
-
-## Critical Loads UI Fix — In Progress
-
-- [x] Locate the existing Critical Loads route, modal, and supporting mock data.
-- [x] Make the Set Priority modal and its backdrop fully opaque while preserving its layout and controls.
-- [x] Limit the page to one representative critical load for ICU, OT, and Emergency & Trauma.
-- [ ] Verify the route at 100% zoom, run `pnpm check` and `pnpm build`, then record the result in memory.
 
 ## Attached Guidance Update — Complete
 
@@ -70,23 +51,6 @@
 - [x] Update NotFound page: Grid Atlas dark theme, operational-panel styling, consistent action-button.
 - [x] Enhance Intelligence page: forecast cards with distinct border colors (solar=lime, demand=amber), tier flow visualization, improved tier dispatch cards.
 - [x] Run typecheck (`tsc --noEmit`) and production build (`vite build`) — both pass.
-
-## Dashboard Responsive Layout & Overflow Fix — Complete
-
-- [x] Audit root layout: html, body, #root, dashboard-shell, main content, sidebar width constraints
-- [x] Fix viewport containers: add width:100%, max-width:100%, min-width:0, box-sizing:border-box to root elements
-- [x] Fix Overview.tsx grid blowout: replace bare `Xfr` columns with `minmax(0,Xfr)` in all 4 responsive section grids
-- [x] Remove fixed max-w-[1440px] overview container that ignored sidebar offset
-- [x] Rewrite SolarTrackingSection internal layout: replace fixed `2xl:w-72 shrink-0` flex row with responsive grid `minmax(0,1.15fr) minmax(260px,0.85fr)`, break earlier at xl breakpoint
-- [x] Fix time-of-day preset controls: add flex-wrap + responsive min-width (50% below sm), shrink padding; prevent Night button clipping and horizontal overflow
-- [x] Fix PowerFlow diagram: replace fixed `px-10/px-16/px-32` padding with responsive steps, replace fixed `w-48` node cards with flexible `flex-1 max-w` sizing
-- [x] Fix EnergyMetrics grid: add minmax() columns, responsive padding, truncation and whitespace handling for hero value and supporting metric cells
-- [x] Fix TopBar: reduce padding, tighten gaps, hide secondary actions below breakpoints, add truncation and shrink-0 on static labels
-- [x] Harden AppSidebar: add max-w constraints and overflow-x-hidden
-- [x] Run `tsc --noEmit` → PASS (zero errors)
-- [x] Run `vite build` → PASS (completed successfully with existing pre-existing warnings only)
-- [x] Run GetDiagnostics → PASS (empty array)
-- [x] Confirm intro page / SolarGrid 3D animation untouched (solargrid-intro.html and SolarGridIntro.tsx unchanged)
 
 ### Remaining weaknesses / follow-up
 

@@ -9,13 +9,17 @@ export function EnergyMetrics() {
   const { telemetry: dbTelemetry, telemetryStatus } = useDashboardData();
   const simTelemetry = useTelemetry();
 
-  // Prefer live Supabase data, fall back to simulation telemetry
+  // Prefer live Supabase / Backend data, fall back to simulation telemetry
   const t = telemetryStatus.kind === "live" && dbTelemetry
     ? {
         solarKw: dbTelemetry.solar_generation_kw ?? 0,
         gridKw: dbTelemetry.grid_import_kw ?? 0,
         batterySoc: dbTelemetry.battery_soc_percent ?? 0,
-        batteryKw: dbTelemetry.battery_charge_kw ?? dbTelemetry.battery_discharge_kw ?? 0,
+        batteryKw: dbTelemetry.battery_charge_kw
+          ? dbTelemetry.battery_charge_kw
+          : dbTelemetry.battery_discharge_kw
+          ? -dbTelemetry.battery_discharge_kw
+          : 0,
         loadKw: dbTelemetry.total_load_kw ?? 0,
         criticalLoadKw: dbTelemetry.critical_load_kw ?? 0,
         estimatedSavingsInr: dbTelemetry.estimated_savings_inr ?? 0,

@@ -1,10 +1,12 @@
 import { jsxLocPlugin } from "@builder.io/vite-plugin-jsx-loc";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import express from "express";
 import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
+import { apiRouter } from "./server/routes";
 
 // =============================================================================
 // Manus Debug Collector - Vite Plugin
@@ -203,7 +205,26 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
+function vitePluginSolarGridApi(): Plugin {
+  return {
+    name: "solargrid-api-plugin",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use(express.json());
+      server.middlewares.use(express.urlencoded({ extended: true }));
+      server.middlewares.use("/api", apiRouter);
+    },
+  };
+}
+
+const plugins = [
+  react(),
+  tailwindcss(),
+  jsxLocPlugin(),
+  vitePluginManusRuntime(),
+  vitePluginManusDebugCollector(),
+  vitePluginStorageProxy(),
+  vitePluginSolarGridApi(),
+];
 
 export default defineConfig({
   plugins,
