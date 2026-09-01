@@ -2,11 +2,17 @@
 
 ## Runtime Error and Landing Restoration — In Progress
 
-- [ ] Reproduce and trace the live runtime exception to its source.
-- [ ] Apply the smallest root-cause correction without disturbing unrelated working-tree changes.
-- [ ] Trace and restore the landing overlay’s CSS viewport scale while preserving the 3D animation.
-- [ ] Verify all requested routes, landing scroll behavior, viewport sizes, and browser zoom levels.
-- [ ] Run the project type check and production build, then record the repair in memory.
+- [x] Re-audit the landing first-scroll DOM and all parent coordinate systems against the supplied restoration brief.
+- [x] Make only a proven viewport/renderer correction; preserve the intro scene, camera, model, animation, and scroll choreography. No source correction was warranted.
+- [ ] Visually verify the landing at 90%, 100%, 110%, and 125% browser zoom and check implemented routes for shared-style regressions.
+- [ ] Run type check and production build, then record the final restoration result in repository memory. `npm run check` passed; production build still needs a clean completion.
+- [x] Reproduce and trace the live `res.json is not a function` exception to the Vite API middleware.
+- [x] Apply the smallest root-cause correction without disturbing unrelated working-tree changes.
+- [x] Inspect the landing overlay and canvas coordinate systems; confirm normal CSS scale while preserving the 3D animation.
+- [x] Verify the live API, landing default viewport, landing scroll behavior, smaller desktop viewport, and implemented routes.
+- [x] Run the project type check and record the build limitation and route gaps in memory.
+- [ ] Perform real browser zoom checks at 90%, 110%, and 125% when browser zoom control is available.
+- [ ] Resolve the existing production-build completion issue caused after Vite reports undefined analytics-template environment values.
 
 ## Natural SolarGrid Design Refinement — Complete
 

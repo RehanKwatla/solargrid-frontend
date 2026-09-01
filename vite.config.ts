@@ -209,9 +209,14 @@ function vitePluginSolarGridApi(): Plugin {
   return {
     name: "solargrid-api-plugin",
     configureServer(server: ViteDevServer) {
-      server.middlewares.use(express.json());
-      server.middlewares.use(express.urlencoded({ extended: true }));
-      server.middlewares.use("/api", apiRouter);
+      // Vite exposes a Connect stack, whose response object is a raw Node
+      // ServerResponse. Run the router through an Express app so its request
+      // and response helpers (including res.json) are initialized first.
+      const apiApp = express();
+      apiApp.use(express.json());
+      apiApp.use(express.urlencoded({ extended: true }));
+      apiApp.use("/api", apiRouter);
+      server.middlewares.use(apiApp);
     },
   };
 }
