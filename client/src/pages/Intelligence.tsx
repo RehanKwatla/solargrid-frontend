@@ -1,6 +1,7 @@
 import { ShieldCheck, SunMedium, Zap } from "lucide-react";
 import { useDashboardData } from "@/contexts/DashboardDataContext";
 import { DayTimeline } from "@/components/dashboard/DayTimeline";
+import { ForecastingOptimizationEngine } from "@/components/intelligence/ForecastingOptimizationEngine";
 import { cn } from "@/lib/utils";
 import {
   DataEmpty,
@@ -27,8 +28,8 @@ export default function Intelligence() {
   const facilityName = facility?.name ?? "Facility";
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-5 max-w-7xl mx-auto">
-      <header className="flex flex-wrap items-end justify-between gap-4 pb-3">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+      <header className="flex flex-wrap items-end justify-between gap-4 pb-3 border-b border-border">
         <div>
           <div className="flex flex-wrap items-center gap-2.5 mb-2">
             <div className="instrument-label">
@@ -36,14 +37,19 @@ export default function Intelligence() {
             </div>
             <DataSourceBadge source={facilityStatus.kind} />
           </div>
-          <h1 className="heading-xl text-foreground">Decision Board</h1>
+          <h1 className="heading-xl text-foreground">Forecasting & Optimization</h1>
           <p className="mt-2 text-[0.84rem] text-text-secondary">
-            Forecast, dispatch decisions, and priority-based load management for {facilityName}
+            Predictive solar/load modeling, dispatch decision rationale, and hospital constraint satisfaction for {facilityName}.
           </p>
         </div>
       </header>
 
-      {/* Dispatch decision + Forecast */}
+      {/* Section 6: Forecasting & Optimization Engine */}
+      <section>
+        <ForecastingOptimizationEngine />
+      </section>
+
+      {/* Dispatch decision + Forecast Drivers */}
       <section className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
         {/* Dispatch decision */}
         <div className="border border-[var(--accent)] bg-[var(--accent)] text-primary-foreground rounded-lg p-5 sm:p-6 md:p-8 flex flex-col justify-between">

@@ -1,88 +1,102 @@
 :root {
-  /* LIGHT MODE — Warm neutral, earthy energy, high readability */
-  --bg-primary: #f0f2eb;
-  --bg-raised: #f6f7f2;
-  --surface: #ffffff;
-  --surface-soft: #eaf0df;
-  --surface-muted: #f1f4ea;
-  --border-color: #d4d9ca;
-  --border-strong: #bbc2ae;
-  --border-soft: #e2e7da;
-  --accent: #4d7a1e;
-  --accent-strong: #3d6316;
-  --accent-soft: #d3e4b4;
-  --accent-bg: #ecf5d8;
-  --primary-foreground: #ffffff;
-  --text-primary: #191e17;
-  --text-secondary: #5a6554;
-  --text-tertiary: #88917f;
-  --text-disabled: #aab3a2;
+  /* =========================================================================
+     SOLARGRID PALETTE — Indradhanu Climate-Tech Art Direction
+     Terracotta Clay: #B5543A | Olive Green: #6F7F5F | Soft Limestone: #F0E6D8
+     Deep Rust: #5A2E25 | Warm Charcoal: #252522 | Muted Cream: #FAF7F0
+     ========================================================================= */
 
-  /* Status semantics */
-  --healthy: #3d7a14;
-  --healthy-bg: #eaf4d2;
-  --healthy-ring: #a8cc6e;
-  --warning: #8a5a0e;
-  --warning-bg: #fdf2d9;
-  --warning-ring: #deb76a;
-  --danger: #a33222;
-  --danger-bg: #fbeae6;
-  --danger-ring: #e5a097;
-  --success: #3d7a14;
-  --energy: #4d7a1e;
+  /* LIGHT MODE — Warm Limestone & Muted Cream foundation with Terracotta & Olive */
+  --bg-primary: #FAF7F0;        /* Muted cream */
+  --bg-raised: #F4EFE6;         /* Layered cream */
+  --surface: #FFFFFF;           /* Crisp surface */
+  --surface-soft: #F0E6D8;      /* Soft limestone */
+  --surface-muted: #EAE2D2;
+  --border-color: #E2D9CC;      /* Fine limestone hairline */
+  --border-strong: #C9BFAFA;
+  --border-soft: #EFE9DE;
 
-  /* Radii — restrained */
+  /* Brand Accents */
+  --accent: #B5543A;            /* Terracotta clay */
+  --accent-strong: #8F3B25;     /* Deep terracotta */
+  --accent-soft: #F2D5CC;
+  --accent-bg: #FCF1EE;
+  --primary-foreground: #FFFFFF;
+
+  /* Semantic Highlights */
+  --healthy: #6F7F5F;           /* Olive green — optimal/healthy/stable */
+  --healthy-bg: #EEF3EA;
+  --healthy-ring: #9AB385;
+  --warning: #C47F2A;           /* Warm amber */
+  --warning-bg: #FDF4E5;
+  --warning-ring: #E0A656;
+  --danger: #B5543A;            /* Terracotta clay alert */
+  --danger-bg: #FBECE8;
+  --danger-ring: #E5A394;
+  --success: #6F7F5F;
+  --energy: #B5543A;
+
+  /* Typography Colors */
+  --text-primary: #252522;      /* Warm charcoal */
+  --text-secondary: #5C5B54;    /* Muted charcoal */
+  --text-tertiary: #8C8B82;     /* Subdued technical detail */
+  --text-disabled: #B0AEA5;
+
+  /* Structural Radii */
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
 
-  /* Shadows — subtle, layered */
-  --shadow-xs: 0 1px 2px rgba(25, 30, 23, 0.04);
-  --shadow-sm: 0 1px 3px rgba(25, 30, 23, 0.06), 0 1px 2px rgba(25, 30, 23, 0.03);
-  --shadow-md: 0 2px 8px rgba(25, 30, 23, 0.07), 0 1px 2px rgba(25, 30, 23, 0.04);
-  --shadow-lg: 0 8px 24px rgba(25, 30, 23, 0.08), 0 2px 6px rgba(25, 30, 23, 0.04);
+  /* Shadows — subtle, layered, architectural */
+  --shadow-xs: 0 1px 2px rgba(37, 37, 34, 0.04);
+  --shadow-sm: 0 1px 3px rgba(37, 37, 34, 0.06), 0 1px 2px rgba(37, 37, 34, 0.03);
+  --shadow-md: 0 3px 12px rgba(37, 37, 34, 0.07), 0 1px 3px rgba(37, 37, 34, 0.04);
+  --shadow-lg: 0 10px 30px rgba(37, 37, 34, 0.09), 0 2px 8px rgba(37, 37, 34, 0.04);
   --shadow-focus: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-soft);
 }
 
 .dark {
-  /* DARK MODE — Clean graphite with subtle depth, Signal Lime accent */
-  --bg-primary: #0e110d;
-  --bg-raised: #131711;
-  --surface: #191e16;
-  --surface-soft: #21271e;
-  --surface-muted: #1c2119;
-  --border-color: #2a3226;
-  --border-strong: #3a4534;
-  --border-soft: #222a1f;
-  --accent: #c4e86e;
-  --accent-strong: #d7f185;
-  --accent-soft: #3a4a22;
-  --accent-bg: #1f2a12;
-  --primary-foreground: #0a1005;
-  --text-primary: #e8eddf;
-  --text-secondary: #95a38c;
-  --text-tertiary: #657060;
-  --text-disabled: #4a5544;
+  /* DARK MODE — Operational Energy Control Center (Warm Charcoal & Deep Rust) */
+  --bg-primary: #151412;        /* Deepest warm charcoal */
+  --bg-raised: #1C1B18;         /* Elevated panel surface */
+  --surface: #22211D;           /* Warm charcoal card surface */
+  --surface-soft: #2C2B26;      /* Interactive soft surface */
+  --surface-muted: #262521;
+  --border-color: #383630;      /* Fine technical divider */
+  --border-strong: #4D4A43;
+  --border-soft: #2D2C27;
 
-  /* Status semantics */
-  --healthy: #c4e86e;
-  --healthy-bg: #1e2a11;
-  --healthy-ring: #56722a;
-  --warning: #e4b259;
-  --warning-bg: #302410;
-  --warning-ring: #6e5420;
-  --danger: #ee8472;
-  --danger-bg: #301410;
-  --danger-ring: #6e3228;
-  --success: #c4e86e;
-  --energy: #c4e86e;
+  /* Brand Accents — Luminous Terracotta & Limestone */
+  --accent: #E0785D;            /* Luminous terracotta clay */
+  --accent-strong: #F2937A;
+  --accent-soft: #4D281F;
+  --accent-bg: #331A14;
+  --primary-foreground: #151412;
 
-  /* Shadows — softer, ambient */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
+  /* Semantic Highlights — Luminous Olive & Amber */
+  --healthy: #9AB385;           /* Luminous olive green */
+  --healthy-bg: #1F2819;
+  --healthy-ring: #5A7347;
+  --warning: #E8AA48;
+  --warning-bg: #33230C;
+  --warning-ring: #7A551E;
+  --danger: #E0785D;
+  --danger-bg: #331712;
+  --danger-ring: #783526;
+  --success: #9AB385;
+  --energy: #E0785D;
+
+  /* Typography Colors — Soft Limestone on Charcoal */
+  --text-primary: #F0E6D8;      /* Soft limestone typography */
+  --text-secondary: #B5AFA4;    /* Muted limestone */
+  --text-tertiary: #807B72;     /* Subtle technical telemetry */
+  --text-disabled: #54514B;
+
+  /* Shadows — Deep, atmospheric */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 3px 12px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.7), 0 3px 10px rgba(0, 0, 0, 0.4);
   --shadow-focus: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-soft);
 }

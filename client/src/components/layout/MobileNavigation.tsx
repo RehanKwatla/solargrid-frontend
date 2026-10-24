@@ -22,12 +22,13 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 const links = [
   { href: "/overview", label: "Overview", icon: LayoutDashboard },
-  { href: "/energy", label: "Energy", icon: Zap },
+  { href: "/energy", label: "Energy Monitoring", icon: Zap },
   { href: "/critical-loads", label: "Critical Loads", icon: ShieldAlert },
   { href: "/energy-sharing", label: "Energy Sharing", icon: ArrowLeftRight },
-  { href: "/intelligence", label: "Intelligence", icon: BrainCircuit },
-  { href: "/alerts", label: "Events", icon: AlertTriangle, badge: "3" },
-  { href: "/metering", label: "Metering", icon: Map },
+  { href: "/intelligence", label: "Forecasting & Optimization", icon: BrainCircuit },
+  { href: "/alerts", label: "Events & Alerts", icon: AlertTriangle, badge: "3" },
+  { href: "/metering", label: "Metering & Reports", icon: Map },
+  { href: "/settings", label: "System Settings", icon: Settings },
 ];
 
 export function MobileNavigation({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -114,15 +115,25 @@ export function MobileNavigation({ open, onClose }: { open: boolean; onClose: ()
             );
           })}
 
-          {/* 3D Twin Experience */}
-          <Link
-            href="/"
-            onClick={onClose}
-            className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 font-sans text-[0.84rem] font-medium text-text-tertiary hover:bg-surface-soft hover:text-foreground transition-colors mt-2 border-t border-border/60 pt-2"
-          >
-            <Compass size={17} className="shrink-0 text-primary" />
-            <span>Launch 3D Twin</span>
-          </Link>
+          {/* Public Landing & 3D Twin Experience */}
+          <div className="pt-2 border-t border-border/60 space-y-1">
+            <Link
+              href="/"
+              onClick={onClose}
+              className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 font-sans text-[0.84rem] font-medium text-text-tertiary hover:bg-surface-soft hover:text-foreground transition-colors"
+            >
+              <LayoutDashboard size={17} className="shrink-0 text-[var(--accent)]" />
+              <span>Public Landing Page</span>
+            </Link>
+            <Link
+              href="/intro"
+              onClick={onClose}
+              className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 font-sans text-[0.84rem] font-medium text-text-tertiary hover:bg-surface-soft hover:text-foreground transition-colors"
+            >
+              <Compass size={17} className="shrink-0 text-primary" />
+              <span>3D Digital Twin</span>
+            </Link>
+          </div>
         </nav>
 
         {/* Live Facility Telemetry Card */}

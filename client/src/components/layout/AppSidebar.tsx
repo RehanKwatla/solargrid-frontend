@@ -19,12 +19,13 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 
 const navigation = [
   { href: "/overview", label: "Overview", icon: LayoutDashboard },
-  { href: "/energy", label: "Energy", icon: Zap },
+  { href: "/energy", label: "Energy Monitoring", icon: Zap },
   { href: "/critical-loads", label: "Critical Loads", icon: ShieldAlert },
   { href: "/energy-sharing", label: "Energy Sharing", icon: ArrowLeftRight },
-  { href: "/intelligence", label: "Intelligence", icon: BrainCircuit },
-  { href: "/alerts", label: "Events", icon: AlertTriangle, badge: "3" },
-  { href: "/metering", label: "Metering", icon: Map },
+  { href: "/intelligence", label: "Forecasting & Optimization", icon: BrainCircuit },
+  { href: "/alerts", label: "Events & Alerts", icon: AlertTriangle, badge: "3" },
+  { href: "/metering", label: "Metering & Reports", icon: Map },
+  { href: "/settings", label: "System Settings", icon: Settings },
 ];
 
 interface AppSidebarProps {
@@ -159,18 +160,32 @@ export function AppSidebar({ isCollapsed, onToggleCollapse }: AppSidebarProps) {
             return NavLink;
           })}
 
-          {/* 3D Twin Experience Link */}
-          <Link
-            href="/"
-            className={cn(
-              "relative group flex items-center rounded-lg font-sans text-[0.82rem] font-medium transition-[background-color,color] duration-150 text-text-tertiary hover:bg-surface-soft hover:text-foreground",
-              isCollapsed ? "justify-center mx-auto h-9 w-9 mt-1" : "gap-2 px-2.5 py-[0.45rem] mt-1"
-            )}
-            title="Launch 3D Digital Twin Experience"
-          >
-            <Compass size={isCollapsed ? 20 : 17} strokeWidth={2} className="shrink-0 text-primary" />
-            {!isCollapsed && <span className="truncate">3D Experience</span>}
-          </Link>
+          {/* Public Landing & 3D Twin Links */}
+          <div className="pt-2 mt-2 border-t border-border/60 space-y-0.5">
+            <Link
+              href="/"
+              className={cn(
+                "relative group flex items-center rounded-lg font-sans text-[0.82rem] font-medium transition-[background-color,color] duration-150 text-text-tertiary hover:bg-surface-soft hover:text-foreground",
+                isCollapsed ? "justify-center mx-auto h-9 w-9" : "gap-2 px-2.5 py-[0.45rem]"
+              )}
+              title="Public Editorial Landing Page"
+            >
+              <LayoutDashboard size={isCollapsed ? 20 : 17} strokeWidth={2} className="shrink-0 text-[var(--accent)]" />
+              {!isCollapsed && <span className="truncate">Public Landing</span>}
+            </Link>
+
+            <Link
+              href="/intro"
+              className={cn(
+                "relative group flex items-center rounded-lg font-sans text-[0.82rem] font-medium transition-[background-color,color] duration-150 text-text-tertiary hover:bg-surface-soft hover:text-foreground",
+                isCollapsed ? "justify-center mx-auto h-9 w-9" : "gap-2 px-2.5 py-[0.45rem]"
+              )}
+              title="Launch 3D Digital Twin Experience"
+            >
+              <Compass size={isCollapsed ? 20 : 17} strokeWidth={2} className="shrink-0 text-primary" />
+              {!isCollapsed && <span className="truncate">3D Digital Twin</span>}
+            </Link>
+          </div>
         </nav>
       </div>
 

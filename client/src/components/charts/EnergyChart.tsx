@@ -7,23 +7,23 @@ const getConfiguration = (isDark: boolean) => ({
   solar: { 
     label: "Solar generation", 
     key: "solar", 
-    color: isDark ? "#B7E64A" : "#4d7a1e", 
+    color: isDark ? "#829770" : "#58694B", 
     companion: "forecast", 
     companionLabel: "Solar forecast", 
-    companionColor: isDark ? "#95a38c" : "#88917f" 
+    companionColor: isDark ? "#95A38C" : "#7E8C76" 
   },
   demand: { 
     label: "Facility demand", 
     key: "demand", 
-    color: isDark ? "#e4b259" : "#8a5a0e", 
+    color: isDark ? "#B5543A" : "#9C4229", 
     companion: "solar", 
     companionLabel: "Solar supply", 
-    companionColor: isDark ? "#B7E64A" : "#4d7a1e" 
+    companionColor: isDark ? "#829770" : "#58694B" 
   },
   battery: { 
     label: "Battery power", 
     key: "battery", 
-    color: isDark ? "#B7E64A" : "#4d7a1e", 
+    color: isDark ? "#C87D55" : "#A64D32", 
     companion: undefined, 
     companionLabel: "", 
     companionColor: "" 
@@ -31,7 +31,7 @@ const getConfiguration = (isDark: boolean) => ({
   grid: { 
     label: "Grid consumption", 
     key: "grid", 
-    color: isDark ? "#3a4534" : "#aab3a2", 
+    color: isDark ? "#8C8C85" : "#4A4A45", 
     companion: undefined, 
     companionLabel: "", 
     companionColor: "" 

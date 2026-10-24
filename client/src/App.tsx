@@ -16,6 +16,7 @@ import Intelligence from "./pages/Intelligence";
 import Overview from "./pages/Overview";
 import Settings from "./pages/Settings";
 import SolarGridIntro from "./pages/SolarGridIntro";
+import LandingPage from "./pages/LandingPage";
 import { usePageTitle } from "./hooks/usePageTitle";
 
 function DashboardRoutes() {
@@ -50,8 +51,9 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/" component={SolarGridIntro} />
+      <Route path="/" component={LandingPage} />
       <Route path="/intro" component={SolarGridIntro} />
+      <Route path="/twin" component={SolarGridIntro} />
       <Route component={DashboardRoutes} />
     </Switch>
   );

@@ -3,8 +3,12 @@ import { useLocation } from "wouter";
 
 const routeTitles: Record<string, { title: string; description: string }> = {
   "/": {
-    title: "SolarGrid — Power in Motion | Digital Twin Experience",
-    description: "Interactive 3D Digital Twin tracking simulator for distributed solar infrastructure.",
+    title: "SolarGrid — Powering Critical Care. Intelligently.",
+    description: "An intelligent energy management platform that helps hospitals coordinate solar generation, battery storage, and grid power for a more resilient energy future.",
+  },
+  "/intro": {
+    title: "SolarGrid — 3D Digital Twin Experience",
+    description: "Interactive 3D dual-axis solar tracking simulation with real-time irradiance mechanics.",
   },
   "/overview": {
     title: "Overview | SolarGrid Smart Energy Platform",

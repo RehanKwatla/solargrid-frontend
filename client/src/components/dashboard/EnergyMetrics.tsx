@@ -2,7 +2,7 @@ import { useDashboardData } from "@/contexts/DashboardDataContext";
 import { useTelemetry } from "@/contexts/SolarTrackingContext";
 import { assets } from "@/data/mockData";
 import { cn } from "@/lib/utils";
-import { Battery, Zap, AlertTriangle, ShieldCheck, Banknote } from "lucide-react";
+import { Battery, Zap, AlertTriangle, ShieldCheck, Banknote, TrendingUp } from "lucide-react";
 import { ValueNA } from "@/components/common/DataState";
 
 export function EnergyMetrics() {
@@ -66,17 +66,25 @@ export function EnergyMetrics() {
       assetId: assets.loadT1.id,
       label: "Critical load",
       value: na ? "—" : `${t.criticalLoadKw.toFixed(1)} kW`,
-      sub: "Protected",
+      sub: "Tier 01 ICU / OT",
       icon: ShieldCheck,
       colorClass: "text-[var(--accent)]",
     },
     {
       label: "Avoided cost",
       value: na ? "—" : `₹${t.estimatedSavingsInr.toLocaleString()}`,
-      sub: telemetryStatus.kind === "live" ? "Today" : "Today · simulated",
+      sub: telemetryStatus.kind === "live" ? "Peak tariff saved" : "Simulated savings",
       accent: true,
       icon: Banknote,
       colorClass: "text-[var(--healthy)]",
+    },
+    {
+      assetId: "FCST-01",
+      label: "Forecast 4h peak",
+      value: na ? "—" : "41.5 kW",
+      sub: "Expected at 14:00 IST",
+      icon: TrendingUp,
+      colorClass: "text-primary",
     },
   ];
 

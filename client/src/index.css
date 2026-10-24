@@ -49,10 +49,10 @@
     background-size: 32px 32px;
   }
   :root {
-    --grid-line: rgba(80, 100, 68, 0.035);
+    --grid-line: rgba(90, 46, 37, 0.045);
   }
   .dark {
-    --grid-line: rgba(120, 160, 90, 0.025);
+    --grid-line: rgba(240, 230, 216, 0.032);
   }
 
   body {
@@ -343,5 +343,42 @@
   @media (max-width: 640px) {
     .dashboard-energy-field { opacity: .30; }
     .dashboard-energy-field__strands { height: 58vh; }
+  }
+
+  /* Energy Flow SVG Animations */
+  @keyframes flowForward {
+    from { stroke-dashoffset: 28; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes flowReverse {
+    from { stroke-dashoffset: 0; }
+    to { stroke-dashoffset: 28; }
+  }
+
+  @keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-flow-forward {
+    animation: flowForward 1.2s linear infinite;
+  }
+
+  .animate-flow-reverse {
+    animation: flowReverse 1.2s linear infinite;
+  }
+
+  .animate-spin-slow {
+    transform-origin: center;
+    animation: spinSlow 24s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-flow-forward,
+    .animate-flow-reverse,
+    .animate-spin-slow {
+      animation: none !important;
+    }
   }
 }
