@@ -57,46 +57,46 @@
 }
 
 .dark {
-  /* DARK MODE — Operational Energy Control Center (Warm Charcoal & Deep Rust) */
-  --bg-primary: #151412;        /* Deepest warm charcoal */
-  --bg-raised: #1C1B18;         /* Elevated panel surface */
-  --surface: #22211D;           /* Warm charcoal card surface */
-  --surface-soft: #2C2B26;      /* Interactive soft surface */
-  --surface-muted: #262521;
-  --border-color: #383630;      /* Fine technical divider */
-  --border-strong: #4D4A43;
-  --border-soft: #2D2C27;
+  /* DARK MODE — Operational Energy Control Center (Dark Charcoal & Deep Forest-Green Surfaces) */
+  --bg-primary: #0D1110;        /* Deep charcoal with forest undertones */
+  --bg-raised: #111714;         /* Elevated panel surface */
+  --surface: #141A18;           /* Deep forest-green card surface */
+  --surface-soft: #1C2421;      /* Interactive soft surface */
+  --surface-muted: #171E1B;
+  --border-color: #222C27;      /* Fine technical divider */
+  --border-strong: #2F3B35;
+  --border-soft: #1A221E;
 
-  /* Brand Accents — Luminous Terracotta & Limestone */
+  /* Brand Accents — Solar Yellow & Terracotta */
   --accent: #E0785D;            /* Luminous terracotta clay */
   --accent-strong: #F2937A;
   --accent-soft: #4D281F;
-  --accent-bg: #331A14;
-  --primary-foreground: #151412;
+  --accent-bg: #2B1813;
+  --primary-foreground: #0D1110;
 
-  /* Semantic Highlights — Luminous Olive & Amber */
-  --healthy: #9AB385;           /* Luminous olive green */
-  --healthy-bg: #1F2819;
-  --healthy-ring: #5A7347;
-  --warning: #E8AA48;
-  --warning-bg: #33230C;
-  --warning-ring: #7A551E;
+  /* Semantic Highlights — Vibrant Olive, Solar Yellow, Terracotta */
+  --healthy: #84CC39;           /* Vibrant energy green */
+  --healthy-bg: #162410;
+  --healthy-ring: #4D7A1E;
+  --warning: #F2D04B;           /* Solar yellow */
+  --warning-bg: #2E270A;
+  --warning-ring: #8A7214;
   --danger: #E0785D;
-  --danger-bg: #331712;
+  --danger-bg: #2E1510;
   --danger-ring: #783526;
-  --success: #9AB385;
-  --energy: #E0785D;
+  --success: #84CC39;
+  --energy: #F2D04B;
 
-  /* Typography Colors — Soft Limestone on Charcoal */
-  --text-primary: #F0E6D8;      /* Soft limestone typography */
-  --text-secondary: #B5AFA4;    /* Muted limestone */
-  --text-tertiary: #807B72;     /* Subtle technical telemetry */
-  --text-disabled: #54514B;
+  /* Typography Colors — Warm Limestone on Dark Charcoal */
+  --text-primary: #EDE8DC;      /* Warm limestone typography */
+  --text-secondary: #9E9E94;    /* Muted limestone */
+  --text-tertiary: #6E736B;     /* Technical telemetry details */
+  --text-disabled: #464B44;
 
-  /* Shadows — Deep, atmospheric */
+  /* Shadows — Deep, atmospheric with subtle glow */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 3px 12px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.35);
   --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.7), 0 3px 10px rgba(0, 0, 0, 0.4);
   --shadow-focus: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-soft);
 }

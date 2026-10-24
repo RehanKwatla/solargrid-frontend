@@ -24,6 +24,7 @@ function DashboardRoutes() {
     <DashboardDataProvider>
       <DashboardLayout>
         <Switch>
+          <Route path="/" component={Overview} />
           <Route path="/overview" component={Overview} />
           <Route path="/dashboard"><Redirect to="/overview" /></Route>
           <Route path="/home"><Redirect to="/overview" /></Route>
@@ -51,7 +52,7 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/" component={LandingPage} />
+      <Route path="/landing" component={LandingPage} />
       <Route path="/intro" component={SolarGridIntro} />
       <Route path="/twin" component={SolarGridIntro} />
       <Route component={DashboardRoutes} />

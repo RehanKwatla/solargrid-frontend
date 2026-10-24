@@ -7,6 +7,7 @@ import {
   Command,
   Compass,
   FileText,
+  Info,
   LayoutDashboard,
   Menu,
   Moon,
@@ -19,6 +20,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { cn } from "@/lib/utils";
 import { useSolarTracking } from "@/contexts/SolarTrackingContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useDashboardData } from "@/contexts/DashboardDataContext";
@@ -93,8 +95,9 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
 
   return (
     <>
-      <header className="sticky top-0 z-20 flex h-[60px] w-full max-w-full min-w-0 items-center justify-between border-b border-border bg-background/95 backdrop-blur px-3 sm:px-5 lg:px-6 xl:px-8 transition-colors duration-200 gap-2">
-        <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-shrink-0">
+      <header className="sticky top-0 z-30 flex h-[58px] w-full max-w-full min-w-0 items-center justify-between border-b border-[#232C28] bg-[#0D1110]/95 backdrop-blur-md px-3 sm:px-6 transition-colors duration-200 gap-3">
+        {/* Left: Branding & Mobile Menu */}
+        <div className="flex items-center gap-3 min-w-0 flex-shrink-0">
           <button
             onClick={onMenuClick}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-soft hover:text-foreground transition-colors lg:hidden"
@@ -102,50 +105,90 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
           >
             <Menu size={19} />
           </button>
-          <div className="min-w-0">
-            <div className="hidden items-center gap-1.5 text-[0.72rem] text-text-tertiary sm:flex min-w-0">
-              <Link
-                href="/overview"
-                className="shrink-0 font-medium hover:text-foreground transition-colors"
-                title="Return to Overview"
-              >
-                SolarGrid
-              </Link>
-              <span className="shrink-0 text-border">/</span>
-              <span className="truncate font-medium">{facilityName}</span>
+
+          <Link
+            href="/overview"
+            className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+          >
+            <div className="w-8 h-8 rounded-lg bg-[#18231B] border border-[#2B3B2E] p-1 flex items-center justify-center shadow-sm group-hover:border-[#84CC39]/60 transition-colors">
+              <img src="/favicon.svg" alt="SolarGrid Logo" className="h-full w-full object-contain" />
             </div>
-            <p className="font-sans text-[0.95rem] font-bold text-foreground sm:mt-0.5 truncate leading-tight">
-              {titles[location] ?? "Overview"}
-            </p>
-          </div>
+            <span className="font-sans text-base font-extrabold tracking-tight text-[#FAF7F0] group-hover:text-[#84CC39] transition-colors">
+              SolarGrid
+            </span>
+          </Link>
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-3 lg:gap-5 flex-shrink-0 min-w-0">
-          {/* Clock & Status */}
-          <div className="hidden items-center gap-2 sm:flex min-w-0">
-            <Clock size={14} className="text-text-tertiary shrink-0" />
-            <span className="font-mono text-[0.75rem] font-medium text-text-secondary shrink-0 whitespace-nowrap tabular-nums">
-              {formattedTime}
-            </span>
-            {overallStatus.kind === "live" ? (
-              <span className="ml-1 flex items-center gap-1.5 rounded-full bg-[var(--healthy-bg)] px-2 py-0.5 text-[0.68rem] font-medium text-[var(--healthy)] shrink-0 whitespace-nowrap border border-[var(--healthy-ring)]/20">
-                <span className="h-1.5 w-1.5 rounded-full bg-[var(--healthy)] shrink-0 live-dot" />
-                <span className="hidden sm:inline">Backend Live</span>
-              </span>
-            ) : overallStatus.kind === "mock" ? (
-              <span className="ml-1 flex items-center gap-1.5 rounded-full bg-surface-soft px-2 py-0.5 text-[0.68rem] font-medium text-text-tertiary shrink-0 whitespace-nowrap border border-border">
-                <span className="h-1.5 w-1.5 rounded-full bg-text-tertiary shrink-0" />
-                <span className="hidden sm:inline">Simulated</span>
-              </span>
-            ) : (
-              <span className="ml-1 flex items-center gap-1.5 rounded-full bg-[var(--danger-bg)] px-2 py-0.5 text-[0.68rem] font-medium text-[var(--danger)] shrink-0 whitespace-nowrap border border-[var(--danger-ring)]/20">
-                <span className="h-1.5 w-1.5 rounded-full bg-[var(--danger)] shrink-0" />
-                <span className="hidden sm:inline">Offline</span>
-              </span>
+        {/* Center: Reference Navigation Tabs (Hidden on small screens) */}
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-medium">
+          <Link
+            href="/overview"
+            className={cn(
+              "relative py-4 transition-colors hover:text-[#FAF7F0]",
+              location === "/overview" || location === "/"
+                ? "text-[#FAF7F0] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#C97B48]"
+                : "text-[#8DA778]"
             )}
-          </div>
+          >
+            Overview
+          </Link>
+          <Link
+            href="/energy"
+            className={cn(
+              "relative py-4 transition-colors hover:text-[#FAF7F0]",
+              location === "/energy"
+                ? "text-[#FAF7F0] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#C97B48]"
+                : "text-[#8DA778]"
+            )}
+          >
+            Live Monitoring
+          </Link>
+          <Link
+            href="/intelligence"
+            className={cn(
+              "relative py-4 transition-colors hover:text-[#FAF7F0]",
+              location === "/intelligence"
+                ? "text-[#FAF7F0] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#C97B48]"
+                : "text-[#8DA778]"
+            )}
+          >
+            Forecasts
+          </Link>
+          <Link
+            href="/intelligence"
+            className={cn(
+              "relative py-4 transition-colors hover:text-[#FAF7F0]",
+              location === "/intelligence#optimization"
+                ? "text-[#FAF7F0] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#C97B48]"
+                : "text-[#8DA778]"
+            )}
+          >
+            Optimization
+          </Link>
+          <Link
+            href="/metering"
+            className={cn(
+              "relative py-4 transition-colors hover:text-[#FAF7F0]",
+              location === "/metering"
+                ? "text-[#FAF7F0] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#C97B48]"
+                : "text-[#8DA778]"
+            )}
+          >
+            Reports
+          </Link>
+        </nav>
 
-          <div className="h-5 w-px bg-border hidden sm:block shrink-0" />
+        {/* Right: Demonstration Mode Pill, Theme Toggle & User */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0">
+          {/* Demonstration Mode Pill Badge */}
+          <Link
+            href="/overview"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1A261D] border border-[#2B3A2E] text-[10px] sm:text-[11px] font-mono text-[#F2D04B] hover:border-[#F2D04B]/50 transition-colors shadow-sm"
+          >
+            <span className="w-2 h-2 rounded-full bg-[#F2D04B] animate-pulse" />
+            <span className="font-bold tracking-wider uppercase">DEMONSTRATION MODE</span>
+            <Info size={12} className="text-[#8DA778]" />
+          </Link>
 
           {/* Action icons */}
           <div className="flex items-center gap-0.5 sm:gap-1.5 shrink-0">
