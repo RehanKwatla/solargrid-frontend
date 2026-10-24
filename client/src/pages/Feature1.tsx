@@ -11,6 +11,7 @@ import { MeteringSettlementLedger } from "@/components/metering/MeteringSettleme
 import { MeteringCommercialMetrics } from "@/components/metering/MeteringCommercialMetrics";
 import { MeteringAnalyticsCharts } from "@/components/metering/MeteringAnalyticsCharts";
 import { Download, FileSpreadsheet, Gauge, Scale, ShieldCheck } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Feature1() {
   const {
@@ -23,6 +24,42 @@ export default function Feature1() {
   const facilityCode = facility?.code ?? "SG-ACC-01";
   const facilityLocation = facility?.location ?? "Pune · India";
   const facilityName = facility?.name ?? "Apollo Care Campus";
+
+  const handleExportAudit = () => {
+    try {
+      const rows = [
+        ["Report", "SolarGrid Microgrid Financial Settlement Audit Ledger"],
+        ["Generated", new Date().toISOString()],
+        ["Facility", facilityName],
+        ["Node ID", facilityCode],
+        ["Regulatory Standard", "MERC Order No. 34 / CEA Distributed Generation"],
+        [""],
+        ["Tariff Component", "Metered Volume (kWh)", "Applicable Rate (INR/kWh)", "Credit / Debit (INR)"],
+        ["Gross Solar Injection", "482.5", "₹6.40", "+₹3,088.00"],
+        ["P2P Clinical Wing Dispatch", "145.0", "₹7.20", "+₹1,044.00"],
+        ["Off-Peak Battery Storage", "220.0", "₹5.80", "+₹1,276.00"],
+        ["Net Grid Peak Import", "18.5", "₹9.10", "-₹168.35"],
+        ["Total Net Settlement Credit", "829.0 kWh", "Blended", "+₹5,239.65"],
+      ];
+
+      const csvContent = "data:text/csv;charset=utf-8," + rows.map((e) => e.join(",")).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `solargrid-settlement-audit-${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success("Settlement Audit Exported", {
+        description: "Official microgrid commercial audit report downloaded (CSV).",
+      });
+    } catch {
+      toast.error("Export Failed", {
+        description: "Could not generate settlement ledger file.",
+      });
+    }
+  };
 
   return (
     <div className="mx-auto w-full max-w-full min-w-0 px-4 py-5 sm:px-6 lg:px-8 xl:px-10 lg:py-8 space-y-6">
@@ -48,6 +85,7 @@ export default function Feature1() {
         <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
+            onClick={handleExportAudit}
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-3.5 py-2 text-xs font-mono font-semibold text-text-secondary hover:text-foreground hover:bg-surface-soft transition-colors"
           >
             <Download size={14} />

@@ -1,4 +1,16 @@
-import { AlertTriangle, ArrowLeftRight, BrainCircuit, ChevronLeft, ChevronRight, LayoutDashboard, Map, Settings, ShieldAlert, Zap } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeftRight,
+  BrainCircuit,
+  ChevronLeft,
+  ChevronRight,
+  Compass,
+  LayoutDashboard,
+  Map,
+  Settings,
+  ShieldAlert,
+  Zap,
+} from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { facility } from "@/data/mockData";
@@ -12,7 +24,7 @@ const navigation = [
   { href: "/energy-sharing", label: "Energy Sharing", icon: ArrowLeftRight },
   { href: "/intelligence", label: "Intelligence", icon: BrainCircuit },
   { href: "/alerts", label: "Events", icon: AlertTriangle, badge: "3" },
-  { href: "/feature-1", label: "Metering", icon: Map },
+  { href: "/metering", label: "Metering", icon: Map },
 ];
 
 interface AppSidebarProps {
@@ -40,14 +52,21 @@ export function AppSidebar({ isCollapsed, onToggleCollapse }: AppSidebarProps) {
       </button>
 
       <div className="flex flex-col min-w-0">
-        {/* Brand */}
-        <div className={cn("flex items-center mb-6", isCollapsed ? "justify-center" : "gap-2.5 px-0.5")}>
-          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--accent-soft)] bg-surface-soft p-1 shadow-[var(--shadow-sm)]">
-            <img src="/logo.png" alt="SolarGrid Logo" className="h-full w-full object-contain" />
+        {/* Brand — Clickable SolarGrid Logo (Requirement 17) */}
+        <Link
+          href="/overview"
+          title="SolarGrid Dashboard Overview"
+          className={cn(
+            "group flex items-center mb-6 rounded-lg p-1 transition-colors hover:bg-surface-soft focus-visible:ring-2 focus-visible:ring-primary",
+            isCollapsed ? "justify-center" : "gap-2.5 px-1.5"
+          )}
+        >
+          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--accent-soft)] bg-surface-soft p-1 shadow-[var(--shadow-sm)] group-hover:border-primary transition-colors">
+            <img src="/favicon.svg" alt="SolarGrid Logo" className="h-full w-full object-contain" />
           </div>
           {!isCollapsed && (
-            <div className="overflow-hidden min-w-0">
-              <span className="block font-sans text-[0.88rem] font-semibold tracking-[-0.02em] text-foreground leading-tight">
+            <div className="overflow-hidden min-w-0 text-left">
+              <span className="block font-sans text-[0.88rem] font-bold tracking-[-0.02em] text-foreground leading-tight group-hover:text-primary transition-colors">
                 SolarGrid
               </span>
               <span className="block font-mono text-[0.62rem] font-medium text-text-tertiary leading-tight mt-0.5 tracking-wide">
@@ -55,7 +74,7 @@ export function AppSidebar({ isCollapsed, onToggleCollapse }: AppSidebarProps) {
               </span>
             </div>
           )}
-        </div>
+        </Link>
 
         {/* Nav section label */}
         {!isCollapsed && (
@@ -69,7 +88,7 @@ export function AppSidebar({ isCollapsed, onToggleCollapse }: AppSidebarProps) {
         {/* Navigation */}
         <nav className={cn("space-y-0.5", !isCollapsed && "px-1")}>
           {navigation.map((item) => {
-            const selected = location === item.href;
+            const selected = location === item.href || (item.href === "/metering" && location === "/feature-1");
             const Icon = item.icon;
 
             const NavLink = (
@@ -139,6 +158,19 @@ export function AppSidebar({ isCollapsed, onToggleCollapse }: AppSidebarProps) {
 
             return NavLink;
           })}
+
+          {/* 3D Twin Experience Link */}
+          <Link
+            href="/"
+            className={cn(
+              "relative group flex items-center rounded-lg font-sans text-[0.82rem] font-medium transition-[background-color,color] duration-150 text-text-tertiary hover:bg-surface-soft hover:text-foreground",
+              isCollapsed ? "justify-center mx-auto h-9 w-9 mt-1" : "gap-2 px-2.5 py-[0.45rem] mt-1"
+            )}
+            title="Launch 3D Digital Twin Experience"
+          >
+            <Compass size={isCollapsed ? 20 : 17} strokeWidth={2} className="shrink-0 text-primary" />
+            {!isCollapsed && <span className="truncate">3D Experience</span>}
+          </Link>
         </nav>
       </div>
 
@@ -204,12 +236,15 @@ export function AppSidebar({ isCollapsed, onToggleCollapse }: AppSidebarProps) {
           </div>
         )}
 
-        {/* Settings */}
+        {/* Settings — Connected to /settings route */}
         <Link
           href="/settings"
           aria-label="Settings"
           className={cn(
-            "mt-3 flex items-center rounded-lg font-sans text-[0.85rem] font-medium text-text-secondary transition-[background-color,color] duration-150 hover:bg-surface-soft hover:text-foreground",
+            "mt-3 flex items-center rounded-lg font-sans text-[0.85rem] font-medium transition-[background-color,color] duration-150",
+            location === "/settings"
+              ? "bg-[var(--accent-bg)] text-[var(--accent-strong)] font-semibold shadow-[inset_0_0_0_1px_var(--accent-soft)]"
+              : "text-text-secondary hover:bg-surface-soft hover:text-foreground",
             isCollapsed ? "justify-center mx-auto h-10 w-10" : "gap-2.5 px-2.5 py-2 mx-1"
           )}
         >

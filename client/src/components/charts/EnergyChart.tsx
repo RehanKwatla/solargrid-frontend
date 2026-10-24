@@ -57,7 +57,7 @@ export function EnergyChart({
   const textColor = isDark ? "#95a38c" : "#5a6554";
 
   return (
-    <div style={{ height }}>
+    <div style={{ height }} className="w-full min-w-0 overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
           <defs>

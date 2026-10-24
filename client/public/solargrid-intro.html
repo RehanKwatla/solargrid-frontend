@@ -122,7 +122,7 @@
 
 <canvas id="webgl"></canvas>
 
-<div class="wordmark"><div class="tag">SOLARGRID</div></div>
+<div class="wordmark"><a href="/overview" target="_parent" class="tag" style="text-decoration:none; display:inline-block; cursor:pointer;" title="Skip directly to Overview Dashboard">SOLARGRID &rarr;</a></div>
 <div class="hero-mark">TRACKER-01 / PV-01</div>
 
 <div class="status-tag" id="statusTag">
@@ -215,7 +215,10 @@
 
 </main>
 
-<footer>SOLARGRID — DIGITAL TWIN PROTOTYPE · SCROLL TO DRIVE THE SIMULATION</footer>
+<footer>
+  <div>SOLARGRID — DIGITAL TWIN PROTOTYPE · SCROLL TO DRIVE THE SIMULATION</div>
+  <div style="margin-top:8px;">&copy; <span id="introYear">2026</span> SOLARGRID TECHNOLOGIES · SMART INDIA HACKATHON &amp; INDRADHANU · <a href="/overview" target="_parent" style="color:var(--lime); text-decoration:underline;">OPEN OPERATIONAL DASHBOARD</a></div>
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -720,6 +723,8 @@
   }
 
   window.addEventListener('load', function(){
+    var yEl = document.getElementById('introYear');
+    if (yEl) yEl.textContent = new Date().getFullYear();
     document.body.classList.add('ready');
     computeMaxScroll();
     animate();

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="solarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E08736" />
+      <stop offset="60%" stop-color="#B5543A" />
+      <stop offset="100%" stop-color="#5A2E25" />
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFDD78" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#E08736" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background Shield / Hexagon -->
+  <rect width="64" height="64" rx="14" fill="#1C1311" />
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="#B5543A" stroke-width="2" stroke-opacity="0.6" />
+
+  <!-- Radial Glow Behind Sun -->
+  <circle cx="32" cy="32" r="22" fill="url(#glowGrad)" />
+
+  <!-- Sun Rays (Tracker Orientation Points) -->
+  <g stroke="#E08736" stroke-width="2.5" stroke-linecap="round">
+    <line x1="32" y1="8" x2="32" y2="12" />
+    <line x1="32" y1="52" x2="32" y2="56" />
+    <line x1="8" y1="32" x2="12" y2="32" />
+    <line x1="52" y1="32" x2="56" y2="32" />
+    <line x1="15" y1="15" x2="18" y2="18" />
+    <line x1="46" y1="46" x2="49" y2="49" />
+    <line x1="49" y1="15" x2="46" y2="18" />
+    <line x1="15" y1="49" x2="18" y2="46" />
+  </g>
+
+  <!-- Solar PV Panel Grid Motif (Angled 3D Tracker Perspective) -->
+  <polygon points="18,36 32,24 46,36 32,48" fill="url(#solarGrad)" stroke="#F0E6D8" stroke-width="1.8" stroke-linejoin="round" />
+  
+  <!-- Grid Bus Lines on PV Surface -->
+  <line x1="25" y1="30" x2="39" y2="42" stroke="#F0E6D8" stroke-width="1.2" stroke-opacity="0.85" />
+  <line x1="39" y1="30" x2="25" y2="42" stroke="#F0E6D8" stroke-width="1.2" stroke-opacity="0.85" />
+  <line x1="32" y1="24" x2="32" y2="48" stroke="#FFDD78" stroke-width="1.5" />
+
+  <!-- Central Energy Pulse Core -->
+  <circle cx="32" cy="36" r="3.5" fill="#FFF2B2" stroke="#B5543A" stroke-width="1.2" />
+</svg>

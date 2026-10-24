@@ -14,7 +14,9 @@ import EnergySharing from "./pages/EnergySharing";
 import Feature1 from "./pages/Feature1";
 import Intelligence from "./pages/Intelligence";
 import Overview from "./pages/Overview";
+import Settings from "./pages/Settings";
 import SolarGridIntro from "./pages/SolarGridIntro";
+import { usePageTitle } from "./hooks/usePageTitle";
 
 function DashboardRoutes() {
   return (
@@ -23,6 +25,7 @@ function DashboardRoutes() {
         <Switch>
           <Route path="/overview" component={Overview} />
           <Route path="/dashboard"><Redirect to="/overview" /></Route>
+          <Route path="/home"><Redirect to="/overview" /></Route>
           <Route path="/energy" component={Energy} />
           <Route path="/energy-sharing" component={EnergySharing} />
           <Route path="/sharing"><Redirect to="/energy-sharing" /></Route>
@@ -30,8 +33,10 @@ function DashboardRoutes() {
           <Route path="/loads"><Redirect to="/critical-loads" /></Route>
           <Route path="/intelligence" component={Intelligence} />
           <Route path="/alerts" component={Alerts} />
-          <Route path="/feature-1" component={Feature1} />
-          <Route path="/fleet"><Redirect to="/feature-1" /></Route>
+          <Route path="/metering" component={Feature1} />
+          <Route path="/feature-1"><Redirect to="/metering" /></Route>
+          <Route path="/fleet"><Redirect to="/metering" /></Route>
+          <Route path="/settings" component={Settings} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />
         </Switch>
@@ -41,20 +46,24 @@ function DashboardRoutes() {
 }
 
 function Router() {
+  usePageTitle();
+
   return (
     <Switch>
       <Route path="/" component={SolarGridIntro} />
+      <Route path="/intro" component={SolarGridIntro} />
       <Route component={DashboardRoutes} />
     </Switch>
   );
 }
+
 export default function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" switchable={true}>
         <SolarTrackingProvider>
           <TooltipProvider>
-            <Toaster theme="dark" position="bottom-right" />
+            <Toaster theme="dark" position="bottom-right" richColors />
             <Router />
           </TooltipProvider>
         </SolarTrackingProvider>

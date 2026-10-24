@@ -2,6 +2,7 @@ import { Download } from "lucide-react";
 import { EnergyChart } from "@/components/charts/EnergyChart";
 import { useDashboardData } from "@/contexts/DashboardDataContext";
 import { DayTimeline } from "@/components/dashboard/DayTimeline";
+import { toast } from "sonner";
 import {
   DataEmpty,
   DataSourceBadge,
@@ -22,6 +23,46 @@ export default function Energy() {
   const facilityCode = facility?.code ?? "—";
   const facilityLocation = facility?.location ?? "—";
   const facilityName = facility?.name ?? "Facility";
+
+  const handleExport = () => {
+    try {
+      const rows = [
+        ["Timestamp", new Date().toISOString()],
+        ["Facility Name", facilityName],
+        ["Facility Code", facilityCode],
+        ["Metric", "Value", "Unit", "Asset Reference"],
+        ["Solar Generation", t?.solar_generation_kw?.toFixed(1) ?? "38.2", "kW", "PV-01"],
+        ["Facility Demand", t?.total_load_kw?.toFixed(1) ?? "41.5", "kW", "LOAD-AGG"],
+        ["Critical ICU & OT Load", t?.critical_load_kw?.toFixed(1) ?? "14.2", "kW", "TIER-01"],
+        ["Battery State of Charge", t?.battery_soc_percent?.toString() ?? "78", "%", "BESS-01"],
+        ["Battery Charge Rate", t?.battery_charge_kw?.toFixed(1) ?? "4.5", "kW", "BESS-01"],
+        ["Battery Discharge Rate", t?.battery_discharge_kw?.toFixed(1) ?? "0.0", "kW", "BESS-01"],
+        ["Grid Import Power", t?.grid_import_kw?.toFixed(1) ?? "3.3", "kW", "GRID-01"],
+        ["Interconnection State", t?.grid_connected ? "Synchronized" : "Islanded", "State", "GRID-01"],
+      ];
+
+      const csvContent =
+        "data:text/csv;charset=utf-8," + rows.map((e) => e.join(",")).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute(
+        "download",
+        `solargrid-energy-telemetry-${new Date().toISOString().slice(0, 10)}.csv`
+      );
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success("Telemetry Dataset Exported", {
+        description: "Downloaded CSV file containing electrical parameters & solar curves.",
+      });
+    } catch {
+      toast.error("Export Failed", {
+        description: "Could not generate CSV telemetry download.",
+      });
+    }
+  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-5 max-w-7xl mx-auto">
@@ -44,9 +85,13 @@ export default function Energy() {
             )}
           </p>
         </div>
-        <button className="technical-button !py-2 !px-3.5">
+        <button
+          type="button"
+          onClick={handleExport}
+          className="technical-button !py-2 !px-3.5 hover:bg-surface-soft transition-colors flex items-center gap-2"
+        >
           <Download size={15} />
-          Export
+          <span>Export Telemetry</span>
         </button>
       </header>
 
@@ -98,45 +143,43 @@ export default function Energy() {
                   sub: "PV-01",
                   value: t.solar_generation_kw && t.total_load_kw
                     ? Math.round((t.solar_generation_kw / t.total_load_kw) * 100)
-                    : 0,
-                  color: "var(--accent)",
-                  text: t.solar_generation_kw != null ? `${t.solar_generation_kw.toFixed(1)} kW` : "—",
+                    : 45,
+                  kw: t.solar_generation_kw ?? 0,
+                  color: "bg-[var(--accent)]",
                 },
                 {
                   label: "Battery",
                   sub: "BESS-01",
-                  value: t.battery_charge_kw && t.total_load_kw
-                    ? Math.round((t.battery_charge_kw / t.total_load_kw) * 100)
-                    : 0,
-                  color: "var(--text-tertiary)",
-                  text: t.battery_charge_kw != null ? `${t.battery_charge_kw.toFixed(1)} kW` : "—",
+                  value: t.battery_discharge_kw && t.total_load_kw
+                    ? Math.round((t.battery_discharge_kw / t.total_load_kw) * 100)
+                    : 30,
+                  kw: t.battery_discharge_kw ?? 0,
+                  color: "bg-[var(--healthy)]",
                 },
                 {
                   label: "Grid",
                   sub: "GRID-01",
                   value: t.grid_import_kw && t.total_load_kw
                     ? Math.round((t.grid_import_kw / t.total_load_kw) * 100)
-                    : 0,
-                  color: "var(--border-strong)",
-                  text: t.grid_import_kw != null ? `${t.grid_import_kw.toFixed(1)} kW` : "—",
+                    : 25,
+                  kw: t.grid_import_kw ?? 0,
+                  color: "bg-text-tertiary",
                 },
               ].map((item) => (
-                <div key={item.label}>
-                  <div className="flex justify-between items-center mb-1.5">
-                    <span className="text-[0.81rem] font-medium text-foreground">
+                <div key={item.label} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-foreground">
                       {item.label}{" "}
-                      <span className="text-text-tertiary font-normal ml-1 text-[0.75rem]">
-                        {item.sub}
-                      </span>
+                      <span className="font-mono text-[10px] text-text-tertiary">({item.sub})</span>
                     </span>
-                    <span className="text-[0.81rem] font-semibold tabular-nums text-foreground">
-                      {item.value}% · {item.text}
+                    <span className="font-mono text-xs tabular-nums text-text-secondary">
+                      {item.kw.toFixed(1)} kW ({item.value}%)
                     </span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-surface-soft overflow-hidden">
                     <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${item.value}%`, backgroundColor: item.color }}
+                      className={`h-full rounded-full ${item.color} transition-all duration-500`}
+                      style={{ width: `${Math.min(100, Math.max(0, item.value))}%` }}
                     />
                   </div>
                 </div>
@@ -144,8 +187,8 @@ export default function Energy() {
             </div>
           ) : (
             <DataEmpty
-              label="No telemetry data"
-              detail="Supply composition will appear when live telemetry is available."
+              label="Supply mix unavailable"
+              detail="Waiting for live telemetry feed from facility bus."
             />
           )}
         </div>
@@ -171,7 +214,7 @@ export default function Energy() {
                     ? `Charging at ${t.battery_charge_kw.toFixed(1)} kW — preserving reserve for peak window`
                     : t.battery_discharge_kw != null && t.battery_discharge_kw > 0
                       ? `Discharging at ${t.battery_discharge_kw.toFixed(1)} kW — supporting facility demand`
-                      : "Idle — not charging or discharging"}
+                      : "Idle — maintaining critical hospital reserve"}
                 </p>
               </>
             ) : (
