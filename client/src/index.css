@@ -12,6 +12,17 @@
   --color-foreground: var(--text-primary);
   --color-card: var(--surface);
   --color-card-foreground: var(--text-primary);
+  --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-surface-muted: var(--surface-muted);
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-raised: var(--bg-raised);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-healthy: var(--healthy);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
   --color-primary: var(--accent);
   --color-primary-foreground: var(--primary-foreground);
   --color-border: var(--border-color);
@@ -30,6 +41,14 @@
     @apply border-border;
     box-sizing: border-box;
   }
+
+  .bg-surface { background-color: var(--surface) !important; }
+  .bg-surface-soft { background-color: var(--surface-soft) !important; }
+  .bg-surface-muted { background-color: var(--surface-muted) !important; }
+  .text-text-primary { color: var(--text-primary) !important; }
+  .text-text-secondary { color: var(--text-secondary) !important; }
+  .text-text-tertiary { color: var(--text-tertiary) !important; }
+  .border-border { border-color: var(--border-color) !important; }
 
   html, body {
     @apply bg-background text-foreground font-sans;

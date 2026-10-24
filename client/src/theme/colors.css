@@ -1,45 +1,44 @@
 :root {
   /* =========================================================================
-     SOLARGRID PALETTE — Indradhanu Climate-Tech Art Direction
-     Terracotta Clay: #B5543A | Olive Green: #6F7F5F | Soft Limestone: #F0E6D8
-     Deep Rust: #5A2E25 | Warm Charcoal: #252522 | Muted Cream: #FAF7F0
+     SOLARGRID PALETTE — Indradhanu Clean Climate-Tech Art Direction
+     Light & Dark Operational Modes
      ========================================================================= */
 
-  /* LIGHT MODE — Warm Limestone & Muted Cream foundation with Terracotta & Olive */
-  --bg-primary: #FAF7F0;        /* Muted cream */
-  --bg-raised: #F4EFE6;         /* Layered cream */
-  --surface: #FFFFFF;           /* Crisp surface */
-  --surface-soft: #F0E6D8;      /* Soft limestone */
-  --surface-muted: #EAE2D2;
-  --border-color: #E2D9CC;      /* Fine limestone hairline */
-  --border-strong: #C9BFAFA;
-  --border-soft: #EFE9DE;
+  /* LIGHT THEME PALETTE (Requested) */
+  --bg-primary: #F4F0E8;        /* Main background */
+  --bg-raised: #EAE3D6;         /* Sidebar & navigation */
+  --surface: #FFFFFF;           /* Primary surfaces and cards */
+  --surface-soft: #EDE8DE;      /* Soft interactive hover surface */
+  --surface-muted: #E4DDD1;     /* Muted surface */
+  --border-color: #D8D1C5;      /* Borders */
+  --border-strong: #C5BCAD;
+  --border-soft: #E4DDD1;
 
   /* Brand Accents */
-  --accent: #B5543A;            /* Terracotta clay */
-  --accent-strong: #8F3B25;     /* Deep terracotta */
-  --accent-soft: #F2D5CC;
-  --accent-bg: #FCF1EE;
+  --accent: #6F7F5F;            /* Primary accent */
+  --accent-strong: #5B6A4C;
+  --accent-soft: #D7DECF;
+  --accent-bg: #EEF3EA;
   --primary-foreground: #FFFFFF;
 
   /* Semantic Highlights */
-  --healthy: #6F7F5F;           /* Olive green — optimal/healthy/stable */
+  --healthy: #6F7F5F;           /* Primary accent (olive) */
   --healthy-bg: #EEF3EA;
-  --healthy-ring: #9AB385;
-  --warning: #C47F2A;           /* Warm amber */
-  --warning-bg: #FDF4E5;
-  --warning-ring: #E0A656;
-  --danger: #B5543A;            /* Terracotta clay alert */
+  --healthy-ring: #6F7F5F;
+  --warning: #B89B19;           /* Solar accent */
+  --warning-bg: #FAF5DC;
+  --warning-ring: #B89B19;
+  --danger: #B5543A;            /* Hospital / alert accent */
   --danger-bg: #FBECE8;
-  --danger-ring: #E5A394;
+  --danger-ring: #B5543A;
   --success: #6F7F5F;
-  --energy: #B5543A;
+  --energy: #B89B19;
 
   /* Typography Colors */
-  --text-primary: #252522;      /* Warm charcoal */
-  --text-secondary: #5C5B54;    /* Muted charcoal */
-  --text-tertiary: #8C8B82;     /* Subdued technical detail */
-  --text-disabled: #B0AEA5;
+  --text-primary: #252522;      /* Primary text */
+  --text-secondary: #68685F;    /* Secondary text */
+  --text-tertiary: #8C8B82;     /* Subtle technical telemetry */
+  --text-disabled: #ADA99F;
 
   /* Structural Radii */
   --radius-xs: 4px;
@@ -57,41 +56,41 @@
 }
 
 .dark {
-  /* DARK MODE — Operational Energy Control Center (Dark Charcoal & Deep Forest-Green Surfaces) */
-  --bg-primary: #0D1110;        /* Deep charcoal with forest undertones */
-  --bg-raised: #111714;         /* Elevated panel surface */
-  --surface: #141A18;           /* Deep forest-green card surface */
-  --surface-soft: #1C2421;      /* Interactive soft surface */
-  --surface-muted: #171E1B;
-  --border-color: #222C27;      /* Fine technical divider */
-  --border-strong: #2F3B35;
-  --border-soft: #1A221E;
+  /* DARK THEME PALETTE (Requested) */
+  --bg-primary: #0C100E;        /* Main background */
+  --bg-raised: #111713;         /* Sidebar and navigation */
+  --surface: #151C18;           /* Primary surfaces and cards */
+  --surface-soft: #1D2621;      /* Soft interactive surface */
+  --surface-muted: #18221D;
+  --border-color: #29332C;      /* Borders */
+  --border-strong: #38463D;
+  --border-soft: #202923;
 
-  /* Brand Accents — Solar Yellow & Terracotta */
-  --accent: #E0785D;            /* Luminous terracotta clay */
-  --accent-strong: #F2937A;
-  --accent-soft: #4D281F;
-  --accent-bg: #2B1813;
-  --primary-foreground: #0D1110;
+  /* Brand Accents */
+  --accent: #8ACF3F;            /* Primary accent */
+  --accent-strong: #9DE251;
+  --accent-soft: #2E4515;
+  --accent-bg: #1B2B0C;
+  --primary-foreground: #0C100E;
 
-  /* Semantic Highlights — Vibrant Olive, Solar Yellow, Terracotta */
-  --healthy: #84CC39;           /* Vibrant energy green */
-  --healthy-bg: #162410;
-  --healthy-ring: #4D7A1E;
-  --warning: #F2D04B;           /* Solar yellow */
-  --warning-bg: #2E270A;
-  --warning-ring: #8A7214;
-  --danger: #E0785D;
+  /* Semantic Highlights */
+  --healthy: #8ACF3F;           /* Primary accent */
+  --healthy-bg: #1B2B0C;
+  --healthy-ring: #8ACF3F;
+  --warning: #E6D63B;           /* Solar accent */
+  --warning-bg: #2B280A;
+  --warning-ring: #E6D63B;
+  --danger: #E36A45;            /* Hospital / alert accent */
   --danger-bg: #2E1510;
-  --danger-ring: #783526;
-  --success: #84CC39;
-  --energy: #F2D04B;
+  --danger-ring: #E36A45;
+  --success: #8ACF3F;
+  --energy: #E6D63B;
 
-  /* Typography Colors — Warm Limestone on Dark Charcoal */
-  --text-primary: #EDE8DC;      /* Warm limestone typography */
-  --text-secondary: #9E9E94;    /* Muted limestone */
-  --text-tertiary: #6E736B;     /* Technical telemetry details */
-  --text-disabled: #464B44;
+  /* Typography Colors */
+  --text-primary: #F4F0E8;      /* Primary text */
+  --text-secondary: #A8ADA5;    /* Secondary text */
+  --text-tertiary: #6E756C;     /* Subtle technical telemetry */
+  --text-disabled: #474E45;
 
   /* Shadows — Deep, atmospheric with subtle glow */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);

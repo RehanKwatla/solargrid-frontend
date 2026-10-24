@@ -25,12 +25,7 @@ import { useSolarTracking } from "@/contexts/SolarTrackingContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useDashboardData } from "@/contexts/DashboardDataContext";
 import { facility as fallbackFacility } from "@/data/mockData";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { GlobalCommandSearch } from "./GlobalCommandSearch";
 
 const titles: Record<string, string> = {
   "/overview": "Energy overview",
@@ -51,7 +46,6 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
   const { facility: dbFacility, overallStatus, alerts } = useDashboardData();
 
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const facilityName = dbFacility?.name ?? fallbackFacility.name;
@@ -68,34 +62,11 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const searchItems = [
-    { href: "/overview", label: "Energy Overview", category: "Core", icon: LayoutDashboard },
-    { href: "/energy", label: "Energy Analytics & PV Curves", category: "Analytics", icon: Zap },
-    { href: "/critical-loads", label: "Critical Load Management (EMS)", category: "Clinical", icon: ShieldAlert },
-    { href: "/energy-sharing", label: "Energy Sharing & P2P Trading", category: "Microgrid", icon: ArrowRight },
-    { href: "/intelligence", label: "Intelligence & Forecasts", category: "AI EMS", icon: Compass },
-    { href: "/alerts", label: "System Events & Attention Log", category: "Safety", icon: AlertTriangle },
-    { href: "/metering", label: "Metering & Financial Settlement", category: "Commercial", icon: FileText },
-    { href: "/settings", label: "System Settings & Thresholds", category: "Config", icon: SettingsIcon },
-    { href: "/", label: "Launch 3D Digital Twin", category: "Experience", icon: Compass },
-  ];
-
-  const filteredItems = searchItems.filter((item) =>
-    item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleSelectRoute = (href: string) => {
-    setSearchOpen(false);
-    setSearchQuery("");
-    setLocation(href);
-  };
-
   const unackAlertCount = alerts.filter((a) => a.state === "critical").length;
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-[58px] w-full max-w-full min-w-0 items-center justify-between border-b border-[#232C28] bg-[#0D1110]/95 backdrop-blur-md px-3 sm:px-6 transition-colors duration-200 gap-3">
+      <header className="sticky top-0 z-30 flex h-[58px] w-full max-w-full min-w-0 items-center justify-between border-b border-border bg-background/95 backdrop-blur-md px-3 sm:px-6 transition-colors duration-200 gap-3">
         {/* Left: Branding & Mobile Menu */}
         <div className="flex items-center gap-3 min-w-0 flex-shrink-0">
           <button
@@ -110,10 +81,10 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
             href="/overview"
             className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#18231B] border border-[#2B3B2E] p-1 flex items-center justify-center shadow-sm group-hover:border-[#84CC39]/60 transition-colors">
+            <div className="w-8 h-8 rounded-lg bg-surface-soft border border-border p-1 flex items-center justify-center shadow-xs group-hover:border-primary transition-colors">
               <img src="/favicon.svg" alt="SolarGrid Logo" className="h-full w-full object-contain" />
             </div>
-            <span className="font-sans text-base font-extrabold tracking-tight text-[#FAF7F0] group-hover:text-[#84CC39] transition-colors">
+            <span className="font-sans text-base font-extrabold tracking-tight text-foreground group-hover:text-primary transition-colors">
               SolarGrid
             </span>
           </Link>
@@ -124,10 +95,10 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
           <Link
             href="/overview"
             className={cn(
-              "relative py-4 transition-colors hover:text-[#FAF7F0]",
+              "relative py-4 transition-colors hover:text-foreground",
               location === "/overview" || location === "/"
-                ? "text-[#FAF7F0] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#C97B48]"
-                : "text-[#8DA778]"
+                ? "text-foreground font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary"
+                : "text-text-secondary"
             )}
           >
             Overview
@@ -135,10 +106,10 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
           <Link
             href="/energy"
             className={cn(
-              "relative py-4 transition-colors hover:text-[#FAF7F0]",
+              "relative py-4 transition-colors hover:text-foreground",
               location === "/energy"
-                ? "text-[#FAF7F0] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#C97B48]"
-                : "text-[#8DA778]"
+                ? "text-foreground font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary"
+                : "text-text-secondary"
             )}
           >
             Live Monitoring
@@ -146,10 +117,10 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
           <Link
             href="/intelligence"
             className={cn(
-              "relative py-4 transition-colors hover:text-[#FAF7F0]",
+              "relative py-4 transition-colors hover:text-foreground",
               location === "/intelligence"
-                ? "text-[#FAF7F0] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#C97B48]"
-                : "text-[#8DA778]"
+                ? "text-foreground font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary"
+                : "text-text-secondary"
             )}
           >
             Forecasts
@@ -157,10 +128,10 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
           <Link
             href="/intelligence"
             className={cn(
-              "relative py-4 transition-colors hover:text-[#FAF7F0]",
+              "relative py-4 transition-colors hover:text-foreground",
               location === "/intelligence#optimization"
-                ? "text-[#FAF7F0] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#C97B48]"
-                : "text-[#8DA778]"
+                ? "text-foreground font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary"
+                : "text-text-secondary"
             )}
           >
             Optimization
@@ -168,10 +139,10 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
           <Link
             href="/metering"
             className={cn(
-              "relative py-4 transition-colors hover:text-[#FAF7F0]",
+              "relative py-4 transition-colors hover:text-foreground",
               location === "/metering"
-                ? "text-[#FAF7F0] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#C97B48]"
-                : "text-[#8DA778]"
+                ? "text-foreground font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary"
+                : "text-text-secondary"
             )}
           >
             Reports
@@ -183,11 +154,11 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
           {/* Demonstration Mode Pill Badge */}
           <Link
             href="/overview"
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1A261D] border border-[#2B3A2E] text-[10px] sm:text-[11px] font-mono text-[#F2D04B] hover:border-[#F2D04B]/50 transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-soft border border-border text-[10px] sm:text-[11px] font-mono text-warning hover:border-warning/50 transition-colors shadow-xs"
           >
-            <span className="w-2 h-2 rounded-full bg-[#F2D04B] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-warning animate-pulse" />
             <span className="font-bold tracking-wider uppercase">DEMONSTRATION MODE</span>
-            <Info size={12} className="text-[#8DA778]" />
+            <Info size={12} className="text-text-tertiary" />
           </Link>
 
           {/* Action icons */}
@@ -295,73 +266,11 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
         </div>
       </header>
 
-      {/* Quick Search Dialog (Cmd+K) */}
-      <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <DialogContent className="sm:max-w-[480px] bg-surface border border-border p-0 shadow-2xl overflow-hidden">
-          <DialogHeader className="p-4 border-b border-border">
-            <div className="flex items-center gap-2.5">
-              <Search size={18} className="text-text-tertiary" />
-              <input
-                type="text"
-                placeholder="Search SolarGrid pages, telemetry, circuits…"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                autoFocus
-                className="w-full bg-transparent text-sm text-foreground placeholder:text-text-tertiary focus:outline-none"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery("")}
-                  className="text-text-tertiary hover:text-foreground"
-                >
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-          </DialogHeader>
-
-          <div className="max-h-[320px] overflow-y-auto p-2 space-y-1">
-            {filteredItems.length > 0 ? (
-              filteredItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.href}
-                    type="button"
-                    onClick={() => handleSelectRoute(item.href)}
-                    className="w-full flex items-center justify-between p-2.5 rounded-lg text-left hover:bg-surface-soft transition-colors group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-surface text-text-secondary group-hover:text-primary transition-colors">
-                        <Icon size={14} />
-                      </div>
-                      <div>
-                        <span className="font-sans text-xs font-semibold text-foreground group-hover:text-primary transition-colors block">
-                          {item.label}
-                        </span>
-                        <span className="font-mono text-[9px] uppercase tracking-wider text-text-tertiary">
-                          {item.category}
-                        </span>
-                      </div>
-                    </div>
-                    <ArrowRight size={13} className="text-text-tertiary group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
-                  </button>
-                );
-              })
-            ) : (
-              <div className="p-6 text-center text-xs text-text-tertiary">
-                No matching routes found for &ldquo;{searchQuery}&rdquo;
-              </div>
-            )}
-          </div>
-
-          <div className="p-2.5 bg-surface-soft/60 border-t border-border flex items-center justify-between text-[10px] font-mono text-text-tertiary">
-            <span>Press ESC to close</span>
-            <span>SolarGrid Navigation</span>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Global Command Palette Search Modal */}
+      <GlobalCommandSearch
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+      />
     </>
   );
 }

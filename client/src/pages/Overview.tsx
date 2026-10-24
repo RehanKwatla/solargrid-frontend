@@ -63,22 +63,22 @@ export default function Overview() {
         <button
           type="button"
           onClick={() => setShowDrilldown((prev) => !prev)}
-          className="w-full flex items-center justify-between p-4 rounded-xl border border-[#232C28] bg-[#141A18] hover:bg-[#1A231F] text-left transition-all shadow-md group"
+          className="w-full flex items-center justify-between p-4 rounded-xl border border-border bg-card hover:bg-surface-soft text-left transition-all shadow-sm group"
         >
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#1F2B22] border border-[#344839] flex items-center justify-center text-[#84CC39]">
+            <div className="w-7 h-7 rounded-lg bg-surface-soft border border-border flex items-center justify-center text-primary">
               <Shield size={16} />
             </div>
             <div>
-              <span className="block text-xs sm:text-sm font-bold text-[#FAF7F0] group-hover:text-[#84CC39] transition-colors">
+              <span className="block text-xs sm:text-sm font-bold text-foreground group-hover:text-primary transition-colors">
                 Hospital Engineering & Battery Rack Drilldown
               </span>
-              <span className="block text-[11px] text-[#8DA778]">
+              <span className="block text-[11px] text-text-secondary">
                 10-segment modular LFP rack, 35% NABH ICU floor lock, cell delta-V balance & circuit dispatch
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-[#8DA778] font-mono">
+          <div className="flex items-center gap-2 text-xs text-primary font-mono">
             <span>{showDrilldown ? "Collapse" : "Expand Details"}</span>
             {showDrilldown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </div>

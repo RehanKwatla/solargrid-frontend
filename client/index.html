@@ -47,6 +47,21 @@
     <!-- Google Fonts Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Pre-mount Theme Initialization (Prevent Theme Flash) -->
+    <script>
+      (function() {
+        try {
+          var stored = localStorage.getItem("theme");
+          var theme = stored ? stored : "light";
+          if (theme === "dark") {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

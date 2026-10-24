@@ -66,7 +66,7 @@ export default function App() {
       <ThemeProvider defaultTheme="light" switchable={true}>
         <SolarTrackingProvider>
           <TooltipProvider>
-            <Toaster theme="dark" position="bottom-right" richColors />
+            <Toaster position="bottom-right" richColors />
             <Router />
           </TooltipProvider>
         </SolarTrackingProvider>
