@@ -14,6 +14,7 @@ import EnergySharing from "./pages/EnergySharing";
 import Feature1 from "./pages/Feature1";
 import Intelligence from "./pages/Intelligence";
 import Overview from "./pages/Overview";
+import DepartmentsRooms from "./pages/DepartmentsRooms";
 import Settings from "./pages/Settings";
 import SolarGridIntro from "./pages/SolarGridIntro";
 import LandingPage from "./pages/LandingPage";
@@ -28,6 +29,8 @@ function DashboardRoutes() {
           <Route path="/overview" component={Overview} />
           <Route path="/dashboard"><Redirect to="/overview" /></Route>
           <Route path="/home"><Redirect to="/overview" /></Route>
+          <Route path="/departments" component={DepartmentsRooms} />
+          <Route path="/rooms"><Redirect to="/departments" /></Route>
           <Route path="/energy" component={Energy} />
           <Route path="/energy-sharing" component={EnergySharing} />
           <Route path="/sharing"><Redirect to="/energy-sharing" /></Route>

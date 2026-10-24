@@ -2,6 +2,7 @@ import {
   AlertTriangle,
   ArrowLeftRight,
   BrainCircuit,
+  Building2,
   ChevronLeft,
   ChevronRight,
   Compass,
@@ -18,8 +19,9 @@ import { useTelemetry } from "@/contexts/SolarTrackingContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const navigation = [
-  { href: "/overview", label: "Overview", icon: LayoutDashboard },
+  { href: "/overview", label: "Hospital Overview", icon: LayoutDashboard },
   { href: "/energy", label: "Energy Monitoring", icon: Zap },
+  { href: "/departments", label: "Departments & Rooms", icon: Building2 },
   { href: "/critical-loads", label: "Critical Loads", icon: ShieldAlert },
   { href: "/energy-sharing", label: "Energy Sharing", icon: ArrowLeftRight },
   { href: "/intelligence", label: "Forecasting & Optimization", icon: BrainCircuit },

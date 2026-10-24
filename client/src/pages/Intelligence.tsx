@@ -1,7 +1,10 @@
-import { ShieldCheck, SunMedium, Zap } from "lucide-react";
+import { useState } from "react";
+import { ShieldCheck, SunMedium, Zap, Layers, Sparkles, Sliders } from "lucide-react";
 import { useDashboardData } from "@/contexts/DashboardDataContext";
 import { DayTimeline } from "@/components/dashboard/DayTimeline";
 import { ForecastingOptimizationEngine } from "@/components/intelligence/ForecastingOptimizationEngine";
+import { PriorityDispatchOptimization } from "@/components/hospital/PriorityDispatchOptimization";
+import { HospitalScenarioSimulator } from "@/components/hospital/HospitalScenarioSimulator";
 import { cn } from "@/lib/utils";
 import {
   DataEmpty,
@@ -23,9 +26,11 @@ export default function Intelligence() {
     predictedDemandStatus,
   } = useDashboardData();
 
-  const facilityCode = facility?.code ?? "—";
-  const facilityLocation = facility?.location ?? "—";
-  const facilityName = facility?.name ?? "Facility";
+  const [activeTab, setActiveTab] = useState<"optimization" | "simulator" | "forecast">("optimization");
+
+  const facilityCode = facility?.code ?? "SG-ACC-01";
+  const facilityLocation = facility?.location ?? "Pune · Maharashtra";
+  const facilityName = facility?.name ?? "Apollo Care Campus";
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
@@ -36,18 +41,75 @@ export default function Intelligence() {
               {facilityCode} · {facilityLocation}
             </div>
             <DataSourceBadge source={facilityStatus.kind} />
+            <span className="pill pill-healthy !text-[9px] !py-0.5">NABH Priority Engine</span>
           </div>
           <h1 className="heading-xl text-foreground">Forecasting & Optimization</h1>
           <p className="mt-2 text-[0.84rem] text-text-secondary">
-            Predictive solar/load modeling, dispatch decision rationale, and hospital constraint satisfaction for {facilityName}.
+            Priority-aware clinical load allocation, explainable dispatch decisions, and hospital contingency simulation for {facilityName}.
           </p>
+        </div>
+
+        {/* Intelligence View Switcher Tabs */}
+        <div className="flex items-center p-1 rounded-xl bg-surface-soft border border-border">
+          <button
+            onClick={() => setActiveTab("optimization")}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all",
+              activeTab === "optimization"
+                ? "bg-card text-foreground shadow-xs font-bold"
+                : "text-text-secondary hover:text-foreground"
+            )}
+          >
+            <Layers size={14} className="text-primary" />
+            <span>Priority Dispatch</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("simulator")}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all",
+              activeTab === "simulator"
+                ? "bg-card text-foreground shadow-xs font-bold"
+                : "text-text-secondary hover:text-foreground"
+            )}
+          >
+            <Sliders size={14} style={{ color: "var(--warning)" }} />
+            <span>What-If Simulator</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("forecast")}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all",
+              activeTab === "forecast"
+                ? "bg-card text-foreground shadow-xs font-bold"
+                : "text-text-secondary hover:text-foreground"
+            )}
+          >
+            <SunMedium size={14} style={{ color: "var(--accent)" }} />
+            <span>Solar & Demand AI</span>
+          </button>
         </div>
       </header>
 
-      {/* Section 6: Forecasting & Optimization Engine */}
-      <section>
-        <ForecastingOptimizationEngine />
-      </section>
+      {/* Tab 1: Section 7 Priority Dispatch Optimization */}
+      {activeTab === "optimization" && (
+        <section className="animate-in fade-in duration-200">
+          <PriorityDispatchOptimization />
+        </section>
+      )}
+
+      {/* Tab 2: Section 8 Hospital Contingency Scenario Simulator */}
+      {activeTab === "simulator" && (
+        <section className="animate-in fade-in duration-200">
+          <HospitalScenarioSimulator />
+        </section>
+      )}
+
+      {/* Tab 3: 24h Solar & Load Predictive Modeling */}
+      {activeTab === "forecast" && (
+        <section className="space-y-6 animate-in fade-in duration-200">
+          <ForecastingOptimizationEngine />
+        </section>
+      )}
 
       {/* Dispatch decision + Forecast Drivers */}
       <section className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">

@@ -345,3 +345,109 @@ export type DataSourceStatus = {
   isStale: boolean;
   error: string | null;
 };
+
+/* ────────────────────────────────────────────
+ * Hospital-Centric Room & Department Hierarchy
+ * ──────────────────────────────────────────── */
+
+export type RoomPriority = "P0" | "P1" | "P2" | "P3";
+
+export type EnergyAvailabilityStatus =
+  | "Normal"
+  | "Attention Required"
+  | "Backup Active"
+  | "Energy Constraint"
+  | "Offline";
+
+export type MedicalEquipment = {
+  id: string;
+  name: string;
+  category: "Life-Support" | "Critical Diagnostic" | "Clinical Treatment" | "Inpatient Support" | "Facility Infrastructure";
+  drawKw: number;
+  minReqKw: number;
+  status: "Running" | "Standby" | "Power-Saving" | "Offline";
+  criticality: "P0 Life-Support" | "P1 Clinical" | "P2 Support" | "P3 Flexible";
+  backupSupply: string;
+};
+
+export type RoomAlert = {
+  id: string;
+  severity: "critical" | "warning" | "info";
+  title: string;
+  message: string;
+  time: string;
+  acknowledged: boolean;
+  recommendedAction?: string;
+};
+
+export type RoomRecommendation = {
+  id: string;
+  title: string;
+  detail: string;
+  type: "preserve" | "shift" | "conserve" | "alert";
+  expectedImpact: string;
+  reason: string;
+  isDemo: boolean;
+};
+
+export type HospitalRoom = {
+  id: string;
+  name: string;
+  code: string;
+  departmentId: string;
+  departmentName: string;
+  building: string;
+  floor: string;
+  roomType: string;
+  priority: RoomPriority;
+  currentKw: number;
+  minRequiredKw: number;
+  peakKw: number;
+  energyTodayKwh: number;
+  energyTrend: string;
+  backupStatus: string;
+  backupHealth: "Ready" | "Active Discharge" | "Testing Required";
+  energyStatus: EnergyAvailabilityStatus;
+  occupancy: string;
+  clinicalFunction: string;
+  authorizedBy: string;
+  equipmentList: MedicalEquipment[];
+  recentAlerts: RoomAlert[];
+  recommendations: RoomRecommendation[];
+  history24h: Array<{ time: string; demandKw: number; solarKw: number; minReqKw: number }>;
+};
+
+export type HospitalDepartment = {
+  id: string;
+  name: string;
+  code: string;
+  building: string;
+  floor: string;
+  clinicalLead: string;
+  description: string;
+  totalRooms: number;
+  currentDemandKw: number;
+  minRequiredKw: number;
+  energyStatus: EnergyAvailabilityStatus;
+  activeAlerts: number;
+  p0Count: number;
+  p1Count: number;
+  p2Count: number;
+  p3Count: number;
+  iconName: string;
+};
+
+export type HospitalCampusProfile = {
+  id: string;
+  name: string;
+  campusCode: string;
+  location: string;
+  totalBeds: number;
+  criticalCareBeds: number;
+  solarCapacityKwp: number;
+  batteryCapacityKwh: number;
+  batteryPowerKw: number;
+  currentMode: string;
+  annualSolarGenerationMwh: number;
+  gridReliabilityPercent: number;
+};

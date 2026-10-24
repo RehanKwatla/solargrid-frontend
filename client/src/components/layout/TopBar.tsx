@@ -28,7 +28,9 @@ import { facility as fallbackFacility } from "@/data/mockData";
 import { GlobalCommandSearch } from "./GlobalCommandSearch";
 
 const titles: Record<string, string> = {
-  "/overview": "Energy overview",
+  "/overview": "Hospital energy overview",
+  "/departments": "Hospital Departments & Room Priorities",
+  "/rooms": "Hospital Departments & Room Priorities",
   "/energy": "Energy",
   "/critical-loads": "Critical Load Management",
   "/energy-sharing": "Energy Sharing & Peer Trading",
@@ -102,6 +104,17 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
             )}
           >
             Overview
+          </Link>
+          <Link
+            href="/departments"
+            className={cn(
+              "relative py-4 transition-colors hover:text-foreground",
+              location === "/departments" || location === "/rooms"
+                ? "text-foreground font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary"
+                : "text-text-secondary"
+            )}
+          >
+            Departments & Rooms
           </Link>
           <Link
             href="/energy"
