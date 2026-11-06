@@ -1,101 +1,74 @@
 :root {
-  /* =========================================================================
-     SOLARGRID PALETTE — Indradhanu Clean Climate-Tech Art Direction
-     Light & Dark Operational Modes
-     ========================================================================= */
+  /* Indradhanu editorial palette: ink canvas, lilac instruments, mint signal. */
+  --bg-primary: #080808;
+  --bg-raised: #171717;
+  --surface: #EAE5FF;
+  --surface-soft: #C3B3FA;
+  --surface-muted: #F3D5EC;
+  --border-color: #343238;
+  --border-strong: #514b59;
+  --border-soft: #d0c6f4;
 
-  /* LIGHT THEME PALETTE (Requested) */
-  --bg-primary: #F4F0E8;        /* Main background */
-  --bg-raised: #EAE3D6;         /* Sidebar & navigation */
-  --surface: #FFFFFF;           /* Primary surfaces and cards */
-  --surface-soft: #EDE8DE;      /* Soft interactive hover surface */
-  --surface-muted: #E4DDD1;     /* Muted surface */
-  --border-color: #D8D1C5;      /* Borders */
-  --border-strong: #C5BCAD;
-  --border-soft: #E4DDD1;
+  --accent: #48977C;
+  --accent-strong: #286c55;
+  --accent-soft: #c0e4d5;
+  --accent-bg: #d8f0e5;
+  --primary-foreground: #080808;
 
-  /* Brand Accents */
-  --accent: #6F7F5F;            /* Primary accent */
-  --accent-strong: #5B6A4C;
-  --accent-soft: #D7DECF;
-  --accent-bg: #EEF3EA;
-  --primary-foreground: #FFFFFF;
+  --healthy: #D8FF3E;
+  --healthy-bg: #2b3212;
+  --healthy-ring: #a3c323;
+  --warning: #9b6a00;
+  --warning-bg: #fff1b9;
+  --warning-ring: #d09a17;
+  --danger: #aa352f;
+  --danger-bg: #f6d0c9;
+  --danger-ring: #cb5b4e;
+  --success: #48977C;
+  --energy: #e3bb36;
 
-  /* Semantic Highlights */
-  --healthy: #6F7F5F;           /* Primary accent (olive) */
-  --healthy-bg: #EEF3EA;
-  --healthy-ring: #6F7F5F;
-  --warning: #B89B19;           /* Solar accent */
-  --warning-bg: #FAF5DC;
-  --warning-ring: #B89B19;
-  --danger: #B5543A;            /* Hospital / alert accent */
-  --danger-bg: #FBECE8;
-  --danger-ring: #B5543A;
-  --success: #6F7F5F;
-  --energy: #B89B19;
+  --text-primary: #f8f7fb;
+  --text-secondary: #c6c2cd;
+  --text-tertiary: #a19ca8;
+  --text-disabled: #696570;
 
-  /* Typography Colors */
-  --text-primary: #252522;      /* Primary text */
-  --text-secondary: #68685F;    /* Secondary text */
-  --text-tertiary: #8C8B82;     /* Subtle technical telemetry */
-  --text-disabled: #ADA99F;
-
-  /* Structural Radii */
-  --radius-xs: 4px;
+  --radius-xs: 3px;
   --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-md: 9px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
 
-  /* Shadows — subtle, layered, architectural */
-  --shadow-xs: 0 1px 2px rgba(37, 37, 34, 0.04);
-  --shadow-sm: 0 1px 3px rgba(37, 37, 34, 0.06), 0 1px 2px rgba(37, 37, 34, 0.03);
-  --shadow-md: 0 3px 12px rgba(37, 37, 34, 0.07), 0 1px 3px rgba(37, 37, 34, 0.04);
-  --shadow-lg: 0 10px 30px rgba(37, 37, 34, 0.09), 0 2px 8px rgba(37, 37, 34, 0.04);
-  --shadow-focus: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-soft);
+  --shadow-xs: 0 1px 0 rgba(0,0,0,.18);
+  --shadow-sm: 0 2px 0 rgba(0,0,0,.2);
+  --shadow-md: 0 8px 24px rgba(0,0,0,.22);
+  --shadow-lg: 0 16px 44px rgba(0,0,0,.28);
+  --shadow-focus: 0 0 0 2px #080808, 0 0 0 4px #C3B3FA;
 }
 
 .dark {
-  /* DARK THEME PALETTE (Requested) */
-  --bg-primary: #0C100E;        /* Main background */
-  --bg-raised: #111713;         /* Sidebar and navigation */
-  --surface: #151C18;           /* Primary surfaces and cards */
-  --surface-soft: #1D2621;      /* Soft interactive surface */
-  --surface-muted: #18221D;
-  --border-color: #29332C;      /* Borders */
-  --border-strong: #38463D;
-  --border-soft: #202923;
+  color-scheme: dark;
+}
 
-  /* Brand Accents */
-  --accent: #8ACF3F;            /* Primary accent */
-  --accent-strong: #9DE251;
-  --accent-soft: #2E4515;
-  --accent-bg: #1B2B0C;
-  --primary-foreground: #0C100E;
-
-  /* Semantic Highlights */
-  --healthy: #8ACF3F;           /* Primary accent */
-  --healthy-bg: #1B2B0C;
-  --healthy-ring: #8ACF3F;
-  --warning: #E6D63B;           /* Solar accent */
-  --warning-bg: #2B280A;
-  --warning-ring: #E6D63B;
-  --danger: #E36A45;            /* Hospital / alert accent */
-  --danger-bg: #2E1510;
-  --danger-ring: #E36A45;
-  --success: #8ACF3F;
-  --energy: #E6D63B;
-
-  /* Typography Colors */
-  --text-primary: #F4F0E8;      /* Primary text */
-  --text-secondary: #A8ADA5;    /* Secondary text */
-  --text-tertiary: #6E756C;     /* Subtle technical telemetry */
-  --text-disabled: #474E45;
-
-  /* Shadows — Deep, atmospheric with subtle glow */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.7), 0 3px 10px rgba(0, 0, 0, 0.4);
-  --shadow-focus: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-soft);
+/* Optional light mode retains the same editorial palette and strong contrast. */
+html:not(.dark) {
+  --bg-primary: #F7F4FB;
+  --bg-raised: #EAE5FF;
+  --surface: #FFFFFF;
+  --surface-soft: #EAE5FF;
+  --surface-muted: #F3D5EC;
+  --border-color: #d8d2e2;
+  --border-strong: #bbb2c9;
+  --border-soft: #e7e1ef;
+  --text-primary: #171717;
+  --text-secondary: #514d57;
+  --text-tertiary: #6a6570;
+  --text-disabled: #96919b;
+  --healthy: #286c55;
+  --healthy-bg: #d8f0e5;
+  --healthy-ring: #48977C;
+  --warning: #805800;
+  --danger: #9e302a;
+  --danger-bg: #f6d0c9;
+  --danger-ring: #cb5b4e;
+  --primary-foreground: #fff;
 }

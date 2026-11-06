@@ -52,7 +52,7 @@ export default function Overview() {
   const facilityName = facility?.name ?? "Apollo Care Campus";
 
   return (
-    <div className="w-full min-w-0 space-y-6">
+    <div className="bento-page w-full min-w-0 space-y-6">
       {/* 1. CINEMATIC REFERENCE-INSPIRED CONTROL DASHBOARD (Primary Master View) */}
       <section>
         <CinematicReferenceDashboard />

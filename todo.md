@@ -101,3 +101,14 @@
 - [ ] Energy charts on the Energy page are not updated with the new CSS design system refinements.
 - [ ] The mobile bottom tab bar could benefit from a badge count on the Alerts tab.
 - [ ] No dark/light theme toggle is exposed in the UI (ThemeProvider supports it, but switchable defaults to false).
+
+## Complete UI/UX Redesign — In Progress
+
+- [x] Audit application routes, shared shell, frontend services, and page workflows before styling changes.
+- [x] Establish the lavender, mint, pink, lemon, charcoal design tokens and responsive bento layout primitives.
+- [x] Redesign the shared dashboard shell and route pages while preserving all existing controls, API calls, and business behavior.
+- [x] Run type check and production client/server builds. `npm run check` and `npm run build` passed; the `pnpm` launcher attempted an unavailable registry fetch.
+- [ ] Inspect desktop and mobile views for primary routes and verify major interactions.
+- [x] Update `memory.md` with design decisions, verification, and any follow-up.
+
+> Visual review remains open because the in-app browser could not reach the local Vite server, and Windows computer-use stopped when it could not confidently identify the active Chrome URL. No browser layout or interaction behavior is claimed as verified.

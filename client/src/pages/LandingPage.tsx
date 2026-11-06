@@ -40,7 +40,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground transition-colors duration-300 relative flex flex-col selection:bg-[var(--accent)] selection:text-white">
+    <div className="bento-page min-h-screen w-full bg-background text-foreground transition-colors duration-300 relative flex flex-col selection:bg-[var(--accent)] selection:text-white">
       {/* 1. Public Marketing Navigation Header */}
       <header className="sticky top-0 z-40 w-full border-b border-border/80 bg-background/90 backdrop-blur-md px-4 sm:px-6 lg:px-12 py-3.5 transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">

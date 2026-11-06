@@ -62,17 +62,11 @@
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: "ss01", "cv11";
     transition: background-color 0.2s ease, color 0.2s ease;
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 32px 32px;
+    background-color: var(--bg-primary);
+    background-image: radial-gradient(ellipse at 75% -10%, rgba(195,179,250,.13), transparent 40%);
+    background-attachment: fixed;
   }
-  :root {
-    --grid-line: rgba(90, 46, 37, 0.045);
-  }
-  .dark {
-    --grid-line: rgba(240, 230, 216, 0.032);
-  }
+  :root { --grid-line: transparent; }
 
   body {
     min-height: 100vh;
@@ -348,10 +342,106 @@
 
   /* Standard card frame — one radius, one border treatment everywhere */
   .card {
+    --text-primary: #171717;
+    --text-secondary: #514d57;
+    --text-tertiary: #6a6570;
+    --border-color: rgba(23,23,23,.17);
     border: 1px solid var(--border-color);
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-xs);
+    background: #EAE5FF;
+    border-radius: 10px;
+    box-shadow: 4px 4px 0 #080808;
+    color: var(--text-primary);
+  }
+
+  /* Pastel instrument surfaces retain dark ink even inside the dark console. */
+  .bg-surface, .bg-card, .bg-surface-soft, .operational-panel, .hero-reading {
+    --text-primary: #171717;
+    --text-secondary: #514d57;
+    --text-tertiary: #6a6570;
+    --border-color: rgba(23,23,23,.18);
+  }
+  .operational-panel, .hero-reading {
+    background: #EAE5FF;
+    border-color: rgba(23,23,23,.2);
+    border-radius: 10px;
+    box-shadow: 4px 4px 0 #080808;
+  }
+  .dashboard-shell { background: #080808; }
+  .dashboard-shell aside { background: #171717; border-color: #343238; }
+  .dashboard-shell aside .bg-surface,
+  .dashboard-shell aside .bg-surface-soft { background-color: #292532 !important; }
+  .dashboard-shell aside .text-text-primary,
+  .dashboard-shell aside .text-foreground { color: #f8f7fb !important; }
+  .dashboard-shell aside .text-text-secondary { color: #c6c2cd !important; }
+  .dashboard-shell header { background: rgba(8,8,8,.94); border-color: #343238; }
+  .dashboard-shell .mobile-tab-bar { background: #171717; border-color: #343238; }
+  .dashboard-shell main { background: transparent; }
+  .dashboard-shell main > div { animation: editorial-in .45s ease both; }
+
+  /* Page-level rhythm: dark gutters with a small set of distinct pastel planes. */
+  .bento-page { padding: clamp(1rem, 2.1vw, 2rem); }
+  .bento-page > header { padding-bottom: 1rem; border-color: #343238; }
+  .bento-page > header h1 { font-size: clamp(2rem, 4vw, 3.5rem); letter-spacing: -.065em; }
+  .bento-page .card:nth-of-type(3n + 2) { background: #F3D5EC; }
+  .bento-page .card:nth-of-type(3n) { background: #C3B3FA; }
+  .bento-page .card .card,
+  .bento-page .card [class*="bg-surface-soft"] { background-color: rgba(255,255,255,.48); }
+  .bento-page .instrument-label,
+  .bento-page .section-head .eyebrow { letter-spacing: .14em; }
+  .bento-page .heading-xl { letter-spacing: -.065em; }
+  .bento-page section { min-width: 0; }
+  .energy-page, .intelligence-page, .sharing-page, .critical-page {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-content: start;
+    gap: 1rem;
+  }
+  .energy-page > *, .intelligence-page > *, .sharing-page > *, .critical-page > * { min-width: 0; margin: 0 !important; }
+  .energy-page > header, .intelligence-page > header { grid-column: 1 / -1; }
+  .energy-page > section:nth-of-type(1) { grid-column: span 8; grid-row: span 2; }
+  .energy-page > section:nth-of-type(2) { grid-column: span 4; }
+  .energy-page > section:nth-of-type(2) > .grid { grid-template-columns: 1fr !important; }
+  .energy-page > section:nth-of-type(3) { grid-column: span 7; }
+  .energy-page > section:nth-of-type(4) { grid-column: span 5; }
+  .intelligence-page > section:nth-of-type(1),
+  .intelligence-page > section:nth-of-type(2) { grid-column: 1 / -1; }
+  .intelligence-page > section:nth-of-type(3) { grid-column: span 5; }
+  .intelligence-page > section:nth-of-type(4) { grid-column: span 7; }
+  .intelligence-page > section:nth-of-type(5) { grid-column: 1 / -1; }
+  .sharing-page > section:nth-of-type(1) { grid-column: 1 / -1; }
+  .sharing-page > section:nth-of-type(2) { grid-column: span 8; }
+  .sharing-page > section:nth-of-type(3) { grid-column: span 4; }
+  .sharing-page > section:nth-of-type(4) { grid-column: 1 / -1; }
+  .sharing-page > section:nth-of-type(5) { grid-column: 1 / -1; }
+  .critical-page > section:nth-of-type(1) { grid-column: 1 / -1; }
+  .critical-page > section:nth-of-type(2) { grid-column: span 5; }
+  .critical-page > section:nth-of-type(3) { grid-column: span 7; }
+  .critical-page > section:nth-of-type(4) { grid-column: 1 / -1; }
+  .critical-page > section:nth-of-type(5) { grid-column: 1 / -1; }
+  .critical-page > section:nth-of-type(6) { grid-column: 1 / -1; }
+  .critical-page > section:nth-of-type(7) { grid-column: 1 / -1; }
+  .dashboard-canvas { background-color: #080808; }
+  .dark .pill { color: #312d35; }
+  .dark .pill-healthy { color: #D8FF3E; }
+  .action-button { border-radius: 5px; box-shadow: 3px 3px 0 #080808; }
+  button, a { transition-timing-function: cubic-bezier(.2,.8,.2,1); }
+  @keyframes editorial-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 1023px) {
+    .bento-page { padding: 1rem; }
+    .energy-page > section:nth-of-type(1), .energy-page > section:nth-of-type(2),
+    .energy-page > section:nth-of-type(3), .energy-page > section:nth-of-type(4),
+    .intelligence-page > section:nth-of-type(3), .intelligence-page > section:nth-of-type(4),
+    .sharing-page > section:nth-of-type(2), .sharing-page > section:nth-of-type(3),
+    .critical-page > section:nth-of-type(2), .critical-page > section:nth-of-type(3) { grid-column: 1 / -1; }
+  }
+  @media (max-width: 640px) {
+    .bento-page { padding: .85rem; }
+    .card { box-shadow: 3px 3px 0 #080808; }
+    .dashboard-shell main { padding-bottom: 4.5rem; }
   }
 
   @media (max-width: 1023px) {

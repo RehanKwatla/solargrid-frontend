@@ -65,7 +65,7 @@ export default function Energy() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-5 max-w-7xl mx-auto">
+    <div className="bento-page energy-page p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <header className="flex flex-wrap items-end justify-between gap-4 pb-3">
         <div>
           <div className="flex flex-wrap items-center gap-2.5 mb-2">

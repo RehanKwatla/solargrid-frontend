@@ -24,7 +24,7 @@ export default function NotFound() {
   ];
 
   return (
-    <div className="w-full min-h-[calc(100vh-140px)] flex items-center justify-center p-4 sm:p-6 lg:p-10">
+    <div className="bento-page w-full min-h-[calc(100vh-140px)] flex items-center justify-center p-4 sm:p-6 lg:p-10">
       <div className="w-full max-w-2xl">
         <div className="rounded-xl border border-border bg-surface p-6 sm:p-10 shadow-[var(--shadow-md)] relative overflow-hidden">
           {/* Subtle background glow */}

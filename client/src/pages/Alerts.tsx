@@ -220,7 +220,7 @@ export default function Alerts() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+    <div className="bento-page p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
       {/* Header */}
       <header className="flex flex-wrap items-end justify-between gap-4 pb-3 border-b border-border">
         <div>
