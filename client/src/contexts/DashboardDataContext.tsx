@@ -46,6 +46,7 @@ import type {
   LoadAuditLog,
   EmergencyModeState,
   PriorityLevel,
+  OperatingModeName,
 } from "@/data/types";
 
 type DashboardDataContextValue = {
@@ -91,6 +92,10 @@ type DashboardDataContextValue = {
 
   /* Actions */
   refetchAll: () => void;
+  updateOperatingMode: (
+    mode: OperatingModeName,
+    detail?: string
+  ) => Promise<void>;
   recordEnergyTransaction: (
     tx: Omit<EnergyTransaction, "id" | "created_at">
   ) => Promise<EnergyTransaction>;
@@ -153,6 +158,7 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
   const [localLoadsOverride, setLocalLoadsOverride] = useState<Record<string, Partial<HospitalLoad>>>({});
   const [localAuditLogs, setLocalAuditLogs] = useState<LoadAuditLog[]>([]);
   const [localEmergencyModeOverride, setLocalEmergencyModeOverride] = useState<EmergencyModeState | null>(null);
+  const [localModeOverride, setLocalModeOverride] = useState<OperatingModeRecord | null>(null);
 
   const mergedTransactions = [
     ...localTransactions,
@@ -184,6 +190,8 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     activated_by: null,
     mode_label: "Standard Operations Mode",
   });
+
+  const mergedOperatingMode: OperatingModeRecord | null = localModeOverride ?? operatingMode.data;
 
   const overallStatus = combineStatuses(
     telemetry.status,
@@ -335,6 +343,15 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     operatingMode.refetch();
   };
 
+  const updateOperatingMode = async (
+    mode: OperatingModeName,
+    detail?: string
+  ): Promise<void> => {
+    const result = await api.updateOperatingMode(mode, detail);
+    setLocalModeOverride(result);
+    operatingMode.refetch();
+  };
+
   const acknowledgeAlert = async (alertId: string | number): Promise<void> => {
     await api.acknowledgeAlert(alertId);
     alerts.refetch();
@@ -343,7 +360,7 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
   const value: DashboardDataContextValue = {
     telemetry: telemetry.data,
     energyHistory: energyHistory.data ?? [],
-    operatingMode: operatingMode.data,
+    operatingMode: mergedOperatingMode,
     forecast: forecast.data,
     optimization: optimization.data,
     loadTiers: loadTiers.data ?? [],
@@ -378,6 +395,7 @@ export function DashboardDataProvider({ children }: { children: ReactNode }) {
     overallStatus,
     anyError: errors.length > 0 ? errors[0]! : null,
     refetchAll,
+    updateOperatingMode,
     recordEnergyTransaction,
     updateHospitalLoadPriority,
     toggleEmergencyMode,

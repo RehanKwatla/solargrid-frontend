@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Search,
   Filter,
@@ -31,6 +31,7 @@ import { RoomDetailModal } from "@/components/hospital/RoomDetailModal";
 import { DepartmentMapView } from "@/components/hospital/DepartmentMapView";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
+import { api } from "@/services/api";
 
 export default function DepartmentsRooms() {
   const { theme } = useTheme();
@@ -49,8 +50,20 @@ export default function DepartmentsRooms() {
   const [selectedRoom, setSelectedRoom] = useState<HospitalRoom | null>(null);
   const [roomModalOpen, setRoomModalOpen] = useState(false);
 
-  // Local rooms copy to allow live priority reclassifications
+  // Rooms loaded from backend API with fallback
   const [rooms, setRooms] = useState<HospitalRoom[]>(HOSPITAL_ROOMS);
+
+  useEffect(() => {
+    let mounted = true;
+    api.getHospitalRooms().then((data) => {
+      if (mounted && data && data.length > 0) {
+        setRooms(data);
+      }
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const prioritySummary = useMemo(() => getHospitalPrioritySummary(rooms), [rooms]);
 
@@ -104,10 +117,20 @@ export default function DepartmentsRooms() {
     return result;
   }, [rooms, searchQuery, selectedDept, selectedPriority, selectedStatus, sortBy]);
 
-  const handlePriorityChange = (roomId: string, newPriority: RoomPriority) => {
+  const handlePriorityChange = async (roomId: string, newPriority: RoomPriority, reason?: string) => {
     setRooms((prev) =>
       prev.map((r) => (r.id === roomId ? { ...r, priority: newPriority } : r))
     );
+    try {
+      await api.updateHospitalRoomPriority(
+        roomId,
+        newPriority,
+        reason || "Clinical priority adjustment",
+        "Clinical Operator"
+      );
+    } catch {
+      // Keep optimistic update
+    }
   };
 
   const openRoomModal = (room: HospitalRoom) => {

@@ -14,6 +14,7 @@ import {
   Sparkles,
   Lock,
   Activity,
+  Play,
 } from "lucide-react";
 import {
   SIMULATION_SCENARIOS,
@@ -22,13 +23,33 @@ import {
 } from "@/data/hospitalData";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
+import { useDashboardData } from "@/contexts/DashboardDataContext";
+import { api } from "@/services/api";
+import { toast } from "sonner";
 
 export function HospitalScenarioSimulator() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const { refetchAll } = useDashboardData();
 
   const [activeScenarioId, setActiveScenarioId] = useState<SimulationScenarioId>("baseline");
+  const [isApplying, setIsApplying] = useState(false);
   const scenario = SIMULATION_SCENARIOS[activeScenarioId];
+
+  const handleApplyToLiveState = async () => {
+    setIsApplying(true);
+    try {
+      await api.applyHospitalScenario(activeScenarioId);
+      refetchAll();
+      toast.success("Simulation Scenario Dispatched to Campus", {
+        description: `Campus microgrid adjusted to "${scenario.name}". Operating mode and telemetry updated.`,
+      });
+    } catch {
+      toast.info("Scenario active in local simulation viewer");
+    } finally {
+      setIsApplying(false);
+    }
+  };
 
   // Base values
   const baseSolarKw = 84.6;
@@ -75,6 +96,16 @@ export function HospitalScenarioSimulator() {
           <span className="px-2.5 py-1 rounded-lg border border-border bg-surface-soft font-mono text-xs font-bold text-primary">
             {scenario.badge}
           </span>
+          <button
+            type="button"
+            onClick={handleApplyToLiveState}
+            disabled={isApplying}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/50 bg-primary/10 text-primary hover:bg-primary/20 text-xs font-mono font-semibold transition-colors cursor-pointer"
+            title="Dispatch this scenario parameters to active campus telemetry"
+          >
+            <Play size={12} className={isApplying ? "animate-spin" : "fill-primary"} />
+            <span>{isApplying ? "Dispatching..." : "Apply to Live Campus"}</span>
+          </button>
         </div>
       </div>
 

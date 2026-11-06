@@ -1,5 +1,40 @@
 # Active Repository Tasks
 
+## Full-Stack Backend Integration Expansion & Git Sync — Complete
+
+- [x] Connect `HospitalScenarioSimulator` to `api.applyHospitalScenario` and dashboard data refetching.
+- [x] Connect operating mode switching in `DashboardDataContext` and `ModeIndicator` to `/api/operating-mode`.
+- [x] Upgrade `client/src/services/websocket.ts` to stream from `/api/stream` (SSE) with live event distribution.
+- [x] Ensure alert acknowledgement across `AlertList` and `Alerts` connects to `/api/alerts/:id/acknowledge`.
+- [x] Run `pnpm check` and `pnpm build` verification.
+- [x] Update `memory.md` with integration details.
+- [x] Commit all changes and push to git repository (`git push origin main`).
+
+## Backend Generation and Full-Stack Integration — Complete
+
+- [x] Design and create server architecture (`server/index.ts`, `server/routes.ts`, `server/storage.ts`).
+- [x] Implement all REST API endpoints matching frontend contracts:
+  - [x] System health (`/api/health`) and Facility identity (`/api/facility`)
+  - [x] Live Telemetry with dynamic variation (`/api/telemetry`)
+  - [x] Historical Energy 24h/7d/30d datasets (`/api/energy-history`)
+  - [x] Operating Mode switching and state (`/api/operating-mode`)
+  - [x] Solar and Load Forecasts (`/api/forecast`)
+  - [x] Optimization decisions (`/api/optimization`)
+  - [x] Priority Dispatch / Load Tiers (`/api/priority-dispatch`, `/api/load-tiers`)
+  - [x] Metering records (`/api/metering`)
+  - [x] Alert management and acknowledgement (`/api/alerts`, `/api/alerts/:id/acknowledge`)
+  - [x] Hospital critical loads & audit logs (`/api/hospital-loads`, `/api/hospital-loads/:id/priority`, `/api/load-audit-logs`)
+  - [x] Emergency mode controls (`/api/emergency-mode`)
+  - [x] P2P Energy sharing summary, peers, and transactions (`/api/energy-sharing/*`)
+  - [x] Hospital campus, departments, rooms, and scenario simulation endpoints (`/api/hospital/*`)
+  - [x] Real-time telemetry event stream (SSE `/api/stream`)
+- [x] Integrate backend into Vite dev environment via Vite API middleware plugin so `pnpm dev` serves both seamlessly.
+- [x] Update `package.json` build and start scripts to build and run standalone backend server (`dist/index.js`).
+- [x] Connect frontend services (`api.ts`, `DepartmentsRooms.tsx`) to use backend endpoints.
+- [x] Verify TypeScript types (`pnpm check`) and build (`pnpm build`).
+- [x] Test API endpoints and verify that frontend status switches to live.
+- [x] Update `memory.md` with decisions, changes, and verification.
+
 ## Runtime Error and Landing Restoration — In Progress
 
 - [x] Re-audit the landing first-scroll DOM and all parent coordinate systems against the supplied restoration brief.

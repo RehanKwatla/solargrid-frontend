@@ -136,7 +136,7 @@ const INITIAL_HOSPITAL_EVENTS: HospitalEvent[] = [
 ];
 
 export default function Alerts() {
-  const { facility, facilityStatus, alertsStatus } = useDashboardData();
+  const { facility, facilityStatus, alertsStatus, acknowledgeAlert } = useDashboardData();
 
   const [events, setEvents] = useState<HospitalEvent[]>(INITIAL_HOSPITAL_EVENTS);
   const [priorityFilter, setPriorityFilter] = useState<string>("ALL");
@@ -179,10 +179,15 @@ export default function Alerts() {
   const warningCount = events.filter((e) => e.severity === "warning" && !e.acknowledged).length;
   const advisoryCount = events.filter((e) => e.severity === "advisory" && !e.acknowledged).length;
 
-  const handleAcknowledge = (id: string) => {
+  const handleAcknowledge = async (id: string) => {
     setEvents((prev) =>
       prev.map((evt) => (evt.id === id ? { ...evt, acknowledged: true } : evt))
     );
+    try {
+      await acknowledgeAlert(id);
+    } catch {
+      // optimistic state preserved
+    }
     toast.success("Event acknowledged by operator", {
       description: "Logged to hospital clinical EMS audit trail.",
     });

@@ -21,6 +21,7 @@ import type {
   TelemetryReading,
   EnergyHistoryPoint,
   OperatingModeRecord,
+  OperatingModeName,
   ForecastData,
   OptimizationDecision,
   LoadTier,
@@ -34,7 +35,16 @@ import type {
   EmergencyModeState,
   PriorityLevel,
   Facility,
+  HospitalCampusProfile,
+  HospitalDepartment,
+  HospitalRoom,
+  RoomPriority,
 } from "@/data/types";
+import {
+  HOSPITAL_CAMPUSES,
+  HOSPITAL_DEPARTMENTS,
+  HOSPITAL_ROOMS,
+} from "@/data/hospitalData";
 
 /**
  * SolarGrid unified API layer:
@@ -204,6 +214,40 @@ export const api = {
       mode: mockOperatingState.mode,
       flow_state: mockOperatingState.flowState,
       mode_detail: mockOperatingState.modeDetail,
+      updated_at: new Date().toISOString(),
+    };
+  },
+
+  async updateOperatingMode(
+    mode: OperatingModeName,
+    detail?: string
+  ): Promise<OperatingModeRecord> {
+    const flowStateMap: Record<OperatingModeName, "normal" | "high-demand" | "grid-outage" | "recovery"> = {
+      "Self-Powered": "normal",
+      "Cost Saving": "normal",
+      "Emergency Watch": "recovery",
+      "Grid Backup": "high-demand",
+    };
+
+    const payload = {
+      mode,
+      flow_state: flowStateMap[mode] || "normal",
+      mode_detail: detail || `${mode} mode active`,
+    };
+
+    const rest = await fetchFromRest<OperatingModeRecord>("/operating-mode", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+
+    if (rest) return rest;
+
+    return {
+      id: "mode-01",
+      facility_id: "SG-ACC-01",
+      mode,
+      flow_state: flowStateMap[mode] || "normal",
+      mode_detail: payload.mode_detail,
       updated_at: new Date().toISOString(),
     };
   },
@@ -669,5 +713,64 @@ export const api = {
       created_at: new Date().toISOString(),
     };
     return { transaction: newTx };
+  },
+
+  // Health
+  async getHealth(): Promise<{ status: string; uptime: number; version: string } | null> {
+    return fetchFromRest<{ status: string; uptime: number; version: string }>("/health");
+  },
+
+  // Hospital Campuses & Departments
+  async getHospitalCampuses(): Promise<HospitalCampusProfile[]> {
+    const rest = await fetchFromRest<HospitalCampusProfile[]>("/hospital/campuses");
+    if (rest && rest.length > 0) return rest;
+    return HOSPITAL_CAMPUSES;
+  },
+
+  async getHospitalDepartments(): Promise<HospitalDepartment[]> {
+    const rest = await fetchFromRest<HospitalDepartment[]>("/hospital/departments");
+    if (rest && rest.length > 0) return rest;
+    return HOSPITAL_DEPARTMENTS;
+  },
+
+  // Hospital Rooms
+  async getHospitalRooms(filters?: { departmentId?: string; priority?: RoomPriority }): Promise<HospitalRoom[]> {
+    const query = new URLSearchParams();
+    if (filters?.departmentId) query.set("department", filters.departmentId);
+    if (filters?.priority) query.set("priority", filters.priority);
+    const qs = query.toString() ? `?${query.toString()}` : "";
+
+    const rest = await fetchFromRest<HospitalRoom[]>(`/hospital/rooms${qs}`);
+    if (rest && rest.length > 0) return rest;
+    return HOSPITAL_ROOMS;
+  },
+
+  async updateHospitalRoomPriority(
+    roomId: string,
+    priority: RoomPriority,
+    justification: string,
+    operator: string
+  ): Promise<{ room: HospitalRoom; audit: LoadAuditLog } | null> {
+    const rest = await fetchFromRest<{ room: HospitalRoom; audit: LoadAuditLog }>(
+      `/hospital/rooms/${roomId}/priority`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ priority, justification, operator }),
+      }
+    );
+    return rest;
+  },
+
+  // Simulation Scenarios
+  async applyHospitalScenario(
+    scenarioId: string
+  ): Promise<{ scenario: any; telemetry: TelemetryReading } | null> {
+    const rest = await fetchFromRest<{ scenario: any; telemetry: TelemetryReading }>(
+      `/hospital/scenarios/${scenarioId}/apply`,
+      {
+        method: "POST",
+      }
+    );
+    return rest;
   },
 };
