@@ -112,3 +112,12 @@
 - [x] Update `memory.md` with design decisions, verification, and any follow-up.
 
 > Visual review remains open because the in-app browser could not reach the local Vite server, and Windows computer-use stopped when it could not confidently identify the active Chrome URL. No browser layout or interaction behavior is claimed as verified.
+
+## Supabase Environment Configuration — In Progress
+
+- [x] Add the provided Supabase project URL and publishable key to ignored root `.env.local` using Vite variable names.
+- [x] Update the tracked environment example and existing Supabase client to recognize the publishable key while preserving the anon-key fallback.
+- [x] Run type check and production build; verify `.env.local` remains ignored and uses only the browser-safe publishable key.
+- [x] Record the Vite-specific integration decision and verification in `memory.md`.
+
+> Supabase project connectivity, database schema, and row-level security permissions still need an environment-level check. Next.js SSR helpers and middleware were not added because this application runs as a Vite SPA with an Express API.
